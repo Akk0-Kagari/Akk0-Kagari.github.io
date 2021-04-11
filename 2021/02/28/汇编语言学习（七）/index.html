@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="无名小站">
+    <meta name="author" content="Akk0">
+    
+    <title>
+        
+            汇编语言学习（七） |
+        
+        Akk0&#39;s Blog
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/avatar.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":false},"style":{"primary_color":"#CC99FF","avatar":"/images/avatar.jpg","favicon":"/images/avatar.jpg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Welcome to Akk0's Blog."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
+    KEEP.language_ago = undefined;
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Akk0's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                Akk0&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">汇编语言学习（七）</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Akk0</span>
+                        
+                            <span class="author-label">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-02-28 15:03:20
+    </span>
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.2k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>5 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="汇编语言学习（七）"><a href="#汇编语言学习（七）" class="headerlink" title="汇编语言学习（七）"></a>汇编语言学习（七）</h1><h2 id="and和or指令"><a href="#and和or指令" class="headerlink" title="and和or指令"></a>and和or指令</h2><p>首先，介绍两条指令and和or。</p>
+<ol>
+<li>and指令：逻辑与指令，按位进行与运算</li>
+</ol>
+<p>例如指令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov al,01100011B</span><br><span class="line">and al,00111011B</span><br></pre></td></tr></table></figure>
+
+<p>执行后：<code>al=00100011B</code></p>
+<p>通过该指令可将操作对象的相应位设为0，其他位不变。</p>
+<p>例如：</p>
+<p>将al的第6位设为0的指令是：<code>and al,10111111B</code><br>将al的第7位设为0的指令是：<code>and al,01111111B</code></p>
+<p>注：与运算是逻辑乘，与1运算本身不改变。<code>1 and 1 = 1、1 and 0 = 0</code></p>
+<ol start="2">
+<li>or指令：逻辑或指令，按位进行或运算</li>
+</ol>
+<p>例如指令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov al,01100011B</span><br><span class="line">or al,00111011B</span><br></pre></td></tr></table></figure>
+
+<p>执行后: al=01111011B</p>
+<p>通过该指令可将操作对象相应位设为1，其他位不变</p>
+<p>例如：</p>
+<p>将al的第6位设为1的指令是：<code>or al,01000000B</code><br>将al的第7位设为1的指令是：<code>or al,10000000B</code></p>
+<h2 id="以字符形式给出的数据"><a href="#以字符形式给出的数据" class="headerlink" title="以字符形式给出的数据"></a>以字符形式给出的数据</h2><p>我们可以在汇编程序中，用<code>......</code>的方式指明数据是以字符的形式给出的，编译器将它们转化为相对应的ASCII码。如下面的程序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">assume cs:code,ds:data</span><br><span class="line">data segment</span><br><span class="line">    db &#39;unIX&#39;</span><br><span class="line">    db &#39;foRK&#39;</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">    start: mov al,&#39;a&#39;</span><br><span class="line">           mov bl,&#39;b&#39;</span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line">code ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<p>在上面的源程序中：<br><code>db &#39;unIX&#39;</code>相当于<code>db 75H,6EH,49H,58H</code>，<code>u、n、I、X</code>的ASCII码分别为<code>75H、6EH、49H、58H</code></p>
+<p><code>mov al,&#39;a&#39;</code>相当于<code>mov al,61H</code>，<code>a</code>的ASCII码为<code>61H</code></p>
+<h2 id="大小写转换的问题"><a href="#大小写转换的问题" class="headerlink" title="大小写转换的问题"></a>大小写转换的问题</h2><p>下面考虑一个问题，在<code>codesg</code>中填写代码，将<code>datasg</code>中的第一个字符串转化为大写，第二个字符串转化为小写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">assume cs:codesg,datasg</span><br><span class="line"></span><br><span class="line">datasg segment</span><br><span class="line">    db &#96;BaSiC&#96;</span><br><span class="line">    db &#96;iNfOrMaTiOn&#96;</span><br><span class="line">datasg ends</span><br><span class="line"></span><br><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,ax</span><br><span class="line">                        ;设置ds指向datasg段</span><br><span class="line">           mov bx,0</span><br><span class="line">                        ;设置(bx)&#x3D;0,ds:bx指向&#39;BaSiC&#39;的第一个字母</span><br><span class="line">           mov cx,5     ;设置循环次数5</span><br><span class="line">        s: mov al,[bx]</span><br><span class="line">           and al,11011111B     ;将al中的ASCII码的第5位置为0，变为大写字母</span><br><span class="line">           mov [bx],al          ;将转变后的ASCII码写回原单元</span><br><span class="line">           inc bx</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov bx,5,ds:bx指向&#39;iNfOrMaTiOn&#39;的第一个字母</span><br><span class="line"></span><br><span class="line">           mov cx,11    ;设置循环次数11</span><br><span class="line"></span><br><span class="line">        s0: mov al,[bx]</span><br><span class="line">           or al,00100000       ;将al中的ASCII码的第5位置为1，变成小写字母</span><br><span class="line">           mov [bx],al</span><br><span class="line">           inc bx</span><br><span class="line">           loop s0</span><br><span class="line"></span><br><span class="line">           mov ax 4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<h2 id="bx-idata"><a href="#bx-idata" class="headerlink" title="[bx+idata]"></a>[bx+idata]</h2><p>前面我们用<code>[bx]</code>的方式指明一个内存单元，其实还可以使用<code>[bx+idata]</code>来表示一个内存单元，它的偏移地址为<code>(bx)+idata</code>：bx中的数值再加上idata</p>
+<p>指令<code>mov ax,[bx+200]</code>的含义：</p>
+<blockquote>
+<p>将一个内存单元的内容送入ax，这个内存单元的长度为2个字节，存放一个字，偏移地址为bx中的数值加上200，段地址在ds中。即(ax)=((ds)*16+(bx)+200)</p>
+</blockquote>
+<p>也可写作：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov ax,[200+bx]</span><br><span class="line">mov ax,200[bx]</span><br><span class="line">mov ax,bx.200</span><br></pre></td></tr></table></figure>
+
+<h2 id="用-bx-idata-的方式进行数组的处理"><a href="#用-bx-idata-的方式进行数组的处理" class="headerlink" title="用[bx+idata]的方式进行数组的处理"></a>用[bx+idata]的方式进行数组的处理</h2><p>通过<code>[bx+idata]</code>，我们可以简化上面大小写转换的程序。通过<code>[0+bx]</code>和<code>[5+bx]</code>的方式在同一循环中定位这两个字符串中的字符。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">    mov ax,datasg</span><br><span class="line">    mov ds,ax</span><br><span class="line">    mov bx,0</span><br><span class="line"></span><br><span class="line">    mov cx,5</span><br><span class="line">s:  mov al,[bx]</span><br><span class="line">    and al,11011111b</span><br><span class="line">    mov [bx],al</span><br><span class="line">    mov al,[5+bx]</span><br><span class="line">    or al,00100000b</span><br><span class="line">    mov [5+bx],al</span><br><span class="line">    inc bx</span><br><span class="line">    loop s</span><br></pre></td></tr></table></figure>
+
+<h2 id="SI和DI"><a href="#SI和DI" class="headerlink" title="SI和DI"></a>SI和DI</h2><p>si和di是8086CPU中和bx功能相近的寄存器，si和di不能够分成两个8位寄存器来使用。</p>
+<p>下面的三组指令实现了相同的功能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mov bx,0</span><br><span class="line">mov ax,[bx]</span><br><span class="line"></span><br><span class="line">mov si,0</span><br><span class="line">mov ax,[si]</span><br><span class="line"></span><br><span class="line">mov di,0</span><br><span class="line">mov ax,[di]</span><br></pre></td></tr></table></figure>
+
+<p>下面的3组指令也实现了相同的功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mov bx,0</span><br><span class="line">mov ax,[bx+123]</span><br><span class="line"></span><br><span class="line">mov si,0</span><br><span class="line">mov ax,[si+123]</span><br><span class="line"></span><br><span class="line">mov di,0</span><br><span class="line">mov ax,[di+123]</span><br></pre></td></tr></table></figure>
+
+<p>用si和di实现字符串’welcome to masm!’复制到它后面的数据区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">assume cs:codesg,ds:datasg</span><br><span class="line"></span><br><span class="line">datasg segment</span><br><span class="line">    db &#39;welcome to masm&#39;</span><br><span class="line">    db &#39;...............&#39;</span><br><span class="line">datasg ends</span><br><span class="line"></span><br><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,dx</span><br><span class="line">           mov si,0</span><br><span class="line">           mov di,16</span><br><span class="line"></span><br><span class="line">           mov cx,8</span><br><span class="line">        s: mov ax,[si]</span><br><span class="line">           mvo [di],ax</span><br><span class="line">           add si,2</span><br><span class="line">           add di,2</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<p>简化版：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,ax</span><br><span class="line">           mov si,0</span><br><span class="line">           mov cx,8</span><br><span class="line"></span><br><span class="line">        s: mov ax,0[si]</span><br><span class="line">           mov 16[si],ax</span><br><span class="line">           add si,2</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<h2 id="bx-si-和-bx-di"><a href="#bx-si-和-bx-di" class="headerlink" title="[bx+si]和[bx+di]"></a>[bx+si]和[bx+di]</h2><p><code>[bx+si]</code>和<code>[bx+di]</code>的含义相似，我们以[bx+si]为例进行讲解</p>
+<p>指令<code>mov ax,[bx+si]</code>的含义如下：</p>
+<blockquote>
+<p>将一个内存单元的内容送入ax，这个内存单元的长度为2字节，存放一个字，偏移地址为bx中的数值加上si中的数值，段地址在ds中，即(ax)=((ds)*16+(bx)+(si))</p>
+</blockquote>
+<p>也可写作<code>mov ax,[bx][si]</code></p>
+<h2 id="bx-si-idata-和-bx-di-idata"><a href="#bx-si-idata-和-bx-di-idata" class="headerlink" title="[bx+si+idata]和[bx+di+idata]"></a>[bx+si+idata]和[bx+di+idata]</h2><p>两者含义相似，选一者讲解。</p>
+<p>指令<code>mov ax,[bx+si+idata]</code>的含义如下：</p>
+<blockquote>
+<p>将一个内存单元的内容送入ax，这个内存单元的长度为2字节，存放一个字，偏移地址为bx中的数值加上si中的数值再加上idata，段地址在ds中，即(ax)=((ds)*16+(bx)+(si)+(idata))</p>
+</blockquote>
+<p>也可写作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov ax,[bx+200+si]</span><br><span class="line">mov ax,[200+bx+si]</span><br><span class="line">mov ax,200[bx][si]</span><br><span class="line">mov ax,[bx].200[si]</span><br><span class="line">mov ax,[bx][si].200</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：汇编语言学习（七）</li>
+        <li>本文作者：Akk0</li>
+        <li>创建时间：2021-02-28 15:03:20</li>
+        <li>
+            本文链接：https://auxein.xyz/2021/02/28/汇编语言学习（七）/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/03/15/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%85%AB%EF%BC%89/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">汇编语言学习（八）</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/02/26/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%85%AD%EF%BC%89/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">汇编语言学习（六）</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Akk0</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%83%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">汇编语言学习（七）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#and%E5%92%8Cor%E6%8C%87%E4%BB%A4"><span class="nav-number">1.1.</span> <span class="nav-text">and和or指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A5%E5%AD%97%E7%AC%A6%E5%BD%A2%E5%BC%8F%E7%BB%99%E5%87%BA%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-number">1.2.</span> <span class="nav-text">以字符形式给出的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E8%BD%AC%E6%8D%A2%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">大小写转换的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bx-idata"><span class="nav-number">1.4.</span> <span class="nav-text">[bx+idata]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8-bx-idata-%E7%9A%84%E6%96%B9%E5%BC%8F%E8%BF%9B%E8%A1%8C%E6%95%B0%E7%BB%84%E7%9A%84%E5%A4%84%E7%90%86"><span class="nav-number">1.5.</span> <span class="nav-text">用[bx+idata]的方式进行数组的处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SI%E5%92%8CDI"><span class="nav-number">1.6.</span> <span class="nav-text">SI和DI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bx-si-%E5%92%8C-bx-di"><span class="nav-number">1.7.</span> <span class="nav-text">[bx+si]和[bx+di]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#bx-si-idata-%E5%92%8C-bx-di-idata"><span class="nav-number">1.8.</span> <span class="nav-text">[bx+si+idata]和[bx+di+idata]</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>

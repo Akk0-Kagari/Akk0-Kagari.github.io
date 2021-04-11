@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="无名小站">
+    <meta name="author" content="Akk0">
+    
+    <title>
+        
+            汇编语言学习（四） |
+        
+        Akk0&#39;s Blog
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/avatar.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":false},"style":{"primary_color":"#CC99FF","avatar":"/images/avatar.jpg","favicon":"/images/avatar.jpg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Welcome to Akk0's Blog."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
+    KEEP.language_ago = undefined;
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Akk0's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                Akk0&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">汇编语言学习（四）</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Akk0</span>
+                        
+                            <span class="author-label">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-02-19 17:27:00
+    </span>
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>2.1k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>7 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="汇编语言学习（四）"><a href="#汇编语言学习（四）" class="headerlink" title="汇编语言学习（四）"></a>汇编语言学习（四）</h1><p>本篇开始编写完整的汇编语言程序，用编译和连接程序将它们编译连接成为可执行文件，在操作系统中运行。</p>
+<h2 id="一个源程序从写出到执行的过程"><a href="#一个源程序从写出到执行的过程" class="headerlink" title="一个源程序从写出到执行的过程"></a>一个源程序从写出到执行的过程</h2><p>第一步：编写汇编源程序</p>
+<blockquote>
+<p>使用文本编辑器，用汇编语言编写汇编源程序。这一步工作的结果时产生了一个存储源程序的文本文件。</p>
+</blockquote>
+<p>第二步：对源程序进行编译连接</p>
+<blockquote>
+<p>使用汇编语言编译程序对源程序文件中的源程序进行编译，产生目标文件；再用连接程序对目标文件进行连接，生成可在操作系统中直接运行的可执行文件。</p>
+</blockquote>
+<p>可执行文件包含两部分内容：</p>
+<ul>
+<li>程序（从源程序中的汇编指令翻译过来的机器码）和数据（源程序中定义的数据）</li>
+<li>相关的描述信息（比如，程序有多大、要占多少内存空间等）</li>
+</ul>
+<p>第三步：执行可执行文件中的程序。</p>
+<p>在操作系统中，执行可执行文件中的程序。</p>
+<p>操作系统依照可执行文件中的描述信息，将可执行文件中的机器码和数据加载入内存，并进行相关的初始化（比如设置CS:IP指向第一条要执行的指令），然后由CPU执行程序。</p>
+<h2 id="源程序"><a href="#源程序" class="headerlink" title="源程序"></a>源程序</h2><p>一段简单的汇编语言源程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">assume cs:codesg</span><br><span class="line"></span><br><span class="line">codesg segment</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    mov ax,0123H</span><br><span class="line">    mov bx,0456H</span><br><span class="line">    add ax,bx</span><br><span class="line">    add ax,ax</span><br><span class="line"></span><br><span class="line">    mov ax,4c00H</span><br><span class="line">    int 21H</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line"></span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+
+<p>下面对程序进行说明：</p>
+<ol>
+<li><strong>伪指令</strong></li>
+</ol>
+<p>在汇编语言源程序中包含两种指令，一种是汇编指令，一种是伪指令。汇编指令是有对应的机器码的指令，可以被编译为机器指令，最终为CPU所执行。而伪指令没有对应的机器指令，最终不被CPU所执行，由编译器执行。</p>
+<p>在上述程序中出现了3种伪指令。</p>
+<ol>
+<li><p>XXX segment</p>
+<pre><code> ：
+
+ ：
+
+ ：
+</code></pre>
+<p> XXX ends</p>
+</li>
+</ol>
+<p><code>segment</code>和<code>ends</code>是一对成对使用的伪指令，这是在写可被编译器编译的汇编程序时，必须要用到的一对伪指令。<code>segment</code>和<code>ends</code>的功能是定义一个段，<code>segment</code>说明一个段开始，<code>ends</code>说明一个段结束。一个段必须有一个名称来标识，使用格式如下：</p>
+<p>段名 segment</p>
+<pre><code>    :
+</code></pre>
+<p>段名 ends</p>
+<p>上面的“codesg”就是段名</p>
+<p>一个汇编程序是由多个段组成的，这些段被用来存放代码、数据或当作栈空间使用。</p>
+<ol start="2">
+<li>end</li>
+</ol>
+<p><code>end</code>是一个汇编程序的结束标记，编译器在编译汇编程序的过程中，如果碰到了伪指令<code>end</code>，就结束对源程序的编译。</p>
+<blockquote>
+<p>注意：end与ends不同。ends和segment成对使用，标记一个段的结束，ends的含义可以理解为“end segment”。而这里的end标记整个程序的结束。</p>
+</blockquote>
+<ol start="3">
+<li>assume</li>
+</ol>
+<p>这条伪指令的含义为“假设”。它假设某一段寄存器和程序中的某一个用<code>segment...ends</code>定义的段相关联。</p>
+<blockquote>
+<p>只需记住<code>assume</code>将有特定用途的段和相关的段寄存器关联起来。</p>
+</blockquote>
+<p>在上面用<code>codesg segment ... codesg ends</code>定义了一个名为<code>codesg</code>的段，在这个段中存放代码，因此这个段是一个代码段。在程序的开头用<code>assume cs:codesg</code>将用作代码段的段<code>codesg</code>和CPU中的段寄存器<code>cs</code>联系起来。</p>
+<ol start="2">
+<li><strong>源程序中的“程序”</strong></li>
+</ol>
+<p>用汇编语言写的源程序，包括伪指令和汇编指令，最终目的是让计算机完成一定的任务。源程序中的汇编指令组成了最终由计算机执行的程序，而源程序中的伪指令是由编译器来处理的，它们并不实现编程的最终目的。这里所说的程序是指源程序中最终由计算机执行、处理的指令或数据。</p>
+<ol start="3">
+<li><strong>标号</strong></li>
+</ol>
+<p>汇编源程序中，除了汇编指令和伪指令外，还有一些标号，比如<code>codesg</code>。一个标号指代了一个地址。<code>codesg</code>在<code>segment</code>的前面，作为一个段的名称，这个段的名称最终将被编译、连接程序处理为一个段的段地址。</p>
+<p><img src="https://gitee.com/auxein/images/raw/master/assembly_language/1212.jpg"></p>
+<ol start="4">
+<li><strong>程序的结构</strong></li>
+</ol>
+<p>实例：编程运算 2^3。</p>
+<ol>
+<li>定义一个段，名称为<code>abc</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">abc segment</span><br><span class="line"></span><br><span class="line">    :</span><br><span class="line"></span><br><span class="line">abc ends</span><br></pre></td></tr></table></figure></li>
+<li>写入汇编指令<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">abc segment</span><br><span class="line"></span><br><span class="line">    mov ax,2</span><br><span class="line">    add ax,ax</span><br><span class="line">    add ax,ax</span><br><span class="line"></span><br><span class="line">abc ends</span><br></pre></td></tr></table></figure></li>
+<li>指明程序结束</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">abc segment</span><br><span class="line"></span><br><span class="line">    mov ax,2</span><br><span class="line">    add ax,ax</span><br><span class="line">    add ax,ax</span><br><span class="line"></span><br><span class="line">abc ends</span><br><span class="line"></span><br><span class="line">end</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li><code>abc</code>被当作代码段来用，所以应该将<code>abc</code>和<code>cs</code>联系起来。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">assume cs:abc</span><br><span class="line"></span><br><span class="line">abc segment</span><br><span class="line"></span><br><span class="line">    mov ax,2</span><br><span class="line">    add ax,ax</span><br><span class="line">    add ax,ax</span><br><span class="line"></span><br><span class="line">abc ends</span><br><span class="line"></span><br><span class="line">end</span><br></pre></td></tr></table></figure></li>
+<li>程序返回</li>
+</ol>
+<p>在上面的程序中有两条指令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov ax,4c00H</span><br><span class="line">int 21H</span><br></pre></td></tr></table></figure>
+
+<p>这两条指令所实现的功能就是程序返回</p>
+<p>与结束相关的概念：</p>
+<table>
+<thead>
+<tr>
+<th>目的</th>
+<th>相关指令</th>
+<th>指令性质</th>
+<th>指令执行者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>通知编译器一个段的结束</td>
+<td>段名 ends</td>
+<td>伪指令</td>
+<td>编译时，由编译器执行</td>
+</tr>
+<tr>
+<td>通知编译器程序结束</td>
+<td>end</td>
+<td>伪指令</td>
+<td>编译时，由编译器执行</td>
+</tr>
+<tr>
+<td>程序返回</td>
+<td>mov ax,4c00H   int 21H</td>
+<td>汇编指令</td>
+<td>执行时，由CPU执行</td>
+</tr>
+</tbody></table>
+<ol start="6">
+<li>语法错误和逻辑错误</li>
+</ol>
+<p>例如：<code>aume cs:abc</code></p>
+<p>编译器不能识别<code>aume</code></p>
+<h2 id="编辑源程序"><a href="#编辑源程序" class="headerlink" title="编辑源程序"></a>编辑源程序</h2><p>可以使用任意的文本编辑器来编辑源程序，只要最终将其存储为纯文本文件即可。文件后缀为<code>.asm</code></p>
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>在编译的过程中，需要提供一个输入，即源程序文件。最多可以得到三个输出：目标文件（.obj）、列表文件(.lst)、交叉引用文件（.crf），这三个输出文件中，目标文件是最终要得到的结果。</p>
+<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><p>在对源程序进行编译得到文件后，需要对目标文件进行连接，从而得到可执行文件。假设已经对<code>1.asm</code>进行编译得到<code>1.obj</code>，现在再将<code>1.obj</code>连接为<code>1.exe</code>。</p>
+<p>连接的作用：</p>
+<ol>
+<li>当源程序很大时，可以将它分为多个源程序文件来编译，每个源程序编译成为目标文件后，再用连接程序将它们连接到一起，生成一个可执行文件；</li>
+<li>程序中调用了某个库文件中的子程序，需要将这个库文件和该程序生成的目标文件连接到一起，生成一个可执行文件；</li>
+<li>一个源程序编译后，得到了存有机器码的目标文件，目标文件中的有些内容还不能直接用来生成可执行文件，连接程序将这些内容处理为最终的可执行信息。在只有一个源程序文件，而又不需要调用某个库中的子程序的情况下，也必须用连接程序对目标文件进行处理，生成可执行文件。</li>
+</ol>
+<h2 id="操作系统的外壳"><a href="#操作系统的外壳" class="headerlink" title="操作系统的外壳"></a>操作系统的外壳</h2><p>操作系统是由多个功能模块组成的庞大、复杂的软件系统。任何通用的操作系统，都要提供一个称为shell（外壳）的程序，用户使用这个程序来操作计算机系统进行工作。</p>
+<p>DOS中有一个程序<code>command.com</code>，这个程序在DOS中被称为命令解释器，也就是DOS系统中的shell。</p>
+<p>DOS启动时，先完成其他重要的初始化工作，然后运行<code>command.com</code>，<code>command.com</code>运行后，执行完其他的相关任务后，在屏幕显示出由当前盘符和当前路径组成的提示符，比如：“c:\”或“c:\windows”等，然后等待用户的输入。</p>
+<p>用户可以输入所要执行的命令，比如：cd、dir、type等，这些命令由command执行，执行完后再次显示由当前盘符和当前路径组成的提示符，等待用户的输入。</p>
+<p>如果用户要执行一个程序，则输入该程序的可执行文件的名称，command首先根据文件名找到可执行文件，然后将这个可执行文件中的程序加载入内存，设置<code>CS：IP</code>指向程序的入口。此后，command暂停运行，CPU运行程序。程序运行结束后，返回到command中，command再次显示由当前盘符和当前路径组成的提示符，等待用户的输入。</p>
+<p><strong>汇编程序从写出到执行的过程</strong></p>
+<blockquote>
+<p>编程 -&gt; 1.asm -&gt; 编译 -&gt; 1.obj -&gt; 连接 -&gt; 1.exe -&gt; 加载 -&gt; 内存中的程序 -&gt; 运行</p>
+</blockquote>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：汇编语言学习（四）</li>
+        <li>本文作者：Akk0</li>
+        <li>创建时间：2021-02-19 17:27:00</li>
+        <li>
+            本文链接：https://auxein.xyz/2021/02/19/汇编语言学习（四）/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/02/21/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%94%EF%BC%89/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">汇编语言学习（五）</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/02/18/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">汇编语言学习（三）</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Akk0</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%9B%9B%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">汇编语言学习（四）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%BA%90%E7%A8%8B%E5%BA%8F%E4%BB%8E%E5%86%99%E5%87%BA%E5%88%B0%E6%89%A7%E8%A1%8C%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">一个源程序从写出到执行的过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.2.</span> <span class="nav-text">源程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%BE%91%E6%BA%90%E7%A8%8B%E5%BA%8F"><span class="nav-number">1.3.</span> <span class="nav-text">编辑源程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">1.4.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5"><span class="nav-number">1.5.</span> <span class="nav-text">连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%A4%96%E5%A3%B3"><span class="nav-number">1.6.</span> <span class="nav-text">操作系统的外壳</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>
