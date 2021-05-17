@@ -292,41 +292,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>操作系统学习（一）</title>
-    <url>/2021/03/22/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="操作系统学习（一）"><a href="#操作系统学习（一）" class="headerlink" title="操作系统学习（一）"></a>操作系统学习（一）</h1><p>操作系统是计算机硬件和应用之间的一层软件</p>
-<p>方便我们管理硬件：</p>
-<p>CPU管理 内存管理 终端管理 磁盘管理</p>
-<p>文件管理 网络管理 电源管理 多核管理</p>
-<h2 id="学习操作系统的不同层次："><a href="#学习操作系统的不同层次：" class="headerlink" title="学习操作系统的不同层次："></a>学习操作系统的不同层次：</h2><ol>
-<li><p>从应用软件出发“探到操作系统”</p>
-</li>
-<li><p>从应用软件出发“进入操作系统”</p>
-</li>
-<li><p>从硬件出发“设计并实现操作系统”</p>
-</li>
-</ol>
-<h2 id="从白纸到图灵机-gt-从通用图灵机到计算机"><a href="#从白纸到图灵机-gt-从通用图灵机到计算机" class="headerlink" title="从白纸到图灵机 - - &gt; 从通用图灵机到计算机"></a>从白纸到图灵机 - - &gt; 从通用图灵机到计算机</h2><p>存储程序的主要思想：将程序和数据存放到计算机内部的存储器中，计算机在程序的控制下一步一步进行处理</p>
-<p>计算机由五大部件组成：输入设备、输出设备、存储器、运算器、控制器</p>
-<h2 id="操作系统的启动"><a href="#操作系统的启动" class="headerlink" title="操作系统的启动"></a>操作系统的启动</h2><p>计算机如何工作？取值执行。</p>
-<p>计算模型需要关注操作模型及其指向的内容</p>
-<ol>
-<li>x86 PC刚开机时CPU处于实模式</li>
-<li>开机时，CS=0xFFFF;IP=0x0000</li>
-<li>寻址0xFFFF0(ROM BIOS映射区)</li>
-<li>检查RAM，键盘，显示器，软硬磁盘</li>
-<li>将磁盘0磁道0扇区读入0x7c00处</li>
-<li>设置cs=0x07c0，ip=0x0000</li>
-</ol>
-<p>0x7c00出存放的代码就是磁盘从引导扇区读入的那512个字节</p>
-<ul>
-<li>引导扇区就是启动设备的第一个扇区</li>
-<li>启动设备信息被设置在CMOS中</li>
-<li>磁盘的第一个扇区商存放着开机后执行的第一段我们可以控制的程序</li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
     <title>汇编语言学习（一）</title>
     <url>/2021/02/05/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/</url>
     <content><![CDATA[<h1 id="汇编语言学习（一）"><a href="#汇编语言学习（一）" class="headerlink" title="汇编语言学习（一）"></a>汇编语言学习（一）</h1><h2 id="汇编语言的组成"><a href="#汇编语言的组成" class="headerlink" title="汇编语言的组成"></a>汇编语言的组成</h2><ol>
@@ -1363,5 +1328,48 @@
         <tag>Crypto</tag>
         <tag>Reverse</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>NachOS系统调用</title>
+    <url>/2021/05/17/NachOS%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="一、背景知识"><a href="#一、背景知识" class="headerlink" title="一、背景知识"></a>一、背景知识</h1><p>Nachos 的全称是“Not Another Completely Heuristic Operating System”，它是一个可修改和跟踪的操作系统教学软件。它给出了一个支持多线程和虚拟存储的操作系统骨架，可让学生在较短的时间内对操作系统中的基本原理和核心算法有一个全面和完整的了解。</p>
+<h1 id="任务简介"><a href="#任务简介" class="headerlink" title="任务简介"></a>任务简介</h1><p>添加系统调用Print(char* msg)</p>
+<p>从API手册可知，操作系统为该任务提供的基础设施有：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kernel-&gt;synConsole-&gt;PutChar(char ch);   &#x2F;&#x2F; 向控制台写字符</span><br><span class="line">kernel-&gt;machine-&gt;ReadRegister(int num); &#x2F;&#x2F; 读寄存器</span><br><span class="line">kernel-&gt;machine-&gt;WriteRegister(int num, int value); &#x2F;&#x2F; 写寄存器</span><br><span class="line">kernel-&gt;machine-&gt;ReadMem(int addr, int size, int * value); &#x2F;&#x2F; 从用户进程内存读值</span><br></pre></td></tr></table></figure>
+
+<h1 id="系统虚拟机运行原理"><a href="#系统虚拟机运行原理" class="headerlink" title="系统虚拟机运行原理"></a>系统虚拟机运行原理</h1><blockquote>
+<p>使用该系统运行用户空间程序使用<code>nachos –x program_name </code>命令。程序从 <code>code/threads/main.cc </code>启动，创建了 <code>Kernel</code> 对象并进行初始化（启动主线程、创建线程调度表、中断处理模块、CPU、控制台、文件系统、中断使能等）。之后，程序创建了用户空间程序，初始化的时候加载了指令集并调用了<br><code>kernel-&gt;machine-&gt;WriteRegister</code> 填写 CPU 寄存器，然后开始执行。执行由<br><code>kernel-&gt;machine-&gt;Run</code> 实现，使用 OneInstruction 函数模拟 CPU 的逐条指令执行过程。</p>
+</blockquote>
+<h1 id="系统调用的实现思路"><a href="#系统调用的实现思路" class="headerlink" title="系统调用的实现思路"></a>系统调用的实现思路</h1><blockquote>
+<p>如同 Linux 操作系统一样，运行在虚拟机上的 NachOS 也使用中断来实现系统调<br>用（用户空间程序调用操作系统内核服务的接口）。<br>实现思路为：当系统调用发生的时候，首先把函数参数、系统调用号存入寄存器，然后引发系统中断，通过中断调用进入内核态；在系统调用完成功能之后，内核程序把返回值存入寄存器，然后返回。<br>如同 Linux 操作系统一样，运行在虚拟机上的 NachOS 也使用中断来实现系统调<br>用（用户空间程序调用操作系统内核服务的接口）。<br>实现思路为：当系统调用发生的时候，首先把函数参数、系统调用号存入寄存器，<br>然后引发系统中断，通过中断调用进入内核态；在系统调用完成功能之后，内核<br>程序把返回值存入寄存器，然后返回。</p>
+</blockquote>
+<h1 id="系统调用的具体实现"><a href="#系统调用的具体实现" class="headerlink" title="系统调用的具体实现"></a>系统调用的具体实现</h1><ol>
+<li><p>在<code>/userprog/syscall.h</code>中进行宏定义和函数声明</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SC_Print     21</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Print</span><span class="params">(<span class="keyword">char</span>* msg)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/userprog/ksyscall.h</code>中实现函数的功能</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SysPrint</span><span class="params">( <span class="keyword">char</span> * msg )</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line"> <span class="keyword">int</span> IntValue = <span class="number">0</span>; </span><br><span class="line"> <span class="keyword">int</span> IntMem = (<span class="keyword">int</span>)msg; </span><br><span class="line"> <span class="keyword">do</span> </span><br><span class="line"> &#123; </span><br><span class="line"> <span class="comment">/* 从用户程序内存空间读取字符串的值 */</span> </span><br><span class="line"> kernel-&gt;machine-&gt;ReadMem(<span class="keyword">int</span>(IntMem++), <span class="number">1</span>, &amp;IntValue); </span><br><span class="line"> <span class="keyword">if</span> ( <span class="number">0</span> == IntValue ) <span class="keyword">break</span>; </span><br><span class="line"> kernel-&gt;synchConsoleOut-&gt;PutChar( (<span class="keyword">char</span>)IntValue ); </span><br><span class="line"> &#125;<span class="keyword">while</span>(<span class="literal">true</span>); </span><br><span class="line"> <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/userprog/exception.cc</code>完善中断处理函数</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">case</span> SC_Print: </span><br><span class="line">    <span class="keyword">int</span> result; </span><br><span class="line">    <span class="comment">/* 取参数，调用自己实现的函数 */</span> </span><br><span class="line">    result = <span class="built_in">SysPrint</span>( (<span class="keyword">char</span> *)kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(<span class="number">4</span>) ); </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(<span class="number">2</span>, (<span class="keyword">int</span>)result); <span class="comment">/* 存返回值 */</span> </span><br><span class="line">    <span class="comment">/* 这段是有关 CPU 的一些状态变量设置，参照原来的代码 */</span> </span><br><span class="line">    &#123; </span><br><span class="line">    <span class="comment">/* 保存当前程序计数器 */</span> </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(PrevPCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg)); </span><br><span class="line">    <span class="comment">/* 当前 PC 计数++*/</span> </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(PCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg) + <span class="number">4</span>);  </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(NextPCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg)+<span class="number">4</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span>; <span class="comment">/* 任务已经完成，返回吧 */</span> </span><br><span class="line">    <span class="built_in">ASSERTNOTREACHED</span>(); <span class="comment">/* 断言，如果执行到了说明出错啦 */</span> </span><br><span class="line">    <span class="keyword">break</span>; </span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/test/start.s</code>中补充汇编代码，实现系统调用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    .globl Print &#x2F;* 声明为外部函数 *&#x2F; </span><br><span class="line">    .ent Print &#x2F;* Print 函数开始 *&#x2F; </span><br><span class="line">Print: </span><br><span class="line">    addiu $2,$0,SC_Print &#x2F;* 将系统调用号存入 r2 寄存器 *&#x2F; </span><br><span class="line">    syscall &#x2F;* 引发系统中断调用 *&#x2F; </span><br><span class="line">    j $31 &#x2F;* 跳转到中断返回的寄存器 r31 *&#x2F; </span><br><span class="line">    .end Print &#x2F;* Print 函数结束*&#x2F; </span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/test</code>下编写<code>print.c</code>，实现函数调用</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;syscall.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result;</span><br><span class="line">        result=Print(<span class="string">&quot;helloworld\n&quot;</span>);</span><br><span class="line">        Halt();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/test/Makefile</code>中添加<code>print.c</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SOURCES &#x3D; add.c halt.c matmult.c shell.c sort.c print.c</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/test</code>下使用<code>make</code>编译</p>
+</li>
+<li><p>在<code>/build.linux</code>下使用<code>make</code>编译,此时可能会报错，如下图</p>
+</li>
+</ol>
+<p><img src="https://gitee.com/auxein/images/raw/master/NachOS/nachos1.png"></p>
+<p>引起错误的原因是因为有其他模块定义了同名的宏。<br>我们需要修改<code>/userprog/syscall.h</code>中的两个宏名称。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#define ConsoleInput         0</span><br><span class="line">#define ConsoleOutput        1</span><br></pre></td></tr></table></figure>
+
+<p>修改完成之后就可以再<code>make</code>会出现<code>warning</code>，但已经无伤大雅了。</p>
+<ol start="9">
+<li>在<code>/test</code>目录下使用命令<code>../build.linux/nachos -x print.noff</code>运行，可以看到我们的<code>helloworld</code>已经被输出了</li>
+</ol>
+<p><img src="https://gitee.com/auxein/images/raw/master/NachOS/output_print.png"></p>
+]]></content>
   </entry>
 </search>
