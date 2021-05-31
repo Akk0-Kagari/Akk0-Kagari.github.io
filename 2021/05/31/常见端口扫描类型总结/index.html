@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="无名小站">
+    <meta name="author" content="Akk0">
+    
+    <title>
+        
+            常见端口扫描类型总结 |
+        
+        Akk0&#39;s Blog
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/avatar.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":false},"style":{"primary_color":"#CC99FF","avatar":"/images/avatar.jpg","favicon":"/images/avatar.jpg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Welcome to Akk0's Blog."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
+    KEEP.language_ago = undefined;
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Akk0's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                Akk0&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">常见端口扫描类型总结</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Akk0</span>
+                        
+                            <span class="author-label">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-05-31 15:17:57
+    </span>
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.1k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>3 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="常见端口扫描类型总结"><a href="#常见端口扫描类型总结" class="headerlink" title="常见端口扫描类型总结"></a>常见端口扫描类型总结</h1><h2 id="TCP-SYN-扫描"><a href="#TCP-SYN-扫描" class="headerlink" title="TCP SYN 扫描"></a>TCP SYN 扫描</h2><p>原理：扫描器向目的主机的一个端口发送请求连接的SYN包，扫描器在收到SYN/ACK后，不采用发送ACK应答的方式而是发送RST请求断开连接，则三次握手不会完成，没有建立正常的TCP连接，此次扫描也不会被记录到系统日志中。这种扫描方式不会再目的主机上留下痕迹。但是这种扫描器需要有<strong>root权限</strong>。</p>
+<ul>
+<li>若收到SYN/ACK则端口开放</li>
+<li>若收到RST表示端口关闭</li>
+</ul>
+<p>优点：扫描隐蔽。</p>
+<h2 id="Connect扫描"><a href="#Connect扫描" class="headerlink" title="Connect扫描"></a>Connect扫描</h2><p>原理即为与TCP端口进行“三次握手”通信。</p>
+<ul>
+<li>若建立成功，端口开放</li>
+<li>反之则关闭</li>
+</ul>
+<p>优点：实现简单，没有<strong>权限</strong>要求。并且扫描速度快，可同时打开多个套接字从而加速扫描。</p>
+<p>缺点：会在目标主机的日志记录中留下<strong>痕迹</strong>，易被发现，并且数据包会被过滤。目标主机的logs文件会显示一连串的连接和连接出错的服务信息，并且能很快地使它关闭。</p>
+<h2 id="NULL扫描（反向扫描）"><a href="#NULL扫描（反向扫描）" class="headerlink" title="NULL扫描（反向扫描）"></a>NULL扫描（反向扫描）</h2><p>原理：将一个没有设置任何标志位的数据包发给TCP端口。对于遵守FRC 793的主机（*nix）：</p>
+<ul>
+<li>端口关闭：舍弃该分段，并发送一个RST数据包。</li>
+<li>端口开启：不会响应</li>
+</ul>
+<p>对于不遵循的主机，例如Windows主机，只要收到无标志位的数据包，无论端口开放还是关闭都响应RST数据包。</p>
+<p><del>为什么称作反向扫描呢？与前两种相比，前两种方式收到响应包表示端口开放，而NULL扫描收到则表示端口关闭</del></p>
+<p>优点：隐蔽性高，可粗略判断系统。</p>
+<p>缺点：精确度相对较低。</p>
+<h2 id="FIN扫描"><a href="#FIN扫描" class="headerlink" title="FIN扫描"></a>FIN扫描</h2><p>原理：FIN表示TCP会话结束，FIN扫描中发送一个设置了FIN位的数据包：</p>
+<ul>
+<li>响应RST数据包，端口关闭</li>
+<li>无响应，端口关闭</li>
+</ul>
+<p>优点：隐蔽</p>
+<p>缺点：不能判断Windows系统上端口开放情况</p>
+<h2 id="ACK扫描"><a href="#ACK扫描" class="headerlink" title="ACK扫描"></a>ACK扫描</h2><p>原理：扫描主机向目标主机发送ACK数据包，根据返回的RST数据包可以得到端口信息。</p>
+<ul>
+<li>RST的TTL小于等于64，端口开放</li>
+<li>反之关闭</li>
+</ul>
+<p>优点：隐蔽</p>
+<h2 id="Xmas-Tree扫描"><a href="#Xmas-Tree扫描" class="headerlink" title="Xmas-Tree扫描"></a>Xmas-Tree扫描</h2><p>通过发送带有以下标志位的TCP数据包：</p>
+<ul>
+<li>URG：指示数据时紧急数据，应立即处理。</li>
+<li>PSH：强制将数据压入缓冲区。</li>
+<li>FIN：在结束TCP会话时使用。</li>
+</ul>
+<p>通常这三种标志位不能被同时设置。我们可以通过这种扫描来判断端口情况。</p>
+<ul>
+<li>无响应，端口开放</li>
+<li>响应RST，端口关闭</li>
+</ul>
+<p>XMAS扫描原理和NULL扫描的类似，将TCP数据包中的ACK、FIN、RST、SYN、URG、PSH标志位置1后发送给目标主机。</p>
+<p>优点：隐蔽</p>
+<p>缺点：不能判断Windows系统上端口开放情况</p>
+<h2 id="Dump扫描"><a href="#Dump扫描" class="headerlink" title="Dump扫描"></a>Dump扫描</h2><p>也被称为Idle扫描或反向扫描，在扫描主机时应用了第三方僵尸计算机扫描。由僵尸主机向目标主机发送SYN包。目标主机端口开放时响应SYN|ACK，关闭时返回RST，僵尸主机对SYN|ACK回应RST，对RST不做回应。从僵尸主机上进行扫描时，进行的是一个从本地计算机到僵尸主机的、连续的ping操作。查看僵尸主机返回的Echo响应的ID字段，能确定目标主机上哪些端口是开放的还是关闭的。</p>
+<h2 id="UDP扫描"><a href="#UDP扫描" class="headerlink" title="UDP扫描"></a>UDP扫描</h2><p>原理：UDP为无连接协议。无连接的协议则不会事先建立客户端和服务器之间的通信信道，只要客户端到服务器存在可用信道，就会假设目标是可达的然后向对方发送数据。</p>
+<ul>
+<li>若响应，端口开放</li>
+<li>返回ICMP目标不可达，端口关闭</li>
+<li>如果服务器返回一个 ICMP 错误类型3且代码为1，2，3，9，10或13的数据包，则说明目标端口被服务器过滤了。</li>
+<li>无响应，<strong>无法判断</strong><del>薛定谔的猫</del></li>
+</ul>
+<h2 id="分段扫描"><a href="#分段扫描" class="headerlink" title="分段扫描"></a>分段扫描</h2><p>原理：将一个完整的 TCP 报文分割封装到 2 个或多个 IP 报文，分别独立发送。</p>
+<ul>
+<li>关闭的端口响应。</li>
+<li>无响应则开放</li>
+</ul>
+<p>优点：隐蔽性好，可穿越防火墙，</p>
+<p>缺点：可能被丢弃，某些程序在处理这些小数据包时会出现异常。</p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：常见端口扫描类型总结</li>
+        <li>本文作者：Akk0</li>
+        <li>创建时间：2021-05-31 15:17:57</li>
+        <li>
+            本文链接：https://auxein.xyz/2021/05/31/常见端口扫描类型总结/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/05/17/NachOS%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">NachOS系统调用</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Akk0</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%B1%BB%E5%9E%8B%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">常见端口扫描类型总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-SYN-%E6%89%AB%E6%8F%8F"><span class="nav-number">1.1.</span> <span class="nav-text">TCP SYN 扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Connect%E6%89%AB%E6%8F%8F"><span class="nav-number">1.2.</span> <span class="nav-text">Connect扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NULL%E6%89%AB%E6%8F%8F%EF%BC%88%E5%8F%8D%E5%90%91%E6%89%AB%E6%8F%8F%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">NULL扫描（反向扫描）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FIN%E6%89%AB%E6%8F%8F"><span class="nav-number">1.4.</span> <span class="nav-text">FIN扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACK%E6%89%AB%E6%8F%8F"><span class="nav-number">1.5.</span> <span class="nav-text">ACK扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xmas-Tree%E6%89%AB%E6%8F%8F"><span class="nav-number">1.6.</span> <span class="nav-text">Xmas-Tree扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dump%E6%89%AB%E6%8F%8F"><span class="nav-number">1.7.</span> <span class="nav-text">Dump扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP%E6%89%AB%E6%8F%8F"><span class="nav-number">1.8.</span> <span class="nav-text">UDP扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%AE%B5%E6%89%AB%E6%8F%8F"><span class="nav-number">1.9.</span> <span class="nav-text">分段扫描</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>
