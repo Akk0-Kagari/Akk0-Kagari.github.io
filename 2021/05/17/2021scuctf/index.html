@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="无名小站">
+    <meta name="author" content="Akk0">
+    
+    <title>
+        
+            Crypto In SCUCTF 2021 |
+        
+        Akk0&#39;s Blog
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/avatar.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":false},"style":{"primary_color":"#CC99FF","avatar":"/images/avatar.jpg","favicon":"/images/avatar.jpg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Welcome to Akk0's Blog."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
+    KEEP.language_ago = undefined;
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Akk0's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                Akk0&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Crypto In SCUCTF 2021</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Akk0</span>
+                        
+                            <span class="author-label">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-05-17 21:31:08
+    </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/crypto/">crypto</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>707 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>3 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="贝斯手"><a href="#贝斯手" class="headerlink" title="贝斯手"></a>贝斯手</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cipher &#x3D; R1EzVElOQlRHSTNVSU5aVUdRNERNTlpWR0UyREVOS0dHWTJES01aVUlZMkRHTkJSR1JCVE9OUlhHNDNFSU5CWUdSRERNUUpXR00yVElOQlNHUTNUTU1aV0dBMkRPTkJSR1laVE9OSldHQTNES01SV0dZMkRLTVJXSU0zRE9OSlFHVTRETVJCVUdRWlVHTVpVR1VaVE9SQlhJUTJETz09PQ</span><br></pre></td></tr></table></figure>
+<p>base解密顺序如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">base64--&gt;base32--&gt;base16--&gt;base85--&gt;base58_STRING</span><br></pre></td></tr></table></figure>
+<p>得到<code>flag=scuctf&#123;M4ny_k1nds_0f_13a5e!&#125;</code></p>
+<h2 id="crypto1"><a href="#crypto1" class="headerlink" title="crypto1"></a>crypto1</h2><p>通过查阅python的random模块，可以得知其在生成随机数时使用了梅森旋转算法，且其版本为MT19937，即该PRNG采用32位的state和32位的输出。该PRNG在初始化时会建立一个长度为624的数组MT，使用extract_number函数来生成随机数，第一次生成随机数时会调用generate_numbers函数来更新MT数组的值，之后每连续生成624个随机数，都会使用generate_numbers函数来更新MT数组的值。而extract_number函数的过程是可逆的，这意味着如果我们知道一个randomnum，我们是可以求出其对应的MT的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># getrandbits(64) = getrandbits(32) &lt;&lt; 32 | getrandbits(32)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>():</span></span><br><span class="line">    f=<span class="built_in">open</span>(<span class="string">&quot;test&quot;</span>,<span class="string">&quot;wb&quot;</span>)</span><br><span class="line">    s=<span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">312</span>):</span><br><span class="line">        s+=<span class="built_in">str</span>(random.getrandbits(<span class="number">64</span>))+<span class="string">&quot;\n&quot;</span></span><br><span class="line">    f.write(s)</span><br></pre></td></tr></table></figure>
+<p>给出的代码中生成了312个64位随机数，根据64位随机数的生成原理我们可以发现624个32位随机数是隐藏在其中的。</p>
+<p>脚本如下，获取第313个64位随机数的脚本如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> random <span class="keyword">import</span> Random</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getrabandbits32</span>(<span class="params">filename</span>):</span></span><br><span class="line">    f = <span class="built_in">open</span>(filename, <span class="string">&#x27;r&#x27;</span>).readlines()</span><br><span class="line">    prng = []</span><br><span class="line">    mx = <span class="number">0xffffffff</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> f:</span><br><span class="line">        i = i.strip(<span class="string">&#x27;n&#x27;</span>)</span><br><span class="line">        num = <span class="built_in">int</span>(i)</span><br><span class="line">        num1 = (num &gt;&gt; <span class="number">32</span>) &amp; mx</span><br><span class="line">        num2 = num &amp; mx</span><br><span class="line">        prng.append(num2)</span><br><span class="line">        prng.append(num1)</span><br><span class="line">    <span class="keyword">return</span> prng</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">invert_right</span>(<span class="params">m,l,val=<span class="string">&#x27;&#x27;</span></span>):</span></span><br><span class="line">    length = <span class="number">32</span></span><br><span class="line">    mx = <span class="number">0xffffffff</span></span><br><span class="line">    <span class="keyword">if</span> val == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">        val = mx</span><br><span class="line">    i,res = <span class="number">0</span>,<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i*l&lt;length:</span><br><span class="line">        mask = (mx&lt;&lt;(length-l)&amp;mx)&gt;&gt;i*l</span><br><span class="line">        tmp = m &amp; mask</span><br><span class="line">        m = m^tmp&gt;&gt;l&amp;val</span><br><span class="line">        res += tmp</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">invert_left</span>(<span class="params">m,l,val</span>):</span></span><br><span class="line">    length = <span class="number">32</span></span><br><span class="line">    mx = <span class="number">0xffffffff</span></span><br><span class="line">    i,res = <span class="number">0</span>,<span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> i*l &lt; length:</span><br><span class="line">        mask = (mx&gt;&gt;(length-l)&amp;mx)&lt;&lt;i*l</span><br><span class="line">        tmp = m &amp; mask</span><br><span class="line">        m ^= tmp&lt;&lt;l&amp;val</span><br><span class="line">        res |= tmp</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">invert_temper</span>(<span class="params">m</span>):</span></span><br><span class="line">    m = invert_right(m,<span class="number">18</span>)</span><br><span class="line">    m = invert_left(m,<span class="number">15</span>,<span class="number">4022730752</span>)</span><br><span class="line">    m = invert_left(m,<span class="number">7</span>,<span class="number">2636928640</span>)</span><br><span class="line">    m = invert_right(m,<span class="number">11</span>)</span><br><span class="line">    <span class="keyword">return</span> m</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clone_mt</span>(<span class="params">record</span>):</span></span><br><span class="line">    state = [invert_temper(i) <span class="keyword">for</span> i <span class="keyword">in</span> record]</span><br><span class="line">    gen = Random()</span><br><span class="line">    gen.setstate((<span class="number">3</span>,<span class="built_in">tuple</span>(state+[<span class="number">0</span>]),<span class="literal">None</span>))</span><br><span class="line">    <span class="keyword">return</span> gen</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">prng = []</span><br><span class="line">prng = getrabandbits32(<span class="string">&#x27;test&#x27;</span>)</span><br><span class="line"></span><br><span class="line">g = clone_mt(prng[:<span class="number">624</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">312</span>):</span><br><span class="line">    out = g.getrandbits(<span class="number">64</span>)</span><br><span class="line">    <span class="built_in">print</span>(out)</span><br><span class="line"></span><br><span class="line">key = g.getrandbits(<span class="number">128</span>)</span><br><span class="line"><span class="built_in">print</span>(key)</span><br></pre></td></tr></table></figure>
+<p>得到随机数<code>299960201114667739988297174563368332867</code>,获得密钥后即可完成解密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">from Crypto.Cipher import AES</span><br><span class="line">from Crypto.Util.number import *</span><br><span class="line">k &#x3D; 299960201114667739988297174563368332867</span><br><span class="line"></span><br><span class="line">def decrypt():</span><br><span class="line">    key &#x3D; long_to_bytes(k)</span><br><span class="line">    aes &#x3D; AES.new(key, AES.MODE_CBC, b&quot;\x00&quot;*16)</span><br><span class="line">    f &#x3D; open(&quot;out&quot;,&quot;rb&quot;)</span><br><span class="line">    cipher &#x3D; f.read()</span><br><span class="line">    output &#x3D; aes.decrypt(cipher)</span><br><span class="line">    print(output)</span><br><span class="line">    </span><br><span class="line">decrypt()</span><br></pre></td></tr></table></figure>
+<p>得到<code>flag=scuctf&#123;af0sd_f8&#125;</code></p>
+<h2 id="crypto2"><a href="#crypto2" class="headerlink" title="crypto2"></a>crypto2</h2><p>Coppersmith攻击</p>
+<p>编写sage脚本如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def getFullP(low_p, n):</span><br><span class="line">    R.&lt;x&gt; &#x3D; PolynomialRing(Zmod(n), implementation&#x3D;&#39;NTL&#39;)</span><br><span class="line">    p &#x3D; x*2^384 + low_p</span><br><span class="line">    root &#x3D; (p-n).monic().small_roots(X &#x3D; 2^128, beta &#x3D; 0.4)</span><br><span class="line">    if root:</span><br><span class="line">        return p(root[0])</span><br><span class="line">    return None</span><br><span class="line"></span><br><span class="line">n &#x3D; 85016144249518040150910227120120655178858680112497903474795846550337648959184474608344455198424753002209821827392389091448043545937173891641586356377876821641241033232828279439195610943286663032638048058568003136520988549470764306016674503217880123290623177055115638997384030786304744623796469032887028528817</span><br><span class="line">pbar &#x3D; 1145141920069</span><br><span class="line">p &#x3D; getFullP(pbar,n)</span><br><span class="line">print(p)</span><br></pre></td></tr></table></figure>
+<p>得到<code>p=9100577608156886077223257362610780621149377885814052415730904118721328908275148008063887016355828659064290353211667316052862069507024555725457694562648389</code></p>
+<p>接下来就是常规的<code>RSA</code>了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from Crypto.Util.number import *</span><br><span class="line"></span><br><span class="line">n&#x3D;85016144249518040150910227120120655178858680112497903474795846550337648959184474608344455198424753002209821827392389091448043545937173891641586356377876821641241033232828279439195610943286663032638048058568003136520988549470764306016674503217880123290623177055115638997384030786304744623796469032887028528817</span><br><span class="line">c&#x3D;83724265903365973936178131138176403586796491037282811488797349096425411605088349291193550728134684573063610685342590513444340298881918101517014943046522979731970278182306111863948764449232289625176702192589838375986050458189860493609407060988207562417247647655585368569618561494059816502622854344519538215287</span><br><span class="line">e&#x3D;65537</span><br><span class="line">p &#x3D; 9100577608156886077223257362610780621149377885814052415730904118721328908275148008063887016355828659064290353211667316052862069507024555725457694562648389</span><br><span class="line">q &#x3D; n&#x2F;&#x2F;p</span><br><span class="line">phi &#x3D; (p-1)*(q-1)</span><br><span class="line">d &#x3D; inverse(e,phi)</span><br><span class="line">m &#x3D; pow(c,d,n)</span><br><span class="line">print(long_to_bytes(m))</span><br></pre></td></tr></table></figure>
+<p>得到<code>flag=scuctf&#123;f05fe93d159b398fe25f280d94241261&#125;</code></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Crypto In SCUCTF 2021</li>
+        <li>本文作者：Akk0</li>
+        <li>创建时间：2021-05-17 21:31:08</li>
+        <li>
+            本文链接：https://auxein.xyz/2021/05/17/2021scuctf/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/05/17/NachOS%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">NachOS系统调用</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/10/sqlilabs%E6%B3%A8%E5%85%A5%E7%AC%94%E8%AE%B0/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">sqlilabs注入笔记</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Akk0</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9D%E6%96%AF%E6%89%8B"><span class="nav-number">1.</span> <span class="nav-text">贝斯手</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crypto1"><span class="nav-number">2.</span> <span class="nav-text">crypto1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#crypto2"><span class="nav-number">3.</span> <span class="nav-text">crypto2</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>
