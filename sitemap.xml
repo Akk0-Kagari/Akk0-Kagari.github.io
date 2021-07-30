@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2020/08/13/XCTF-supersqli/</loc>
+    
+    <lastmod>2021-07-30</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2021/05/17/2021scuctf/</loc>
     
     <lastmod>2021-07-30</lastmod>
@@ -114,6 +121,20 @@
   </url>
   
   <url>
+    <loc>http://example.com/2020/08/14/XCTF-Web_php_unserialize/</loc>
+    
+    <lastmod>2021-02-05</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://example.com/2020/08/14/XCTF-unserialize3/</loc>
+    
+    <lastmod>2021-02-05</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2020/11/29/2020scuctf/</loc>
     
     <lastmod>2021-02-05</lastmod>
@@ -144,6 +165,20 @@
   </url>
   
   <url>
+    <loc>http://example.com/tags/unserialize/</loc>
+    <lastmod>2021-07-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/tags/sql%E6%B3%A8%E5%85%A5/</loc>
+    <lastmod>2021-07-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/tags/Crypto/</loc>
     <lastmod>2021-07-30</lastmod>
     <changefreq>daily</changefreq>
@@ -165,5 +200,12 @@
   </url>
   
 
+  
+  <url>
+    <loc>http://example.com/categories/Web/</loc>
+    <lastmod>2021-07-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
   
 </urlset>
