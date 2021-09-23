@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="无名小站">
+    <meta name="author" content="Akk0">
+    
+    <title>
+        
+            Cryptopals Write-Up |
+        
+        Akk0&#39;s Blog
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/avatar.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":false},"style":{"primary_color":"#CC99FF","avatar":"/images/avatar.jpg","favicon":"/images/avatar.jpg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/30.jpg","description":"Welcome to Akk0's Blog."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
+    KEEP.language_ago = undefined;
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Akk0's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                Akk0&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Cryptopals Write-Up</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Akk0</span>
+                        
+                            <span class="author-label">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-09-23 20:59:21
+    </span>
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>430 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>2 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="Cryptopals-Write-Up"><a href="#Cryptopals-Write-Up" class="headerlink" title="Cryptopals Write-Up"></a>Cryptopals Write-Up</h1><h2 id="Set-1"><a href="#Set-1" class="headerlink" title="Set 1"></a>Set 1</h2><h3 id="Challenge-1-Convert-hex-to-base64"><a href="#Challenge-1-Convert-hex-to-base64" class="headerlink" title="Challenge 1 - Convert hex to base64"></a>Challenge 1 - Convert hex to base64</h3><p>The string:</p>
+<blockquote>
+<p>49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d</p>
+</blockquote>
+<p>Should produce:</p>
+<blockquote>
+<p>SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t</p>
+</blockquote>
+<p>solution:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> base64 <span class="keyword">import</span> b64encode, b64decode</span><br><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> hexlify</span><br><span class="line">hex_s = <span class="string">&#x27;49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d&#x27;</span></span><br><span class="line"></span><br><span class="line">s = unhexlify(hex_s)</span><br><span class="line"><span class="comment"># b&quot;I&#x27;m killing your brain like a poisonous mushroom&quot;</span></span><br><span class="line">b64_S = b64encode(s)</span><br><span class="line"><span class="comment"># b&#x27;SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Fixed-XOR"><a href="#Fixed-XOR" class="headerlink" title="Fixed XOR"></a>Fixed XOR</h3><p>Write a function that takes two equal-length buffers and produces their XOR combination.</p>
+<blockquote>
+<p>1c0111001f010100061a024b53535009181c</p>
+</blockquote>
+<p>after hex decoding, and when XOR’d against:</p>
+<blockquote>
+<p>686974207468652062756c6c277320657965</p>
+</blockquote>
+<p>should produce:</p>
+<blockquote>
+<p>746865206b696420646f6e277420706c6179</p>
+</blockquote>
+<p>solution:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> unhexlify</span><br><span class="line"><span class="comment"># unhexlify 对象长度为偶数</span></span><br><span class="line">a = unhexlify(<span class="string">&#x27;1c0111001f010100061a024b53535009181c&#x27;</span>)</span><br><span class="line">b = unhexlify(<span class="string">&#x27;686974207468652062756c6c277320657965&#x27;</span>)</span><br><span class="line">xor_res = <span class="built_in">bytes</span>([i ^ j <span class="keyword">for</span> i,j <span class="keyword">in</span>  <span class="built_in">zip</span>(a,b)])</span><br><span class="line"><span class="built_in">print</span>(xor_res)</span><br><span class="line"><span class="comment"># b&#x27;746865206b696420646f6e277420706c6179&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Single-byte-XOR-cipher"><a href="#Single-byte-XOR-cipher" class="headerlink" title="Single-byte XOR cipher"></a>Single-byte XOR cipher</h3><p>The hex encoded string:</p>
+<blockquote>
+<p>1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736</p>
+</blockquote>
+<p>has been XOR’d against a single character. Find the key, decrypt the message.</p>
+<p>solution:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> hexlify, unhexlify</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_letter_ratio</span>(<span class="params">input_bytes</span>):</span></span><br><span class="line">    ascii_text_chars = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">97</span>, <span class="number">123</span>)) + [<span class="number">32</span>] + <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">65</span>,<span class="number">91</span>))</span><br><span class="line">    nb_letter = <span class="built_in">sum</span>([x <span class="keyword">in</span> ascii_text_chars <span class="keyword">for</span> x <span class="keyword">in</span> input_bytes])</span><br><span class="line">    <span class="keyword">return</span> nb_letter / <span class="built_in">len</span>(input_bytes)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_probably_text</span>(<span class="params">input_bytes</span>):</span></span><br><span class="line">    ratio = get_letter_ratio(input_bytes = input_bytes)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span> <span class="keyword">if</span> ratio &gt; <span class="number">0.8</span> <span class="keyword">else</span> <span class="literal">False</span></span><br><span class="line">    </span><br><span class="line">hex_s = <span class="string">&#x27;1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736&#x27;</span></span><br><span class="line">bytes_s = unhexlify(hex_s) </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">2</span>**<span class="number">8</span>):</span><br><span class="line">    candidate_character = <span class="built_in">bytes</span>([i])</span><br><span class="line">    stream = candidate_character * <span class="built_in">len</span>(hex_s)</span><br><span class="line">    <span class="comment"># print(stream)</span></span><br><span class="line">    xor_res = <span class="built_in">bytes</span>([a ^ b <span class="keyword">for</span> a,b <span class="keyword">in</span> <span class="built_in">zip</span>(bytes_s, stream)])</span><br><span class="line">    <span class="keyword">if</span> get_probably_text(input_bytes=xor_res) == <span class="literal">True</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;message: &#x27;</span>,xor_res,<span class="string">&#x27;\tkey: &#x27;</span>,candidate_character)</span><br><span class="line"></span><br><span class="line"><span class="comment"># b&quot;Cooking MC&#x27;s like a pound of bacon&quot;</span></span><br><span class="line"><span class="comment"># b&#x27;x&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Detect-single-character-XOR"><a href="#Detect-single-character-XOR" class="headerlink" title="Detect single-character XOR"></a>Detect single-character XOR</h3><p>One of the 60-character strings in this <a class="link"   target="_blank" rel="noopener" href="https://cryptopals.com/static/challenge-data/4.txt" >file<i class="fas fa-external-link-alt"></i></a> has been encrypted by single-character XOR.</p>
+<p>Find it.</p>
+<p>solution:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> binascii <span class="keyword">import</span> unhexlify</span><br><span class="line"></span><br><span class="line">ascii_text_chars = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">97</span>, <span class="number">123</span>)) + [<span class="number">32</span>] + <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="number">65</span>,<span class="number">91</span>))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_letter_ratio</span>(<span class="params">input_bytes</span>):</span></span><br><span class="line">    nb_letter = <span class="built_in">sum</span>([x <span class="keyword">in</span> ascii_text_chars <span class="keyword">for</span> x <span class="keyword">in</span> input_bytes])</span><br><span class="line">    <span class="keyword">return</span> nb_letter / <span class="built_in">len</span>(input_bytes)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_probably_text</span>(<span class="params">input_bytes</span>):</span></span><br><span class="line">    ratio = get_letter_ratio(input_bytes = input_bytes)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">True</span> <span class="keyword">if</span> ratio &gt; <span class="number">0.8</span> <span class="keyword">else</span> <span class="literal">False</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">crack_single_character_xor</span>(<span class="params">hex_s</span>):</span></span><br><span class="line">    bytes_s = unhexlify(hex_s)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span>**<span class="number">8</span>):</span><br><span class="line">        candidate_character = <span class="built_in">bytes</span>([i])</span><br><span class="line">        stream = candidate_character * <span class="built_in">len</span>(hex_s)</span><br><span class="line">        <span class="comment"># print(stream)</span></span><br><span class="line">        xor_res = <span class="built_in">bytes</span>([a ^ b <span class="keyword">for</span> a,b <span class="keyword">in</span> <span class="built_in">zip</span>(bytes_s, stream)])</span><br><span class="line">        nb_letter = <span class="built_in">sum</span>([x <span class="keyword">in</span> ascii_text_chars <span class="keyword">for</span> x <span class="keyword">in</span> xor_res])</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> get_probably_text(input_bytes=xor_res) == <span class="literal">True</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&#x27;cipher: &#x27;</span>,bytes_s,<span class="string">&#x27;\tmessage: &#x27;</span>,xor_res,<span class="string">&#x27;\tkey: &#x27;</span>,candidate_character, <span class="string">&#x27;\tnb_letter:&#x27;</span>, nb_letter)</span><br><span class="line"></span><br><span class="line">cipher = <span class="built_in">open</span>(<span class="string">&#x27;4.txt&#x27;</span>,<span class="string">&#x27;r&#x27;</span>).readlines()</span><br><span class="line"><span class="keyword">for</span> s <span class="keyword">in</span> cipher:</span><br><span class="line">    crack_single_character_xor(s.strip())</span><br><span class="line"></span><br><span class="line"><span class="comment"># cipher:  b&#x27;&#123;ZB\x15A]TA\x15A]P\x15ETGAL\x15\\F\x15_@XE\\[R?&#x27;     message:  b&#x27;Now that the party is jumping\n&#x27;    key:  b&#x27;5&#x27;      nb_letter: 29</span></span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Cryptopals Write-Up</li>
+        <li>本文作者：Akk0</li>
+        <li>创建时间：2021-09-23 20:59:21</li>
+        <li>
+            本文链接：https://auxein.xyz/2021/09/23/Cryptopals-Write-Up/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/08/13/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB%E2%80%94%E2%80%94%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93-%E7%AC%94%E8%AE%B0/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">程序员的自我修养——链接、装载与库 笔记</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Akk0</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Cryptopals-Write-Up"><span class="nav-number">1.</span> <span class="nav-text">Cryptopals Write-Up</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-1"><span class="nav-number">1.1.</span> <span class="nav-text">Set 1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Challenge-1-Convert-hex-to-base64"><span class="nav-number">1.1.1.</span> <span class="nav-text">Challenge 1 - Convert hex to base64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fixed-XOR"><span class="nav-number">1.1.2.</span> <span class="nav-text">Fixed XOR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Single-byte-XOR-cipher"><span class="nav-number">1.1.3.</span> <span class="nav-text">Single-byte XOR cipher</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Detect-single-character-XOR"><span class="nav-number">1.1.4.</span> <span class="nav-text">Detect single-character XOR</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>

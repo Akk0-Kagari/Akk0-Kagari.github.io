@@ -172,12 +172,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>3.6k 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>4.8k 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>13 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>17 分钟</span>
         </span>
     
     
@@ -665,6 +665,53 @@
 <li>以上地址都为程序被装载时的虚拟地址</li>
 </ul>
 <p><strong>符号修饰与函数签名</strong><br>解决函数重名问题</p>
+<h2 id="章四-静态链接"><a href="#章四-静态链接" class="headerlink" title="章四-静态链接"></a>章四-静态链接</h2><p>当我们有两个目标文件时，如何将其链接起来形成一个可执行文件，这引出了一个问题。</p>
+<h3 id="空间与地址分配"><a href="#空间与地址分配" class="headerlink" title="空间与地址分配"></a>空间与地址分配</h3><ul>
+<li>方案一：按序叠加。直接将各个目标文件依次合并。缺点：输出文件会有很多零散的段，段的装载地址和空间的对齐位置是页，即4096字节。如果一个段的长度只有1个字节，它也要在内存中占用4096字节，造成内存空间产生大量的内部碎片。</li>
+<li>方案二：相似段合并。“链接器为目标文件分配地址和空间”，<strong>地址和空间</strong>包含两个含义：第一个是在输出的可执行文件中的空间；第二个是在装载后的虚拟地址中的虚拟地址空间。对于”.text”和”.data”段两个都要分配，而对于”.bss”这样的段，分配空间的意义只局限于虚拟地址空间，因为其在文件中无内容。</li>
+</ul>
+<p>可想而知，现在的链接器空间分配采用的都是方案二。使用这种方法的链接器一般都采用一种叫 <strong>“两步链接(Two-pass Linking)”</strong> 的方法.</p>
+<ol>
+<li>空间与地址分配：扫描所有输入目标文件，并且获得它们的各个段的长度、属性和位置，并将输入目标文件中的符号表中所有的符号定义和符号引用收集起来，同一放到一个全局符号表。链接器将各个段合并，计算出输出文件中各个段合并后的长度与位置，并建立映射关系。</li>
+<li>符号解析与重定位：使用上面收集的信息，读取输入文件中段的数据、重定位信息，并进行符号解析与重定位、调整代码中的地址。</li>
+</ol>
+<p>VMA(Virtual Memory Address)，虚拟地址。LMA(Load Memory Address)，加载地址。正常情况下两值应该相等，但在一些嵌入式系统中，特别是将程序放在ROM的系统中，二值不同。</p>
+<p>在链接前，目标文件中的所有段的VMA都是0。链接后，各个段都被分配到了相应的虚拟地址。</p>
+<p>因为各符号在段内的相对位置是固定的，所以链接器需要给每个符号加上一个偏移量，使其定位到正确的虚拟地址。</p>
+<h3 id="符号解析与重定位"><a href="#符号解析与重定位" class="headerlink" title="符号解析与重定位"></a>符号解析与重定位</h3><p>重定位表**(Relocation Table)** 用于保存与重定位相关的信息。对于每个需要重定位的段都一个对应的重定位表，所以 <strong>重定位表</strong> 又可以称为 <strong>重定位段</strong> 。例如，”.text”有需要重定位的地方，就会有一个相应的”.rel.text”的段保存代码段的重定位表。</p>
+<p>每个要定位的地方叫一个 <strong>重定位入口(Relocation Entry)</strong> ，重定位入口的 <strong>“Offset”</strong> 表示该入口在要重定位的段中的位置。</p>
+<p>对于32位的Intel x86系列处理器，重定位表的结构如下。Elf32_Rel定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">  Elf32_Addr r_offset;</span><br><span class="line">  Elf32_Word r_info;</span><br><span class="line">&#125;Elf32_Rel</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>r_offset</td>
+<td>重定位入口的偏移，对于可重定位文件来说，这个值是该重定位入口索要修正的位置的第一个字节相对于段起始的偏移；对于可执行文件或共享对象文件来说，这个值是该重定位入口所要修正的位置的第一个字节的虚拟地址。</td>
+</tr>
+<tr>
+<td>r_info</td>
+<td>重定位入口的类型和符号。低8位表示重定位入口的类型，高24位表示重定位入口的符号在符号表中的下标。因各处理器的指令格式不同，重定位所修正的指令地址格式也不同，因为每种处理器都有自己一套重定位入口的类型。对于可执行文件和共享目标文件来说，它们的重定位入口是动态链接类型的。</td>
+</tr>
+</tbody></table>
+<p><strong>指令修正方式</strong></p>
+<p>寻址方式的区别：</p>
+<ul>
+<li>近址寻址或远址寻址</li>
+<li>绝对寻址或相对寻址</li>
+<li>寻址长度为8位、16位、32位或64位</li>
+</ul>
+<p>对于32位x86平台下的Elf文件的重定位入口所修正的指令寻址方式只有两种：</p>
+<ul>
+<li>绝对近址32位寻址</li>
+<li>相对近址32位寻址</li>
+</ul>
+<p>以上两种重定位方式指令修正方式每个被修正的位置的长度都为32位，即4个字节。唯一的区别就是绝对寻址和相对寻址。</p>
 
         </div>
 
@@ -689,6 +736,21 @@
 
         
             <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/09/23/Cryptopals-Write-Up/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Cryptopals Write-Up</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
                 
                 
                     <div class="article-next">
@@ -820,7 +882,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB%E2%80%94%E2%80%94%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93-%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">程序员的自我修养——链接、装载与库 笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E4%B8%80"><span class="nav-number">1.1.</span> <span class="nav-text">章一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E4%BA%8C"><span class="nav-number">1.2.</span> <span class="nav-text">章二</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E7%BC%96%E5%86%99%E5%88%B0%E8%BF%90%E8%A1%8C"><span class="nav-number">1.2.1.</span> <span class="nav-text">从编写到运行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E7%BC%96%E8%AF%91"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">预编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B1%87%E7%BC%96"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">汇编</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">链接</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E6%89%AE%E6%BC%94%E7%9A%84%E8%A7%92%E8%89%B2"><span class="nav-number">1.2.2.</span> <span class="nav-text">编译器扮演的角色</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">语法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">语义分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">中间语言生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="nav-number">1.2.2.5.</span> <span class="nav-text">目标代码生成与优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%E5%99%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text">链接器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5"><span class="nav-number">1.2.4.</span> <span class="nav-text">静态链接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E4%B8%89-%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">章三-目标文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.3.1.</span> <span class="nav-text">目标文件的格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E5%BD%A2%E5%A6%82"><span class="nav-number">1.3.2.</span> <span class="nav-text">目标文件形如</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84%E5%85%B6%E4%BB%96%E6%AE%B5"><span class="nav-number">1.3.3.</span> <span class="nav-text">ELF文件包含的其他段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.3.4.</span> <span class="nav-text">ELF文件结构描述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%E7%9A%84%E6%8E%A5%E5%8F%A3-%E7%AC%A6%E5%8F%B7"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">链接的接口-符号</span></a></li></ol></li></ol></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB%E2%80%94%E2%80%94%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93-%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">程序员的自我修养——链接、装载与库 笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E4%B8%80"><span class="nav-number">1.1.</span> <span class="nav-text">章一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E4%BA%8C"><span class="nav-number">1.2.</span> <span class="nav-text">章二</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E7%BC%96%E5%86%99%E5%88%B0%E8%BF%90%E8%A1%8C"><span class="nav-number">1.2.1.</span> <span class="nav-text">从编写到运行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%84%E7%BC%96%E8%AF%91"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">预编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BC%96%E8%AF%91"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">编译</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B1%87%E7%BC%96"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">汇编</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">链接</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%99%A8%E6%89%AE%E6%BC%94%E7%9A%84%E8%A7%92%E8%89%B2"><span class="nav-number">1.2.2.</span> <span class="nav-text">编译器扮演的角色</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%8D%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E5%88%86%E6%9E%90"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">语法分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">语义分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%AD%E9%97%B4%E8%AF%AD%E8%A8%80%E7%94%9F%E6%88%90"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">中间语言生成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E4%B8%8E%E4%BC%98%E5%8C%96"><span class="nav-number">1.2.2.5.</span> <span class="nav-text">目标代码生成与优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%E5%99%A8"><span class="nav-number">1.2.3.</span> <span class="nav-text">链接器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5"><span class="nav-number">1.2.4.</span> <span class="nav-text">静态链接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E4%B8%89-%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">章三-目标文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.3.1.</span> <span class="nav-text">目标文件的格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E5%BD%A2%E5%A6%82"><span class="nav-number">1.3.2.</span> <span class="nav-text">目标文件形如</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84%E5%85%B6%E4%BB%96%E6%AE%B5"><span class="nav-number">1.3.3.</span> <span class="nav-text">ELF文件包含的其他段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.3.4.</span> <span class="nav-text">ELF文件结构描述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%E7%9A%84%E6%8E%A5%E5%8F%A3-%E7%AC%A6%E5%8F%B7"><span class="nav-number">1.3.4.1.</span> <span class="nav-text">链接的接口-符号</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AB%A0%E5%9B%9B-%E9%9D%99%E6%80%81%E9%93%BE%E6%8E%A5"><span class="nav-number">1.4.</span> <span class="nav-text">章四-静态链接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A9%BA%E9%97%B4%E4%B8%8E%E5%9C%B0%E5%9D%80%E5%88%86%E9%85%8D"><span class="nav-number">1.4.1.</span> <span class="nav-text">空间与地址分配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%A6%E5%8F%B7%E8%A7%A3%E6%9E%90%E4%B8%8E%E9%87%8D%E5%AE%9A%E4%BD%8D"><span class="nav-number">1.4.2.</span> <span class="nav-text">符号解析与重定位</span></a></li></ol></li></ol></li></ol>
     </div>
 </div>
         </aside>
