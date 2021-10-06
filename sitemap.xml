@@ -4,7 +4,7 @@
   <url>
     <loc>http://example.com/2021/09/23/Cryptopals-Write-Up/</loc>
     
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     
   </url>
   
@@ -165,7 +165,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -173,42 +173,42 @@
   
   <url>
     <loc>http://example.com/tags/Web/</loc>
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/unserialize/</loc>
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/sql%E6%B3%A8%E5%85%A5/</loc>
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/Crypto/</loc>
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/Reverse/</loc>
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/tags/crypto/</loc>
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -217,7 +217,7 @@
   
   <url>
     <loc>http://example.com/categories/Web/</loc>
-    <lastmod>2021-09-23</lastmod>
+    <lastmod>2021-10-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
