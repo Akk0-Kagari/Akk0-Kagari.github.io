@@ -2125,4 +2125,20 @@
 <p>以上两种重定位方式指令修正方式每个被修正的位置的长度都为32位，即4个字节。唯一的区别就是绝对寻址和相对寻址。</p>
 ]]></content>
   </entry>
+  <entry>
+    <title>Cryptopals Write-Up</title>
+    <url>/2021/10/22/Python%20Import%20%E6%9C%BA%E5%88%B6%E5%B0%8F%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="Python-Import-机制小记"><a href="#Python-Import-机制小记" class="headerlink" title="# Python Import 机制小记"></a># Python Import 机制小记</h1><h2 id="模块（module）与包-（package）"><a href="#模块（module）与包-（package）" class="headerlink" title="模块（module）与包 （package）"></a>模块（module）与包 （package）</h2><h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>典型的，一个 <code>.py</code> 后缀文件即是 Python 的一个模块。在模块的内部，可以通过全局变量 <code>__name__</code> 来获得模块名。模块可以包含可执行的语句，这些语句会在模块 <strong>初始化</strong> 的时候执行 —— 当所在模块被 <code>import</code> 导入时它们有且只会执行一次。</p>
+<h3 id="包"><a href="#包" class="headerlink" title="包"></a>包</h3><p>根据目前 <code>PEP420</code> 的提案，目前的 <code>Python</code> 实际上是有两种包的存在：<strong>正规包</strong>（<code>regular Package</code>） 以及 <strong>命名空间包</strong>（<code>Namespace package</code>）</p>
+<ul>
+<li><p>正规包：<br>在 Python 3.2 之前就已经存在了的，通常是以包含一个 <code>__init__.py</code> 文件的目录形式展现。当 package 被导入时，这个 <code>__init__.py</code> 文件会被 <em>隐式</em> 地执行。</p>
+</li>
+<li><p>命名空间包</p>
+<p>根据 PEP420 的定义，命名空间包是由多个 <em>portion</em> 组成的 —— <em>portion</em> 类似于父包下的子包，但它们物理位置上不一定相邻，而且它们可能表现为 .zip 中的文件、网络上的文件等等。命名空间包不需要 <code>__init__.py</code> 文件，只要它本身或者子包（也就是 <em>portion*）被导入时，Python 就会给顶级的部分创建为命名空间包 —— 因此，命名空间包不一定直接对应到文件系统中的对象，它可以是一个 *虚拟</em> 的 module 。</p>
+</li>
+</ul>
+<h2 id="Import-机制"><a href="#Import-机制" class="headerlink" title="Import 机制"></a>Import 机制</h2><p>模块中的 Python 代码可以通过 import（导入）操作访问另一个模块内的代码。<code>import</code> 语句时调起导入机制的常用方式，但不是唯一方式。<code>importlib.import_module()</code> 以及内置的 <code>__import__()</code> 函数都可以调起导入机制。</p>
+<p>未完待续……..</p>
+]]></content>
+  </entry>
 </search>
