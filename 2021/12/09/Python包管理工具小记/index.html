@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="无名小站">
+    <meta name="author" content="Akk0">
+    
+    <title>
+        
+            Python包管理工具小记 |
+        
+        Akk0&#39;s Blog
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="/images/avatar.jpg">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN","path":"search.xml"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":false},"style":{"primary_color":"#CC99FF","avatar":"/images/avatar.jpg","favicon":"/images/avatar.jpg","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"background_img":"/images/30.jpg","description":"Welcome to Akk0's Blog."},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.0"};
+    KEEP.language_ago = undefined;
+  </script>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="Akk0's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                Akk0&#39;s Blog
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/links"
+                            >
+                                友链
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/links">友链</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Python包管理工具小记</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/avatar.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Akk0</span>
+                        
+                            <span class="author-label">Lv3</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-12-09 19:55:45
+    </span>
+    
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>4.3k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>17 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="Python包管理工具小记"><a href="#Python包管理工具小记" class="headerlink" title="Python包管理工具小记"></a>Python包管理工具小记</h1><p>python的源码包与二进制包</p>
+<blockquote>
+<p>源码包：源码包安装的过程，是先解压，再编译，最后才安装，所以它是跨平台的，由于每次安装都要进行编译，相对二进包安装方式来说安装速度较慢。源码包的本质是一个压缩包，其常见的格式有.zip，.tar，.gz，.bz2，.Z</p>
+</blockquote>
+<blockquote>
+<p>二进制包：二进制包的安装过程省去了编译的过程，直接进行解压安装，所以安装速度较源码包来说更快。由于不同平台的编译出来的包无法通用，所以在发布时，需事先编译好多个平台的包。二进制包的常见格式有.egg，.whl</p>
+</blockquote>
+<h2 id="包管理工具"><a href="#包管理工具" class="headerlink" title="包管理工具"></a>包管理工具</h2><p>以下对这些包管理工具按时间顺序进行介绍</p>
+<h3 id="distutils"><a href="#distutils" class="headerlink" title="distutils"></a>distutils</h3><p><code>distutils</code>是<code>python</code>标准库的一部分，2000年发布。使用它能够进行<code>python</code>模块的安装和发布。<br><code>setup.py</code>就是利用<code>distutils</code>的功能写成。<br>关于<code>setup.py</code>所有格式的详细描述：<a class="link"   target="_blank" rel="noopener" href="https://docs.python.org/3/distutils/setupscript.html" >Writing the Setup Script<i class="fas fa-external-link-alt"></i></a></p>
+<p>安装方式</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+
+<p>不同的打包命令</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py sdist --formats=gztar,<span class="built_in">zip</span></span><br></pre></td></tr></table></figure>
+<p>其他可用格式</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Description</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>zip</td>
+<td>zip file(.zip)</td>
+<td>(1),(3)</td>
+</tr>
+<tr>
+<td>gztar</td>
+<td>gzip’ed tar file (.tar.gz)</td>
+<td>(2)</td>
+</tr>
+<tr>
+<td>bztar</td>
+<td>bzip2’ed tar file (.tar.bz2)</td>
+<td></td>
+</tr>
+<tr>
+<td>xztar</td>
+<td>xz’ed tar file (.tar.xz)</td>
+<td></td>
+</tr>
+<tr>
+<td>ztar</td>
+<td>compressed tar file (.tar.Z)</td>
+<td>(4)</td>
+</tr>
+<tr>
+<td>tar</td>
+<td>tar file (.tar)</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Notes:</p>
+<ol>
+<li>default on Windows</li>
+<li>default on Unix</li>
+<li>requires either external zip utility or zipfile module (part of the standard Python library since Python 1.6)</li>
+<li>requires the compress program. Notice that this format is now pending for deprecation and will be removed in the future versions of Python.</li>
+</ol>
+<h3 id="setuptools-和-distribute"><a href="#setuptools-和-distribute" class="headerlink" title="setuptools 和 distribute"></a>setuptools 和 distribute</h3><p><code>setuptools</code>是一个为了增强<code>distutils</code>而开发的集合，2004年发布。它包含了<code>easy_install</code>这个工具。<br><code>ez_setup.py</code>是<code>setuptools</code>的安装工具。<code>ez</code>就是<code>easy</code>的缩写。</p>
+<p><code>setuptools</code>是一个项目的名称，是基础组件。而<code>easy_install</code>是这个项目中提供的工具，它依赖基础组件工作。</p>
+<p>下文中提到的<code>setuptools</code>被认为与<code>easy_install</code>同义。<br>例子来源于<a class="link"   target="_blank" rel="noopener" href="http://peak.telecommunity.com/DevCenter/EasyInstall" >此处<i class="fas fa-external-link-alt"></i></a></p>
+<p><strong>Example 1.</strong> Install a package by name, searching PyPI for the <strong>latest</strong> version, and automatically downloading, building, and installing it(ps:高版本依赖问题)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">easy_install SQLObject</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2.</strong> Install or upgrade a package by name and version by finding links on a given “download page”:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">easy_install -f http:&#x2F;&#x2F;pythonpaste.org&#x2F;package_index.html SQLObject</span><br></pre></td></tr></table></figure>
+<p><strong>Example 3.</strong> Download a source distribution from a specified URL, automatically building and installing it:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">easy_install http:&#x2F;&#x2F;example.com&#x2F;path&#x2F;to&#x2F;MyPackage-1.2.3.tgz</span><br></pre></td></tr></table></figure>
+<p><strong>Example 4.</strong> Install an already-downloaded .egg file:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">easy_install &#x2F;my_downloads&#x2F;OtherPackage-3.2.1-py2.3.egg</span><br></pre></td></tr></table></figure>
+
+
+<p><code>distribute</code>是<code>setuptools</code>的一个分支版本。分支的原因可能是有一部分开发者认为<code>setuptools</code>开发太慢了。但现在<code>distribute</code>又合并回了<code>setuptools</code>中。因此，我们可以认为它们是同一个东西。事实上，如果你查看一下<code>easy_install</code>的版本，会发现它本质上就是<code>distribute</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># easy_install --version</span><br><span class="line">distribute 0.6.28</span><br></pre></td></tr></table></figure>
+
+<h3 id="Eggs"><a href="#Eggs" class="headerlink" title="Eggs"></a>Eggs</h3><p><code>Eggs</code>格式是<code>setuptools</code>引入的一种文件格式，它使用<code>.egg</code>扩展名，用于<code>Python</code>模块的安装。</p>
+<blockquote>
+<p>Eggs are to Pythons as Jars are to Java..</p>
+</blockquote>
+<p><code>eggs</code>通过将一些额外的信息与<code>Python</code>项目绑定在一起，使得整个项目的依赖项在运行时能够得到满足，同时允许项目能够为其他项目提供扩展功能。有几种二进制格式可以体现<code>egg</code>，但最常见的是<code>.egg</code>压缩文件格式，因为它是一种较为方便的发布项目的格式。所有的格式都支持包括包的特定数据、项目范围的元数据、<code>C Extensions</code>和Python代码。</p>
+<p>其安装方法即为上文所提到的<code>easy install</code>。</p>
+<p>some benefits：</p>
+<blockquote>
+<p>They enable tools like the “Easy Install” Python package manager</p>
+</blockquote>
+<blockquote>
+<p>.egg files are a “zero installation” format for a Python package; no build or install step is required, just put them on PYTHONPATH or sys.path and use them <strong>(may require the runtime installed if C extensions or data files are used)</strong></p>
+</blockquote>
+<blockquote>
+<p>They can include package metadata, such as the other eggs they depend on</p>
+</blockquote>
+<blockquote>
+<p>They allow “namespace packages” (packages that just contain other packages) to be split into separate distributions (e.g. zope.<em>, twisted.</em>, peak.* packages can be distributed as separate eggs, unlike normal packages which must always be placed under the same parent directory. This allows what are now huge monolithic packages to be distributed as separate components.)</p>
+</blockquote>
+<blockquote>
+<p>They allow applications or libraries to specify the needed version of a library, so that you can e.g. require(“Twisted-Internet&gt;=2.0”) before doing an import twisted.internet.</p>
+</blockquote>
+<p><del>(ps:<code>.whl</code>同理？但是依赖项又是如何check的呢？</del></p>
+<h4 id="使用eggs"><a href="#使用eggs" class="headerlink" title="使用eggs"></a>使用eggs</h4><p>如果我们安装的是一个纯粹的<code>python</code> <code>.egg</code>文件，并且不使用任何包内数据文件（这里有点没理解），并且不介意手动将包移动到<code>sys.path</code>或<code>PYTHONPATH</code>时，我们就可以不安装<code>setuptools</code>并进行安装。</p>
+<p>但是对于那些比如包含<code>C Extensions</code>的文件，或者那些需要访问非<code>python</code>数据的包内文件（打包在<code>.egg</code>种的文件，如README.md，这下前面的部分理解了），就必须要使用<code>setuptools</code>中的<code>pkg_resources</code>模块安装了！</p>
+<p>除了为使用包含<code>C Extensions</code>或数据文件的提供运行时支持外，<code>pkg_resources</code>模块还提供了一个 API，用于自动定位<code>egg</code>及其依赖关系，并在运行时将其添加到<code>sys.path</code>中。(详见 <a class="link"   target="_blank" rel="noopener" href="http://peak.telecommunity.com/DevCenter/PkgResources" >API<i class="fas fa-external-link-alt"></i></a> 文档和 <a class="link"   target="_blank" rel="noopener" href="http://peak.telecommunity.com/DevCenter/PkgResources" >setuptools<i class="fas fa-external-link-alt"></i></a> 文档)。</p>
+<p>如此情况我们可以安装一个包的不同版本，只要我们在运行时能够自动选择正确的版本。如果某个依赖错误，则会抛出<code>DistributionNotFound</code>异常，告知需要的包及其版本。</p>
+<p>那么如何判断纯<code>python</code>的<code>.egg</code>文件和那些包含<code>C Extensions</code>的<code>.egg</code>文件呢？答案是我们可以通过包名来判断，纯<code>.egg</code>文件往往是平台独立的，而那些包含<code>C Extensions</code>的文件则会在其文件名末尾上带上目标平台名。如果使用<code>pkg_resources</code>运行时自动查找包，它会忽略掉那些和我们的平台不兼容的<code>eggs</code>。如果我们不使用的话，就需要自己留意<code>egg</code>是否兼容了。</p>
+<p>当我们安装了我们的<code>egg</code>文件后，就需要将它添加到<code>sys.path</code>了。我们可以手动完成这个过程，在<code>PYTHONPATH</code>环境变量处添加，或者我们在代码中将他们呢添加到<code>sys.path</code>。长远来看，手动安装显然不是一个好的策略。</p>
+<h4 id="自动查找"><a href="#自动查找" class="headerlink" title="自动查找"></a>自动查找</h4><p>一种好的管理策略是我们将这些包放置到一个已经添加到<code>sys.path</code>的目录下，比如<code>site-packages</code>，或者一些我们自己手动添加到<code>PYTHONPATH</code>和<code>sys.path</code>的目录。</p>
+<p>看下面一串代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pkg_resources <span class="keyword">import</span> require</span><br><span class="line">require(<span class="string">&quot;FooBar&gt;=1.2&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个代码会在<code>sys.path</code>的所有目录中查找名叫<code>FooBar</code>并且版本号大于<code>1.2</code>的<code>egg</code>，并且自动匹配最新的版本，连同FooBar需要的任意<code>eggs</code>。</p>
+<p><code>require</code>查找方式对大小写不敏感。</p>
+<p>当我们想提供一些额外的可选功能时，这时候可能就需要定位并且将一些额外的<code>egg</code>文件添加到<code>sys.path</code>。例如，<code>FooBarWeb</code>web框架可能提供可选的<code>FastCGI</code>支持，我们就可以使用<code>(&quot;require[FastCGI] &gt;= 1.0&quot;)</code>来查找了，这样这些额外的包就可以被添加到<code>sys.path</code>。（没有找到抛出<code>pkg_resources.DistributionNotFound</code>异常）</p>
+<p><strong>在<code>EGG-INFO/depends.txt</code>文件中记录了<code>egg</code>需要与可选的依赖项</strong></p>
+<p><strong>Note:</strong> <code>pkg_resources</code>不会在PyPI上自动查找<code>eggs</code>文件或者从某个地方进行下载，它们必须是可以在<code>sys.path</code>目录下可用的<code>eggs</code>，但是我们可以捕获这个错误并且**自动从PyPI或者任何地方下载这些<code>eggs</code>**。要想自动安装这些依赖我们就可以利用一些工具了，如<code>EasyInstall</code>，<code>setuptools</code>需要被用于build<code>eggs</code>。</p>
+<h4 id="Build-eggs"><a href="#Build-eggs" class="headerlink" title="Build eggs"></a>Build <code>eggs</code></h4><p>如果我们从<code>setup.py</code> build <code>egg</code>就需要安装<code>setuptools</code>了。</p>
+<p>添加目标包的<code>setup</code>文件，添加<code>from setuptools import setup</code>使其能够替代现有导入的<code>setup</code>函数，然后运行<code>setup.py bdist_egg</code>。</p>
+<p>然后一个<code>.egg</code>文件会被放在<code>dist</code>目录下，静静等待下一次使用。如果想添加一些特殊的元数据文件，可以在<code>SomePackage.egg-info</code>目录下添加（由<code>bdist_egg</code>创建，<code>SomePackage</code>即为我们安装的包名）。那些被放在该目录下的文件会被拷贝到<code>egg</code>文件的<code>EGG-INFO</code>目录下，以便在运行时使用。其他元数据文件会自动生成，不需要编辑。下次执行<code>setup</code>时会被自动<code>overwrite</code>。</p>
+<h4 id="声明依赖"><a href="#声明依赖" class="headerlink" title="声明依赖"></a>声明依赖</h4><p>然而，库并不总可以调用<code>require()</code>，而且在任何情况下，库的源代码很少是声明其版本依赖关系的地方。所以<code>setuptools</code>允许我们在项目的<code>setup</code>中声明依赖关系，这样它们就会被绑定在<code>egg</code>的元数据目录中，然后运行时和<code>EasyInstall</code>可以自动找到所需的额外<code>eggs</code>，当项目被安装或在运行时通过<code>require()</code>将它们加入到<code>sys.path</code> 中。</p>
+<blockquote>
+<p>So far, we’ve only covered how to use eggs that have actually been installed, by building them with the distutils and then putting them in a directory on sys.path. </p>
+</blockquote>
+<p>更多详细信息参见此处<a class="link"   target="_blank" rel="noopener" href="http://peak.telecommunity.com/DevCenter/PythonEggs#id6" >The Quick Guide to Python Eggs<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="pip"><a href="#pip" class="headerlink" title="pip"></a>pip</h3><p>从这里开始，<code>easy_install</code>和<code>setuptools</code>不再同义</p>
+<p><code>pip</code>是目前<code>python</code>包管理的事实标准，2008年发布。它被用作 <code>easy_install</code>的替代品，但是它仍有大量的功能建立在<code>setuptools</code>组件之上。</p>
+<p><code>pip</code>希望不再使用<code>Eggs</code>格式（虽然它支持<code>Eggs</code>），而更希望采用“源码发行版”（使用<code>python setup.py sdist</code>创建）。这可以充分利用<a class="link"   target="_blank" rel="noopener" href="https://pip.pypa.io/en/latest/cli/pip_install/" >Requirements File Format<i class="fas fa-external-link-alt"></i></a>提供的方便功能。</p>
+<p><code>pip</code>可以利用<code>requirments.txt</code>来实现在依赖的安装。在<code>setup.py</code>中，也存在一个<code>install_requires</code>表来指定依赖的安装。它们的区别在哪里？</p>
+<h4 id="setup-py-VS-requirements-txt"><a href="#setup-py-VS-requirements-txt" class="headerlink" title="setup.py VS requirements.txt"></a>setup.py VS requirements.txt</h4><h5 id="Python库"><a href="#Python库" class="headerlink" title="Python库"></a>Python库</h5><p>这里的Python库指代一个开发出来供他人使用而发布的包，在<a class="link"   target="_blank" rel="noopener" href="https://pypi.python.org/pypi" >PyPI<i class="fas fa-external-link-alt"></i></a>中我们可以找到很多的样例。在<code>setup.py</code>中包含了一个库的基本信息。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> setup</span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    name=<span class="string">&quot;MyLibrary&quot;</span>,</span><br><span class="line">    version=<span class="string">&quot;1.0&quot;</span>,</span><br><span class="line">    install_requires=[</span><br><span class="line">        <span class="string">&quot;requests&quot;</span>,</span><br><span class="line">        <span class="string">&quot;bcrypt&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这样就很简单声明了<code>Python</code>库的一些信息，但是并没有显式提供一个<code>url</code>来获取这些依赖，仅告诉了我们依赖是什么。我们可以称这种声明方式为“抽象的依赖”，它们只是以名字（或者加上了一个具体的版本号） 的方式来出现的。这就像我们说的“鸭子类型”，你不在乎它是什么样子的只要它看起来是<code>requests</code>。</p>
+<blockquote>
+<p><a class="link"   target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1484390" >鸭子类型<i class="fas fa-external-link-alt"></i></a>（duck typing）在程序设计中是动态类型的一种风格。 在这种风格中，一个对象有效的语义，不是由继承自特定的类或实现特定的接口，而是由”当前方法和属性的集合”决定。</p>
+</blockquote>
+<h5 id="Python应用"><a href="#Python应用" class="headerlink" title="Python应用"></a>Python应用</h5><p>这里的Python应用指我们要部署的一些东西，区别于前面的<code>Python</code>库。Python应用中往往会在应用外放至一个文件用于声明该应用部署所需的依赖。</p>
+<p>一个应用往往会有许多依赖。通常由requirements来对它们进行声明。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># This is an implicit value, here for clarity</span><br><span class="line">--index https:&#x2F;&#x2F;pypi.python.org&#x2F;simple&#x2F;</span><br><span class="line"></span><br><span class="line">MyPackage&#x3D;&#x3D;1.0</span><br><span class="line">requests&#x3D;&#x3D;1.2.0</span><br><span class="line">bcrypt&#x3D;&#x3D;1.0.2</span><br></pre></td></tr></table></figure>
+<p>文件的头部有一个 <code>--index https://pypi.python.org/simple/</code> ，一般我们不需要声明这项，除非我们使用的不是PyPI。</p>
+<p>这一行把一个抽象的依赖声明<code>requests==1.2.0</code>转变为一个具体的依赖声明<code>requests 1.2.0 from pypi.python.org/simple/</code>，这不像“鸭子类型”，倒像一次<code>isinstance</code>检查。</p>
+<h5 id="抽象与具体"><a href="#抽象与具体" class="headerlink" title="抽象与具体"></a>抽象与具体</h5><p>对于抽象依赖和具体依赖的区分是非常重要的，这点使我们的<code>PyPI</code>镜像源正常工作，这点允许我们可以在公司里搭建我们私有的包索引服务，甚至这点允许了你去fork一个包并改造它。因为一个抽象的依赖只是一个名字和一个可选的版本号，你可以从<code>PyPi</code>来安装它，或者从你自己的文件系统，你可以fork它并改造它，只要你指明了正确的名字和版本号你就可以一直这么使用下去。</p>
+<p>然而当我们在一个该使用抽象依赖的地方使用了具体依赖，就可能出现问题。当我们替换一个底层依赖的时候，还需要改动依赖这个库的其他依赖对该库的依赖声明。</p>
+<h5 id="Setuptools的dependcy-links"><a href="#Setuptools的dependcy-links" class="headerlink" title="Setuptools的dependcy_links"></a>Setuptools的dependcy_links</h5><p>在<code>Setuptools</code>中有一个参数是<code>dependency_link</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from setuptools import setup</span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    # ...</span><br><span class="line">    dependency_links &#x3D; [</span><br><span class="line">        &quot;http:&#x2F;&#x2F;packages.example.com&#x2F;snapshots&#x2F;&quot;,</span><br><span class="line">        &quot;http:&#x2F;&#x2F;example2.com&#x2F;p&#x2F;bar-1.0.tar.gz&quot;,</span><br><span class="line">    ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这一功能除去了依赖的抽象特性，直接把依赖的获取url标在了setup.py里。就像在Go语言中修改依赖包一样，我们只需要修改依赖链中每个包的<code>dependency_links</code>。</p>
+<h5 id="开发可复用的包与不重复自己"><a href="#开发可复用的包与不重复自己" class="headerlink" title="开发可复用的包与不重复自己"></a>开发可复用的包与不重复自己</h5><p>那么我们写依赖声明的时候需要在 setup.py 中写好抽象依赖，在 <code>requirements.txt</code>中写好具体的依赖，但是我们并不想维护两份依赖文件，这样会让我们很难做好同步。编写好<code>requirements.txt</code>可以解决这个问题，我们可以在有<code>setup.py</code>的目录里写下一个这样的 requirements.txt</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">--index https:&#x2F;&#x2F;pypi.python.org&#x2F;simple&#x2F;</span><br><span class="line"></span><br><span class="line">-e .</span><br></pre></td></tr></table></figure>
+<p>这样<code>pip install -r requirements.txt</code>可以照常工作，它会先安装该文件路径下的包，然后继续开始解析抽象依赖(setup.py内的依赖)，结合<code>--index</code>选项后转换为具体依赖然后再进行安装。</p>
+<p>这个办法可以让我们解决一种类似这样的情形：比如我们有两个或两个以上的包在一起开发但是是分开发行的，或者说你有一个尚未发布的包并把它分成了几个部分。如果你的顶层的包依然仅仅按照“名字”来依赖的话，我们依然可以使用<code>requirements.txt</code>来安装开发版本的依赖包:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--index https:&#x2F;&#x2F;pypi.python.org&#x2F;simple&#x2F;</span><br><span class="line"></span><br><span class="line">-e https:&#x2F;&#x2F;github.com&#x2F;foo&#x2F;bar.git#egg&#x3D;bar</span><br><span class="line">-e .</span><br></pre></td></tr></table></figure>
+<p>这会首先从<code>https://github.com/foo/bar.git</code>来安装包<code>bar</code>， 然后进行到第二行<code>-e .</code>，开始安装<code>setup</code>中的抽象依赖，但是包<code>bar</code>已经安装过了， 所以<code>pip</code>会跳过安装，而是仍然使用<code>github.com</code>上安装了的开发版本的包<code>bar</code>。</p>
+<h4 id="pip-vs-easy-install"><a href="#pip-vs-easy-install" class="headerlink" title="pip vs easy_install"></a>pip vs easy_install</h4><p><code>pip</code>支持<code>git/svn/hg</code>等流行的<code>VCS</code>系统，可以直接从<code>gz</code>或者<code>zip</code>压缩包安装，支持搜索包，以及指定服务器安装等等功能。</p>
+<p>那么<code>pip</code>和<code>easy_install</code>的区别</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>pip</th>
+<th>easy_install</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Installs from Wheels</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Uninstall Packages</td>
+<td>Yes (python -m pip uninstall)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Dependency Overrides</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>List Installed Packages</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>PEP 438 Support</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Installation format</td>
+<td>‘Flat’ packages with egg-info metadata.(包含<code>egg-info</code>元数据的包)</td>
+<td>Encapsulated Egg format(封装的<code>egg</code>包)</td>
+</tr>
+<tr>
+<td>sys.path modification</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Installs from eggs</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>pylauncher support</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Multi-version Installs</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Exclude scripts during installs</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>per project index</td>
+<td>Only in virtualenv</td>
+<td>Yes, via setup.cfg</td>
+</tr>
+</tbody></table>
+<p>源自<a class="link"   target="_blank" rel="noopener" href="https://packaging.python.org/en/latest/discussions/pip-vs-easy-install/" >此处<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="wheel"><a href="#wheel" class="headerlink" title="wheel"></a>wheel</h3><p><code>wheel</code>本质上是一个<code>zip</code>包格式，它使用<code>.whl</code>扩展名，用于<code>Python</code>模块安装，是<code>.egg</code>文件的替代品。</p>
+<p><code>wheel</code>还提供了一个<code>bdist_wheel</code>作为<code>setuptools</code>的扩展命令，这个命令可以用来生成<code>wheel</code>包。</p>
+<p><code>pip</code>提供了一个<code>wheel</code>子命令来安装<code>wheel</code>包。当然，需要先安装<code>wheel</code>模块。</p>
+<h4 id="whl使用"><a href="#whl使用" class="headerlink" title="whl使用"></a>whl使用</h4><p>将一个基于<code>setuptools</code>的项目<code>build</code>为<code>.whl</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py bdist_wheel</span><br></pre></td></tr></table></figure>
+
+<p>我们打包好的<code>.whl</code>会被生成在<code>dist</code>目录下，名为<code>yourproject-&lt;tags&gt;.whl</code></p>
+<p>或者制作一个<code>python2/3</code>兼容的纯<code>Python</code>文件，就需要在<code>setup.cfg</code>中添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[bdsit_wheel]</span><br><span class="line">universal &#x3D; 1</span><br></pre></td></tr></table></figure>
+
+<p>一些包转换命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wheel convert youreggfile.egg   #egg转wheel</span><br><span class="line">wheel convert yourinstaller.exe #exe转wheel</span><br></pre></td></tr></table></figure>
+
+<p>如何将我们的<code>license file</code>包含在生成的<code>.wheel</code>文件中呢？</p>
+<p>通常我们的项目中会被要求包含一些开源许可证。默认情况下，wheel方便地在<code>.dist-info</code>目录中包含与下列glob模式匹配的文件。</p>
+<blockquote>
+<p>glob是python自带的一个操作文件的相关模块，由于模块功能比较少，所以很容易掌握。用它可以查找符合特定规则的文件路径名。使用该模块查找文件，只需要用到： “*”, “?”, “[]”这三个匹配符;</p>
+</blockquote>
+<ul>
+<li><code>AUTHORS*</code></li>
+<li><code>COPYING*</code></li>
+<li><code>LICEN[CS]E*</code></li>
+<li><code>NOTICE*</code></li>
+</ul>
+<p>这些文件我们都可以通过<code>setup.cfg</code>文件中的<code>[metadata]</code>参数来进行重写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[metadata]</span><br><span class="line">license_files &#x3D;</span><br><span class="line">   license.txt</span><br><span class="line">   3rdparty&#x2F;*.txt</span><br></pre></td></tr></table></figure>
+<p><a class="link"   target="_blank" rel="noopener" href="https://wheel.readthedocs.io/en/latest/#defining-the-python-version" >setup.cfg<i class="fas fa-external-link-alt"></i></a>可以用来定义<code>wheel</code>打包时的相关信息</p>
+<h3 id="distutils2-和-distlib"><a href="#distutils2-和-distlib" class="headerlink" title="distutils2 和 distlib"></a>distutils2 和 distlib</h3><p><code>distutils2</code>被设计为<code>distutils</code>的替代品。从2009年开发到2012年。它包含更多的功能，并希望以<code>packaging</code>作为名称进入<code>python 3.3</code>成为标准库的一部分。但这个计划后来停滞了</p>
+<p><code>distlib</code>是<code>distutils2</code>的部分，它为<code>distutils2/packaging</code>提供的低级功能增加高级<code>API</code>，使其便于使用。</p>
+<p><a class="link"   target="_blank" rel="noopener" href="https://pythonhosted.org/distlib/overview.html" >这里<i class="fas fa-external-link-alt"></i></a>介绍了<code>distlib</code>没有进入<code>python 3.3</code>标准库的一些原因。</p>
+<p>因此，可以暂时不必了解这两个工具，静观其变即可。</p>
+<p>参考链接：</p>
+<ol>
+<li><a class="link"   target="_blank" rel="noopener" href="https://docs.python.org/3/distutils/sourcedist.html" >https://docs.python.org/3/distutils/sourcedist.html<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://blog.zengrong.net/post/python_packaging/#%E4%BA%8Cpython-%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%A4%A7%E4%B9%B1%E6%96%97" >https://blog.zengrong.net/post/python_packaging/#%E4%BA%8Cpython-%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%A4%A7%E4%B9%B1%E6%96%97<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="http://peak.telecommunity.com/DevCenter/PythonEggs" >http://peak.telecommunity.com/DevCenter/PythonEggs<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="http://peak.telecommunity.com/DevCenter/EasyInstall" >http://peak.telecommunity.com/DevCenter/EasyInstall<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://pyzh.readthedocs.io/en/latest/python-setup-dot-py-vs-requirements-dot-txt.html" >https://pyzh.readthedocs.io/en/latest/python-setup-dot-py-vs-requirements-dot-txt.html<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://packaging.python.org/en/latest/discussions/pip-vs-easy-install/" >https://packaging.python.org/en/latest/discussions/pip-vs-easy-install/<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://wheel.readthedocs.io/en/latest/#defining-the-python-version" >https://wheel.readthedocs.io/en/latest/#defining-the-python-version<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   target="_blank" rel="noopener" href="https://stackoverflow.com/questions/6344076/differences-between-distribute-distutils-setuptools-and-distutils2/14753678#14753678" >https://stackoverflow.com/questions/6344076/differences-between-distribute-distutils-setuptools-and-distutils2/14753678#14753678<i class="fas fa-external-link-alt"></i></a></li>
+</ol>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Python包管理工具小记</li>
+        <li>本文作者：Akk0</li>
+        <li>创建时间：2021-12-09 19:55:45</li>
+        <li>
+            本文链接：https://auxein.xyz/2021/12/09/Python包管理工具小记/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/12/10/Python%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Python软件包安装过程</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/10/22/Python%20Import%20%E6%9C%BA%E5%88%B6%E5%B0%8F%E8%AE%B0/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Python Import 机制小记</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Akk0</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.0</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Python%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%B0%8F%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">Python包管理工具小记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="nav-number">1.1.</span> <span class="nav-text">包管理工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#distutils"><span class="nav-number">1.1.1.</span> <span class="nav-text">distutils</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setuptools-%E5%92%8C-distribute"><span class="nav-number">1.1.2.</span> <span class="nav-text">setuptools 和 distribute</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Eggs"><span class="nav-number">1.1.3.</span> <span class="nav-text">Eggs</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8eggs"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">使用eggs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E6%9F%A5%E6%89%BE"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">自动查找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Build-eggs"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">Build eggs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E4%BE%9D%E8%B5%96"><span class="nav-number">1.1.3.4.</span> <span class="nav-text">声明依赖</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pip"><span class="nav-number">1.1.4.</span> <span class="nav-text">pip</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#setup-py-VS-requirements-txt"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">setup.py VS requirements.txt</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Python%E5%BA%93"><span class="nav-number">1.1.4.1.1.</span> <span class="nav-text">Python库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Python%E5%BA%94%E7%94%A8"><span class="nav-number">1.1.4.1.2.</span> <span class="nav-text">Python应用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8A%BD%E8%B1%A1%E4%B8%8E%E5%85%B7%E4%BD%93"><span class="nav-number">1.1.4.1.3.</span> <span class="nav-text">抽象与具体</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Setuptools%E7%9A%84dependcy-links"><span class="nav-number">1.1.4.1.4.</span> <span class="nav-text">Setuptools的dependcy_links</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E5%8F%AF%E5%A4%8D%E7%94%A8%E7%9A%84%E5%8C%85%E4%B8%8E%E4%B8%8D%E9%87%8D%E5%A4%8D%E8%87%AA%E5%B7%B1"><span class="nav-number">1.1.4.1.5.</span> <span class="nav-text">开发可复用的包与不重复自己</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#pip-vs-easy-install"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">pip vs easy_install</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wheel"><span class="nav-number">1.1.5.</span> <span class="nav-text">wheel</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#whl%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">whl使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#distutils2-%E5%92%8C-distlib"><span class="nav-number">1.1.6.</span> <span class="nav-text">distutils2 和 distlib</span></a></li></ol></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.0/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>

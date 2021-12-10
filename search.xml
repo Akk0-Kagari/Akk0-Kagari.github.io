@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>NachOS系统调用</title>
+    <url>/2021/05/17/NachOS%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
+    <content><![CDATA[<h1 id="一、背景知识"><a href="#一、背景知识" class="headerlink" title="一、背景知识"></a>一、背景知识</h1><p>Nachos 的全称是“Not Another Completely Heuristic Operating System”，它是一个可修改和跟踪的操作系统教学软件。它给出了一个支持多线程和虚拟存储的操作系统骨架，可让学生在较短的时间内对操作系统中的基本原理和核心算法有一个全面和完整的了解。</p>
+<h1 id="任务简介"><a href="#任务简介" class="headerlink" title="任务简介"></a>任务简介</h1><p>添加系统调用Print(char* msg)</p>
+<p>从API手册可知，操作系统为该任务提供的基础设施有：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kernel-&gt;synConsole-&gt;PutChar(char ch);   &#x2F;&#x2F; 向控制台写字符</span><br><span class="line">kernel-&gt;machine-&gt;ReadRegister(int num); &#x2F;&#x2F; 读寄存器</span><br><span class="line">kernel-&gt;machine-&gt;WriteRegister(int num, int value); &#x2F;&#x2F; 写寄存器</span><br><span class="line">kernel-&gt;machine-&gt;ReadMem(int addr, int size, int * value); &#x2F;&#x2F; 从用户进程内存读值</span><br></pre></td></tr></table></figure>
+
+<h1 id="系统虚拟机运行原理"><a href="#系统虚拟机运行原理" class="headerlink" title="系统虚拟机运行原理"></a>系统虚拟机运行原理</h1><blockquote>
+<p>使用该系统运行用户空间程序使用<code>nachos –x program_name </code>命令。程序从 <code>code/threads/main.cc </code>启动，创建了 <code>Kernel</code> 对象并进行初始化（启动主线程、创建线程调度表、中断处理模块、CPU、控制台、文件系统、中断使能等）。之后，程序创建了用户空间程序，初始化的时候加载了指令集并调用了<br><code>kernel-&gt;machine-&gt;WriteRegister</code> 填写 CPU 寄存器，然后开始执行。执行由<br><code>kernel-&gt;machine-&gt;Run</code> 实现，使用 OneInstruction 函数模拟 CPU 的逐条指令执行过程。</p>
+</blockquote>
+<h1 id="系统调用的实现思路"><a href="#系统调用的实现思路" class="headerlink" title="系统调用的实现思路"></a>系统调用的实现思路</h1><blockquote>
+<p>如同 Linux 操作系统一样，运行在虚拟机上的 NachOS 也使用中断来实现系统调<br>用（用户空间程序调用操作系统内核服务的接口）。<br>实现思路为：当系统调用发生的时候，首先把函数参数、系统调用号存入寄存器，然后引发系统中断，通过中断调用进入内核态；在系统调用完成功能之后，内核程序把返回值存入寄存器，然后返回。<br>如同 Linux 操作系统一样，运行在虚拟机上的 NachOS 也使用中断来实现系统调<br>用（用户空间程序调用操作系统内核服务的接口）。<br>实现思路为：当系统调用发生的时候，首先把函数参数、系统调用号存入寄存器，<br>然后引发系统中断，通过中断调用进入内核态；在系统调用完成功能之后，内核<br>程序把返回值存入寄存器，然后返回。</p>
+</blockquote>
+<h1 id="系统调用的具体实现"><a href="#系统调用的具体实现" class="headerlink" title="系统调用的具体实现"></a>系统调用的具体实现</h1><ol>
+<li><p>在<code>/userprog/syscall.h</code>中进行宏定义和函数声明</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SC_Print     21</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Print</span><span class="params">(<span class="keyword">char</span>* msg)</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/userprog/ksyscall.h</code>中实现函数的功能</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SysPrint</span><span class="params">( <span class="keyword">char</span> * msg )</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line"> <span class="keyword">int</span> IntValue = <span class="number">0</span>; </span><br><span class="line"> <span class="keyword">int</span> IntMem = (<span class="keyword">int</span>)msg; </span><br><span class="line"> <span class="keyword">do</span> </span><br><span class="line"> &#123; </span><br><span class="line"> <span class="comment">/* 从用户程序内存空间读取字符串的值 */</span> </span><br><span class="line"> kernel-&gt;machine-&gt;ReadMem(<span class="keyword">int</span>(IntMem++), <span class="number">1</span>, &amp;IntValue); </span><br><span class="line"> <span class="keyword">if</span> ( <span class="number">0</span> == IntValue ) <span class="keyword">break</span>; </span><br><span class="line"> kernel-&gt;synchConsoleOut-&gt;PutChar( (<span class="keyword">char</span>)IntValue ); </span><br><span class="line"> &#125;<span class="keyword">while</span>(<span class="literal">true</span>); </span><br><span class="line"> <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/userprog/exception.cc</code>完善中断处理函数</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">case</span> SC_Print: </span><br><span class="line">    <span class="keyword">int</span> result; </span><br><span class="line">    <span class="comment">/* 取参数，调用自己实现的函数 */</span> </span><br><span class="line">    result = <span class="built_in">SysPrint</span>( (<span class="keyword">char</span> *)kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(<span class="number">4</span>) ); </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(<span class="number">2</span>, (<span class="keyword">int</span>)result); <span class="comment">/* 存返回值 */</span> </span><br><span class="line">    <span class="comment">/* 这段是有关 CPU 的一些状态变量设置，参照原来的代码 */</span> </span><br><span class="line">    &#123; </span><br><span class="line">    <span class="comment">/* 保存当前程序计数器 */</span> </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(PrevPCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg)); </span><br><span class="line">    <span class="comment">/* 当前 PC 计数++*/</span> </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(PCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg) + <span class="number">4</span>);  </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(NextPCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg)+<span class="number">4</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span>; <span class="comment">/* 任务已经完成，返回吧 */</span> </span><br><span class="line">    <span class="built_in">ASSERTNOTREACHED</span>(); <span class="comment">/* 断言，如果执行到了说明出错啦 */</span> </span><br><span class="line">    <span class="keyword">break</span>; </span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/test/start.s</code>中补充汇编代码，实现系统调用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    .globl Print &#x2F;* 声明为外部函数 *&#x2F; </span><br><span class="line">    .ent Print &#x2F;* Print 函数开始 *&#x2F; </span><br><span class="line">Print: </span><br><span class="line">    addiu $2,$0,SC_Print &#x2F;* 将系统调用号存入 r2 寄存器 *&#x2F; </span><br><span class="line">    syscall &#x2F;* 引发系统中断调用 *&#x2F; </span><br><span class="line">    j $31 &#x2F;* 跳转到中断返回的寄存器 r31 *&#x2F; </span><br><span class="line">    .end Print &#x2F;* Print 函数结束*&#x2F; </span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/test</code>下编写<code>print.c</code>，实现函数调用</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;syscall.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result;</span><br><span class="line">        result=Print(<span class="string">&quot;helloworld\n&quot;</span>);</span><br><span class="line">        Halt();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/test/Makefile</code>中添加<code>print.c</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SOURCES &#x3D; add.c halt.c matmult.c shell.c sort.c print.c</span><br></pre></td></tr></table></figure></li>
+<li><p>在<code>/test</code>下使用<code>make</code>编译</p>
+</li>
+<li><p>在<code>/build.linux</code>下使用<code>make</code>编译,此时可能会报错，如下图</p>
+</li>
+</ol>
+<p><img src="https://gitee.com/auxein/images/raw/master/NachOS/nachos1.png"></p>
+<p>引起错误的原因是因为有其他模块定义了同名的宏。<br>我们需要修改<code>/userprog/syscall.h</code>中的两个宏名称。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#define ConsoleInput         0</span><br><span class="line">#define ConsoleOutput        1</span><br></pre></td></tr></table></figure>
+
+<p>修改完成之后就可以再<code>make</code>会出现<code>warning</code>，但已经无伤大雅了。</p>
+<ol start="9">
+<li>在<code>/test</code>目录下使用命令<code>../build.linux/nachos -x print.noff</code>运行，可以看到我们的<code>helloworld</code>已经被输出了</li>
+</ol>
+<p><img src="https://gitee.com/auxein/images/raw/master/NachOS/output_print.png"></p>
+]]></content>
+  </entry>
+  <entry>
     <title>Crypto In SCUCTF 2021</title>
     <url>/2021/05/17/2021scuctf/</url>
     <content><![CDATA[<h2 id="贝斯手"><a href="#贝斯手" class="headerlink" title="贝斯手"></a>贝斯手</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cipher &#x3D; R1EzVElOQlRHSTNVSU5aVUdRNERNTlpWR0UyREVOS0dHWTJES01aVUlZMkRHTkJSR1JCVE9OUlhHNDNFSU5CWUdSRERNUUpXR00yVElOQlNHUTNUTU1aV0dBMkRPTkJSR1laVE9OSldHQTNES01SV0dZMkRLTVJXSU0zRE9OSlFHVTRETVJCVUdRWlVHTVpVR1VaVE9SQlhJUTJETz09PQ</span><br></pre></td></tr></table></figure>
@@ -26,6 +69,89 @@
       <tags>
         <tag>crypto</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Python Import 机制小记</title>
+    <url>/2021/10/22/Python%20Import%20%E6%9C%BA%E5%88%B6%E5%B0%8F%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="Python-Import-机制小记"><a href="#Python-Import-机制小记" class="headerlink" title="Python Import 机制小记"></a>Python Import 机制小记</h1><h2 id="模块（module）与包-（package）"><a href="#模块（module）与包-（package）" class="headerlink" title="模块（module）与包 （package）"></a>模块（module）与包 （package）</h2><h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>典型的，一个 <code>.py</code> 后缀文件即是 Python 的一个模块。在模块的内部，可以通过全局变量 <code>__name__</code> 来获得模块名。模块可以包含可执行的语句，这些语句会在模块 <strong>初始化</strong> 的时候执行 —— 当所在模块被 <code>import</code> 导入时它们有且只会执行一次。</p>
+<h3 id="包"><a href="#包" class="headerlink" title="包"></a>包</h3><p>根据目前 <code>PEP420</code> 的提案，目前的 <code>Python</code> 实际上是有两种包的存在：<strong>正规包</strong>（<code>regular Package</code>） 以及 <strong>命名空间包</strong>（<code>Namespace package</code>）</p>
+<ul>
+<li><p>正规包：<br>在 Python 3.2 之前就已经存在了的，通常是以包含一个 <code>__init__.py</code> 文件的目录形式展现。当 package 被导入时，这个 <code>__init__.py</code> 文件会被 <em>隐式</em> 地执行。</p>
+</li>
+<li><p>命名空间包</p>
+<p>根据 PEP420 的定义，命名空间包是由多个 <em>portion</em> 组成的 —— <em>portion</em> 类似于父包下的子包，但它们物理位置上不一定相邻，而且它们可能表现为 .zip 中的文件、网络上的文件等等。命名空间包不需要 <code>__init__.py</code> 文件，只要它本身或者子包（也就是 <em>portion*）被导入时，Python 就会给顶级的部分创建为命名空间包 —— 因此，命名空间包不一定直接对应到文件系统中的对象，它可以是一个 *虚拟</em> 的 module 。</p>
+</li>
+</ul>
+<h2 id="Import-机制"><a href="#Import-机制" class="headerlink" title="Import 机制"></a>Import 机制</h2><p>模块中的 Python 代码可以通过 import（导入）操作访问另一个模块内的代码。<code>import</code> 语句时调起导入机制的常用方式，但不是唯一方式。<code>importlib.import_module()</code> 以及内置的 <code>__import__()</code> 函数都可以调起导入机制。</p>
+<p>未完待续……..</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>XCTF-Web_php_unserialize</title>
+    <url>/2020/08/14/XCTF-Web_php_unserialize/</url>
+    <content><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>题目如下<br><img src="https://img-blog.csdnimg.cn/20200814193603290.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70#pic_center"><br>可以看出来这是一道关于反序列化的题目</p>
+<h1 id="分析题目"><a href="#分析题目" class="headerlink" title="分析题目"></a>分析题目</h1><p>看一下题目的代码</p>
+<ul>
+<li> 首先判断GET参数 <strong>“var”</strong> 是否存在，然后通过base64解码传入变量var，如果不存在就输出网页源码</li>
+<li> 对<strong>var</strong>进行一个正则过滤，如果通过正则过滤便会进行反序列化，否则响应信息’stop hacking!’</li>
+</ul>
+<h1 id="题目中出现的魔术方法"><a href="#题目中出现的魔术方法" class="headerlink" title="题目中出现的魔术方法"></a>题目中出现的魔术方法</h1><p>题目中存在一个demo类</p>
+<ul>
+<li><code>__contrust()</code><br>见名知意，构造方法。具有构造方法的类会在每次创建新对象前调用此方法 ，该方法常用于完成一些初始化工作。</li>
+<li><code>__destruct()</code><br>析构方法 ，当 某个对象的所有引用都被删除或者当对象被显式销毁时 ， 析构函数会被执行。</li>
+<li><code>__wakeup()</code><br>是用在反序列化操作中。<strong>unserialize()</strong> 会检查存在一个 <strong>__wakeup()</strong>    方法。如果存在，则先会调用 <strong>__wakeup()</strong> 方法。 <strong>__wakeup()</strong> 经常用在反序列化操作中，例如重新建立数据库连接，或执行其它初始化操作。</li>
+</ul>
+<h1 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h1><ul>
+<li>通过GET传入base64编码得参数且要绕过正则过滤</li>
+<li>绕过 <strong>__wakeup()</strong><br>解释，源码中提示flag在 <strong>fl4g.php</strong> 中，而使用调用 <strong>__wakeup()</strong> 会强制将 <strong>$file</strong> 变量复制为index.php</li>
+</ul>
+<h1 id="开始解题"><a href="#开始解题" class="headerlink" title="开始解题"></a>开始解题</h1><h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>代码如下</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123; </span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$file</span> = <span class="string">&#x27;index.php&#x27;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$file</span></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">$this</span>-&gt;file = <span class="variable">$file</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">echo</span> @highlight_file(<span class="keyword">$this</span>-&gt;file, <span class="literal">true</span>); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;file != <span class="string">&#x27;index.php&#x27;</span>) &#123; </span><br><span class="line">            <span class="comment">//the secret is in the fl4g.php</span></span><br><span class="line">            <span class="keyword">$this</span>-&gt;file = <span class="string">&#x27;index.php&#x27;</span>; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$a</span> = <span class="keyword">new</span> Demo(<span class="string">&#x27;fl4g.php&#x27;</span>);</span><br><span class="line"><span class="variable">$b</span> = serialize(<span class="variable">$a</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$b</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>运行后结果如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">O:4:&quot;Demo&quot;:1:&#123;s:10:&quot;Demofile&quot;;s:8:&quot;fl4g.php&quot;;&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="绕过正则"><a href="#绕过正则" class="headerlink" title="绕过正则"></a>绕过正则</h2><p>该题正则匹配的规则如下:<br>在不区分大小写的情况下 ， 若字符串出现 <strong>“o:数字”</strong> 或者 <strong>“c:数字’</strong> 这样的格式 ， 那么就被过滤。<br>我们传入得参数类型为对象 <strong>“ O “</strong> ， 又因为序列化字符串的格式为 <strong>参数格式:参数名长度</strong> ， 因此 <strong>“ O:4 “</strong> 这样的字符串肯定无法通过正则匹配<br>这里利用了一个php反序列化的特性（感兴趣可以自行百度），需要注意的是在php7中这部分代码被修改了，无法使用。</p>
+<h3 id="获取php版本"><a href="#获取php版本" class="headerlink" title="获取php版本"></a>获取php版本</h3><p>使用dirsearch进行扫描<br><img src="https://img-blog.csdnimg.cn/20200814200908751.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70#pic_center"><br>可以找到泄露的PHP信息<br><img src="https://img-blog.csdnimg.cn/2020081420102849.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70#pic_center"></p>
+<h3 id="利用特性"><a href="#利用特性" class="headerlink" title="利用特性"></a>利用特性</h3><p>反序列化操作 <strong>参数格式:参数名长度</strong> 时，当格式为 <strong>参数格式:+参数名长度</strong> 会返回同样的结果，故我们可以通过这个方法绕过正则过滤</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">O:+4:&quot;Demo&quot;:1:&#123;s:10:&quot;Demofile&quot;;s:8:&quot;fl4g.php&quot;;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="绕过-wakeup"><a href="#绕过-wakeup" class="headerlink" title="绕过__wakeup()"></a>绕过__wakeup()</h2><p>对应的CVE编号: <strong>CVE-2016-7124</strong></p>
+<ul>
+<li>存在漏洞的PHP版本: <strong>PHP5.6.25</strong> 之前版本和 <strong>7.0.10</strong> 之前的<strong>7.x</strong>版本</li>
+<li>漏洞概述: <strong>__wakeup()</strong> 魔法函数被绕过,导致执行了一些非预期效果的漏洞</li>
+<li>漏洞原理: 当对象的 <strong>属性(变量)数</strong> 大于实际的个数时, <strong>__wakeup()</strong> 魔法函数被绕过</li>
+</ul>
+<p>故序列化结果修改如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">O:4:&quot;Demo&quot;:1:&#123;s:10:&quot;Demofile&quot;;s:8:&quot;fl4g.php&quot;;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h2><p>题目中知道还需要进行base64编码<br>构造payload如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?var&#x3D;TzorNDoiRGVtbyI6Mjp7czoxMDoiAERlbW8AZmlsZSI7czo4OiJmbDRnLnBocCI7fQ&#x3D;&#x3D;</span><br></pre></td></tr></table></figure>
+<p>得到flag<br><img src="https://img-blog.csdnimg.cn/20200814202144316.png#pic_center"></p>
+<h1 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h1><blockquote>
+<p>需要注意的一点是private和protect属性的序列化</p>
+</blockquote>
+<p>直接上代码</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">test</span></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$name</span>=<span class="string">&quot;winny&quot;</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$age</span>=<span class="string">&quot;8&quot;</span>;</span><br><span class="line">        <span class="keyword">protected</span> <span class="variable">$sex</span>=<span class="string">&quot;female&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$a</span>=<span class="keyword">new</span> test();</span><br><span class="line">    <span class="variable">$a</span>=serialize(<span class="variable">$a</span>);</span><br><span class="line">    print_r(<span class="variable">$a</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>序列化显示如下</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">O:4:&quot;test&quot;:3:&#123;s:4:&quot;name&quot;;s:5:&quot;winny&quot;;s:9:&quot;testage&quot;;s:1:&quot;8&quot;;s:6:&quot;*sex&quot;;s:6:&quot;female&quot;;&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>private</code> 分析：<br>这样就发现本来是 <code>age</code>结果上面出现的是 <code>testage</code>，而且 <code>testage</code> 长度为7，但是上面显示的是9<br>查找资料后发现 <code>private</code> 属性序列化的时候格式是 <strong>%00类名%00成员名</strong>，**%00** 占一个字节长度，所以 <code>age</code> 加了类名后变成了 <code>testage</code> 长度为9</p>
+</li>
+<li><p><code>protect</code> 分析：<br>本来是 <code>sex</code> 结果上面出现的是 <code>*sex</code>，而且 <code>*sex</code> 的长度是4，但是上面显示的是6，同样查找资料后发现 <code>protect</code>属性序列化的时候格式<em><em>是 %00</em>%00成员名</em>*</p>
+<blockquote>
+<p>public(公共的):在本类内部、外部类、子类都可以访问<br>protect(受保护的):只有本类或子类或父类中可以访问<br>private(私人的):只有本类内部可以使用</p>
+</blockquote>
+</li>
+</ul>
+<p>这里我开始是采用手动序列化，一直没有成功。本菜狗还是使用脚本输出吧呜呜呜。</p>
+]]></content>
+      <tags>
+        <tag>Web</tag>
+        <tag>unserialize</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Python软件包安装过程</title>
+    <url>/2021/12/10/Python%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B/</url>
+    <content><![CDATA[]]></content>
   </entry>
   <entry>
     <title>XCTF-supersqli</title>
@@ -94,111 +220,6 @@
         <tag>Web</tag>
         <tag>sql注入</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>XCTF-Web_php_unserialize</title>
-    <url>/2020/08/14/XCTF-Web_php_unserialize/</url>
-    <content><![CDATA[<h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>题目如下<br><img src="https://img-blog.csdnimg.cn/20200814193603290.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70#pic_center"><br>可以看出来这是一道关于反序列化的题目</p>
-<h1 id="分析题目"><a href="#分析题目" class="headerlink" title="分析题目"></a>分析题目</h1><p>看一下题目的代码</p>
-<ul>
-<li> 首先判断GET参数 <strong>“var”</strong> 是否存在，然后通过base64解码传入变量var，如果不存在就输出网页源码</li>
-<li> 对<strong>var</strong>进行一个正则过滤，如果通过正则过滤便会进行反序列化，否则响应信息’stop hacking!’</li>
-</ul>
-<h1 id="题目中出现的魔术方法"><a href="#题目中出现的魔术方法" class="headerlink" title="题目中出现的魔术方法"></a>题目中出现的魔术方法</h1><p>题目中存在一个demo类</p>
-<ul>
-<li><code>__contrust()</code><br>见名知意，构造方法。具有构造方法的类会在每次创建新对象前调用此方法 ，该方法常用于完成一些初始化工作。</li>
-<li><code>__destruct()</code><br>析构方法 ，当 某个对象的所有引用都被删除或者当对象被显式销毁时 ， 析构函数会被执行。</li>
-<li><code>__wakeup()</code><br>是用在反序列化操作中。<strong>unserialize()</strong> 会检查存在一个 <strong>__wakeup()</strong>    方法。如果存在，则先会调用 <strong>__wakeup()</strong> 方法。 <strong>__wakeup()</strong> 经常用在反序列化操作中，例如重新建立数据库连接，或执行其它初始化操作。</li>
-</ul>
-<h1 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h1><ul>
-<li>通过GET传入base64编码得参数且要绕过正则过滤</li>
-<li>绕过 <strong>__wakeup()</strong><br>解释，源码中提示flag在 <strong>fl4g.php</strong> 中，而使用调用 <strong>__wakeup()</strong> 会强制将 <strong>$file</strong> 变量复制为index.php</li>
-</ul>
-<h1 id="开始解题"><a href="#开始解题" class="headerlink" title="开始解题"></a>开始解题</h1><h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>代码如下</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123; </span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$file</span> = <span class="string">&#x27;index.php&#x27;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$file</span></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">$this</span>-&gt;file = <span class="variable">$file</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">echo</span> @highlight_file(<span class="keyword">$this</span>-&gt;file, <span class="literal">true</span>); </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>) </span>&#123; </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;file != <span class="string">&#x27;index.php&#x27;</span>) &#123; </span><br><span class="line">            <span class="comment">//the secret is in the fl4g.php</span></span><br><span class="line">            <span class="keyword">$this</span>-&gt;file = <span class="string">&#x27;index.php&#x27;</span>; </span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$a</span> = <span class="keyword">new</span> Demo(<span class="string">&#x27;fl4g.php&#x27;</span>);</span><br><span class="line"><span class="variable">$b</span> = serialize(<span class="variable">$a</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$b</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>运行后结果如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">O:4:&quot;Demo&quot;:1:&#123;s:10:&quot;Demofile&quot;;s:8:&quot;fl4g.php&quot;;&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="绕过正则"><a href="#绕过正则" class="headerlink" title="绕过正则"></a>绕过正则</h2><p>该题正则匹配的规则如下:<br>在不区分大小写的情况下 ， 若字符串出现 <strong>“o:数字”</strong> 或者 <strong>“c:数字’</strong> 这样的格式 ， 那么就被过滤。<br>我们传入得参数类型为对象 <strong>“ O “</strong> ， 又因为序列化字符串的格式为 <strong>参数格式:参数名长度</strong> ， 因此 <strong>“ O:4 “</strong> 这样的字符串肯定无法通过正则匹配<br>这里利用了一个php反序列化的特性（感兴趣可以自行百度），需要注意的是在php7中这部分代码被修改了，无法使用。</p>
-<h3 id="获取php版本"><a href="#获取php版本" class="headerlink" title="获取php版本"></a>获取php版本</h3><p>使用dirsearch进行扫描<br><img src="https://img-blog.csdnimg.cn/20200814200908751.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70#pic_center"><br>可以找到泄露的PHP信息<br><img src="https://img-blog.csdnimg.cn/2020081420102849.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYxMzc2MA==,size_16,color_FFFFFF,t_70#pic_center"></p>
-<h3 id="利用特性"><a href="#利用特性" class="headerlink" title="利用特性"></a>利用特性</h3><p>反序列化操作 <strong>参数格式:参数名长度</strong> 时，当格式为 <strong>参数格式:+参数名长度</strong> 会返回同样的结果，故我们可以通过这个方法绕过正则过滤</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">O:+4:&quot;Demo&quot;:1:&#123;s:10:&quot;Demofile&quot;;s:8:&quot;fl4g.php&quot;;&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="绕过-wakeup"><a href="#绕过-wakeup" class="headerlink" title="绕过__wakeup()"></a>绕过__wakeup()</h2><p>对应的CVE编号: <strong>CVE-2016-7124</strong></p>
-<ul>
-<li>存在漏洞的PHP版本: <strong>PHP5.6.25</strong> 之前版本和 <strong>7.0.10</strong> 之前的<strong>7.x</strong>版本</li>
-<li>漏洞概述: <strong>__wakeup()</strong> 魔法函数被绕过,导致执行了一些非预期效果的漏洞</li>
-<li>漏洞原理: 当对象的 <strong>属性(变量)数</strong> 大于实际的个数时, <strong>__wakeup()</strong> 魔法函数被绕过</li>
-</ul>
-<p>故序列化结果修改如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">O:4:&quot;Demo&quot;:1:&#123;s:10:&quot;Demofile&quot;;s:8:&quot;fl4g.php&quot;;&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="构造payload"><a href="#构造payload" class="headerlink" title="构造payload"></a>构造payload</h2><p>题目中知道还需要进行base64编码<br>构造payload如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?var&#x3D;TzorNDoiRGVtbyI6Mjp7czoxMDoiAERlbW8AZmlsZSI7czo4OiJmbDRnLnBocCI7fQ&#x3D;&#x3D;</span><br></pre></td></tr></table></figure>
-<p>得到flag<br><img src="https://img-blog.csdnimg.cn/20200814202144316.png#pic_center"></p>
-<h1 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h1><blockquote>
-<p>需要注意的一点是private和protect属性的序列化</p>
-</blockquote>
-<p>直接上代码</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">test</span></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$name</span>=<span class="string">&quot;winny&quot;</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$age</span>=<span class="string">&quot;8&quot;</span>;</span><br><span class="line">        <span class="keyword">protected</span> <span class="variable">$sex</span>=<span class="string">&quot;female&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable">$a</span>=<span class="keyword">new</span> test();</span><br><span class="line">    <span class="variable">$a</span>=serialize(<span class="variable">$a</span>);</span><br><span class="line">    print_r(<span class="variable">$a</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>序列化显示如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">O:4:&quot;test&quot;:3:&#123;s:4:&quot;name&quot;;s:5:&quot;winny&quot;;s:9:&quot;testage&quot;;s:1:&quot;8&quot;;s:6:&quot;*sex&quot;;s:6:&quot;female&quot;;&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p><code>private</code> 分析：<br>这样就发现本来是 <code>age</code>结果上面出现的是 <code>testage</code>，而且 <code>testage</code> 长度为7，但是上面显示的是9<br>查找资料后发现 <code>private</code> 属性序列化的时候格式是 <strong>%00类名%00成员名</strong>，**%00** 占一个字节长度，所以 <code>age</code> 加了类名后变成了 <code>testage</code> 长度为9</p>
-</li>
-<li><p><code>protect</code> 分析：<br>本来是 <code>sex</code> 结果上面出现的是 <code>*sex</code>，而且 <code>*sex</code> 的长度是4，但是上面显示的是6，同样查找资料后发现 <code>protect</code>属性序列化的时候格式<em><em>是 %00</em>%00成员名</em>*</p>
-<blockquote>
-<p>public(公共的):在本类内部、外部类、子类都可以访问<br>protect(受保护的):只有本类或子类或父类中可以访问<br>private(私人的):只有本类内部可以使用</p>
-</blockquote>
-</li>
-</ul>
-<p>这里我开始是采用手动序列化，一直没有成功。本菜狗还是使用脚本输出吧呜呜呜。</p>
-]]></content>
-      <tags>
-        <tag>Web</tag>
-        <tag>unserialize</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>NachOS系统调用</title>
-    <url>/2021/05/17/NachOS%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/</url>
-    <content><![CDATA[<h1 id="一、背景知识"><a href="#一、背景知识" class="headerlink" title="一、背景知识"></a>一、背景知识</h1><p>Nachos 的全称是“Not Another Completely Heuristic Operating System”，它是一个可修改和跟踪的操作系统教学软件。它给出了一个支持多线程和虚拟存储的操作系统骨架，可让学生在较短的时间内对操作系统中的基本原理和核心算法有一个全面和完整的了解。</p>
-<h1 id="任务简介"><a href="#任务简介" class="headerlink" title="任务简介"></a>任务简介</h1><p>添加系统调用Print(char* msg)</p>
-<p>从API手册可知，操作系统为该任务提供的基础设施有：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kernel-&gt;synConsole-&gt;PutChar(char ch);   &#x2F;&#x2F; 向控制台写字符</span><br><span class="line">kernel-&gt;machine-&gt;ReadRegister(int num); &#x2F;&#x2F; 读寄存器</span><br><span class="line">kernel-&gt;machine-&gt;WriteRegister(int num, int value); &#x2F;&#x2F; 写寄存器</span><br><span class="line">kernel-&gt;machine-&gt;ReadMem(int addr, int size, int * value); &#x2F;&#x2F; 从用户进程内存读值</span><br></pre></td></tr></table></figure>
-
-<h1 id="系统虚拟机运行原理"><a href="#系统虚拟机运行原理" class="headerlink" title="系统虚拟机运行原理"></a>系统虚拟机运行原理</h1><blockquote>
-<p>使用该系统运行用户空间程序使用<code>nachos –x program_name </code>命令。程序从 <code>code/threads/main.cc </code>启动，创建了 <code>Kernel</code> 对象并进行初始化（启动主线程、创建线程调度表、中断处理模块、CPU、控制台、文件系统、中断使能等）。之后，程序创建了用户空间程序，初始化的时候加载了指令集并调用了<br><code>kernel-&gt;machine-&gt;WriteRegister</code> 填写 CPU 寄存器，然后开始执行。执行由<br><code>kernel-&gt;machine-&gt;Run</code> 实现，使用 OneInstruction 函数模拟 CPU 的逐条指令执行过程。</p>
-</blockquote>
-<h1 id="系统调用的实现思路"><a href="#系统调用的实现思路" class="headerlink" title="系统调用的实现思路"></a>系统调用的实现思路</h1><blockquote>
-<p>如同 Linux 操作系统一样，运行在虚拟机上的 NachOS 也使用中断来实现系统调<br>用（用户空间程序调用操作系统内核服务的接口）。<br>实现思路为：当系统调用发生的时候，首先把函数参数、系统调用号存入寄存器，然后引发系统中断，通过中断调用进入内核态；在系统调用完成功能之后，内核程序把返回值存入寄存器，然后返回。<br>如同 Linux 操作系统一样，运行在虚拟机上的 NachOS 也使用中断来实现系统调<br>用（用户空间程序调用操作系统内核服务的接口）。<br>实现思路为：当系统调用发生的时候，首先把函数参数、系统调用号存入寄存器，<br>然后引发系统中断，通过中断调用进入内核态；在系统调用完成功能之后，内核<br>程序把返回值存入寄存器，然后返回。</p>
-</blockquote>
-<h1 id="系统调用的具体实现"><a href="#系统调用的具体实现" class="headerlink" title="系统调用的具体实现"></a>系统调用的具体实现</h1><ol>
-<li><p>在<code>/userprog/syscall.h</code>中进行宏定义和函数声明</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SC_Print     21</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Print</span><span class="params">(<span class="keyword">char</span>* msg)</span></span>;</span><br></pre></td></tr></table></figure></li>
-<li><p>在<code>/userprog/ksyscall.h</code>中实现函数的功能</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">SysPrint</span><span class="params">( <span class="keyword">char</span> * msg )</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line"> <span class="keyword">int</span> IntValue = <span class="number">0</span>; </span><br><span class="line"> <span class="keyword">int</span> IntMem = (<span class="keyword">int</span>)msg; </span><br><span class="line"> <span class="keyword">do</span> </span><br><span class="line"> &#123; </span><br><span class="line"> <span class="comment">/* 从用户程序内存空间读取字符串的值 */</span> </span><br><span class="line"> kernel-&gt;machine-&gt;ReadMem(<span class="keyword">int</span>(IntMem++), <span class="number">1</span>, &amp;IntValue); </span><br><span class="line"> <span class="keyword">if</span> ( <span class="number">0</span> == IntValue ) <span class="keyword">break</span>; </span><br><span class="line"> kernel-&gt;synchConsoleOut-&gt;PutChar( (<span class="keyword">char</span>)IntValue ); </span><br><span class="line"> &#125;<span class="keyword">while</span>(<span class="literal">true</span>); </span><br><span class="line"> <span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure></li>
-<li><p>在<code>/userprog/exception.cc</code>完善中断处理函数</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">case</span> SC_Print: </span><br><span class="line">    <span class="keyword">int</span> result; </span><br><span class="line">    <span class="comment">/* 取参数，调用自己实现的函数 */</span> </span><br><span class="line">    result = <span class="built_in">SysPrint</span>( (<span class="keyword">char</span> *)kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(<span class="number">4</span>) ); </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(<span class="number">2</span>, (<span class="keyword">int</span>)result); <span class="comment">/* 存返回值 */</span> </span><br><span class="line">    <span class="comment">/* 这段是有关 CPU 的一些状态变量设置，参照原来的代码 */</span> </span><br><span class="line">    &#123; </span><br><span class="line">    <span class="comment">/* 保存当前程序计数器 */</span> </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(PrevPCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg)); </span><br><span class="line">    <span class="comment">/* 当前 PC 计数++*/</span> </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(PCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg) + <span class="number">4</span>);  </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">WriteRegister</span>(NextPCReg, </span><br><span class="line">    kernel-&gt;machine-&gt;<span class="built_in">ReadRegister</span>(PCReg)+<span class="number">4</span>); </span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">return</span>; <span class="comment">/* 任务已经完成，返回吧 */</span> </span><br><span class="line">    <span class="built_in">ASSERTNOTREACHED</span>(); <span class="comment">/* 断言，如果执行到了说明出错啦 */</span> </span><br><span class="line">    <span class="keyword">break</span>; </span><br></pre></td></tr></table></figure></li>
-<li><p>在<code>/test/start.s</code>中补充汇编代码，实现系统调用</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    .globl Print &#x2F;* 声明为外部函数 *&#x2F; </span><br><span class="line">    .ent Print &#x2F;* Print 函数开始 *&#x2F; </span><br><span class="line">Print: </span><br><span class="line">    addiu $2,$0,SC_Print &#x2F;* 将系统调用号存入 r2 寄存器 *&#x2F; </span><br><span class="line">    syscall &#x2F;* 引发系统中断调用 *&#x2F; </span><br><span class="line">    j $31 &#x2F;* 跳转到中断返回的寄存器 r31 *&#x2F; </span><br><span class="line">    .end Print &#x2F;* Print 函数结束*&#x2F; </span><br></pre></td></tr></table></figure></li>
-<li><p>在<code>/test</code>下编写<code>print.c</code>，实现函数调用</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;syscall.h&quot;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result;</span><br><span class="line">        result=Print(<span class="string">&quot;helloworld\n&quot;</span>);</span><br><span class="line">        Halt();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>在<code>/test/Makefile</code>中添加<code>print.c</code></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">SOURCES &#x3D; add.c halt.c matmult.c shell.c sort.c print.c</span><br></pre></td></tr></table></figure></li>
-<li><p>在<code>/test</code>下使用<code>make</code>编译</p>
-</li>
-<li><p>在<code>/build.linux</code>下使用<code>make</code>编译,此时可能会报错，如下图</p>
-</li>
-</ol>
-<p><img src="https://gitee.com/auxein/images/raw/master/NachOS/nachos1.png"></p>
-<p>引起错误的原因是因为有其他模块定义了同名的宏。<br>我们需要修改<code>/userprog/syscall.h</code>中的两个宏名称。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#define ConsoleInput         0</span><br><span class="line">#define ConsoleOutput        1</span><br></pre></td></tr></table></figure>
-
-<p>修改完成之后就可以再<code>make</code>会出现<code>warning</code>，但已经无伤大雅了。</p>
-<ol start="9">
-<li>在<code>/test</code>目录下使用命令<code>../build.linux/nachos -x print.noff</code>运行，可以看到我们的<code>helloworld</code>已经被输出了</li>
-</ol>
-<p><img src="https://gitee.com/auxein/images/raw/master/NachOS/output_print.png"></p>
-]]></content>
   </entry>
   <entry>
     <title>XCTF-unserialize3</title>
@@ -366,6 +387,204 @@
 ]]></content>
   </entry>
   <entry>
+    <title>常见端口扫描类型总结</title>
+    <url>/2021/05/31/%E5%B8%B8%E8%A7%81%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%B1%BB%E5%9E%8B%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h1 id="常见端口扫描类型总结"><a href="#常见端口扫描类型总结" class="headerlink" title="常见端口扫描类型总结"></a>常见端口扫描类型总结</h1><h2 id="TCP-SYN-扫描"><a href="#TCP-SYN-扫描" class="headerlink" title="TCP SYN 扫描"></a>TCP SYN 扫描</h2><p>原理：扫描器向目的主机的一个端口发送请求连接的SYN包，扫描器在收到SYN/ACK后，不采用发送ACK应答的方式而是发送RST请求断开连接，则三次握手不会完成，没有建立正常的TCP连接，此次扫描也不会被记录到系统日志中。这种扫描方式不会再目的主机上留下痕迹。但是这种扫描器需要有<strong>root权限</strong>。</p>
+<ul>
+<li>若收到SYN/ACK则端口开放</li>
+<li>若收到RST表示端口关闭</li>
+</ul>
+<p>优点：扫描隐蔽。</p>
+<h2 id="Connect扫描"><a href="#Connect扫描" class="headerlink" title="Connect扫描"></a>Connect扫描</h2><p>原理即为与TCP端口进行“三次握手”通信。</p>
+<ul>
+<li>若建立成功，端口开放</li>
+<li>反之则关闭</li>
+</ul>
+<p>优点：实现简单，没有<strong>权限</strong>要求。并且扫描速度快，可同时打开多个套接字从而加速扫描。</p>
+<p>缺点：会在目标主机的日志记录中留下<strong>痕迹</strong>，易被发现，并且数据包会被过滤。目标主机的logs文件会显示一连串的连接和连接出错的服务信息，并且能很快地使它关闭。</p>
+<h2 id="NULL扫描（反向扫描）"><a href="#NULL扫描（反向扫描）" class="headerlink" title="NULL扫描（反向扫描）"></a>NULL扫描（反向扫描）</h2><p>原理：将一个没有设置任何标志位的数据包发给TCP端口。对于遵守FRC 793的主机（*nix）：</p>
+<ul>
+<li>端口关闭：舍弃该分段，并发送一个RST数据包。</li>
+<li>端口开启：不会响应</li>
+</ul>
+<p>对于不遵循的主机，例如Windows主机，只要收到无标志位的数据包，无论端口开放还是关闭都响应RST数据包。</p>
+<p><del>为什么称作反向扫描呢？与前两种相比，前两种方式收到响应包表示端口开放，而NULL扫描收到则表示端口关闭</del></p>
+<p>优点：隐蔽性高，可粗略判断系统。</p>
+<p>缺点：精确度相对较低。</p>
+<h2 id="FIN扫描"><a href="#FIN扫描" class="headerlink" title="FIN扫描"></a>FIN扫描</h2><p>原理：FIN表示TCP会话结束，FIN扫描中发送一个设置了FIN位的数据包：</p>
+<ul>
+<li>响应RST数据包，端口关闭</li>
+<li>无响应，端口关闭</li>
+</ul>
+<p>优点：隐蔽</p>
+<p>缺点：不能判断Windows系统上端口开放情况</p>
+<h2 id="ACK扫描"><a href="#ACK扫描" class="headerlink" title="ACK扫描"></a>ACK扫描</h2><p>原理：扫描主机向目标主机发送ACK数据包，根据返回的RST数据包可以得到端口信息。</p>
+<ul>
+<li>RST的TTL小于等于64，端口开放</li>
+<li>反之关闭</li>
+</ul>
+<p>优点：隐蔽</p>
+<h2 id="Xmas-Tree扫描"><a href="#Xmas-Tree扫描" class="headerlink" title="Xmas-Tree扫描"></a>Xmas-Tree扫描</h2><p>通过发送带有以下标志位的TCP数据包：</p>
+<ul>
+<li>URG：指示数据时紧急数据，应立即处理。</li>
+<li>PSH：强制将数据压入缓冲区。</li>
+<li>FIN：在结束TCP会话时使用。</li>
+</ul>
+<p>通常这三种标志位不能被同时设置。我们可以通过这种扫描来判断端口情况。</p>
+<ul>
+<li>无响应，端口开放</li>
+<li>响应RST，端口关闭</li>
+</ul>
+<p>XMAS扫描原理和NULL扫描的类似，将TCP数据包中的ACK、FIN、RST、SYN、URG、PSH标志位置1后发送给目标主机。</p>
+<p>优点：隐蔽</p>
+<p>缺点：不能判断Windows系统上端口开放情况</p>
+<h2 id="Dump扫描"><a href="#Dump扫描" class="headerlink" title="Dump扫描"></a>Dump扫描</h2><p>也被称为Idle扫描或反向扫描，在扫描主机时应用了第三方僵尸计算机扫描。由僵尸主机向目标主机发送SYN包。目标主机端口开放时响应SYN|ACK，关闭时返回RST，僵尸主机对SYN|ACK回应RST，对RST不做回应。从僵尸主机上进行扫描时，进行的是一个从本地计算机到僵尸主机的、连续的ping操作。查看僵尸主机返回的Echo响应的ID字段，能确定目标主机上哪些端口是开放的还是关闭的。</p>
+<h2 id="UDP扫描"><a href="#UDP扫描" class="headerlink" title="UDP扫描"></a>UDP扫描</h2><p>原理：UDP为无连接协议。无连接的协议则不会事先建立客户端和服务器之间的通信信道，只要客户端到服务器存在可用信道，就会假设目标是可达的然后向对方发送数据。</p>
+<ul>
+<li>若响应，端口开放</li>
+<li>返回ICMP目标不可达，端口关闭</li>
+<li>如果服务器返回一个 ICMP 错误类型3且代码为1，2，3，9，10或13的数据包，则说明目标端口被服务器过滤了。</li>
+<li>无响应，<strong>无法判断</strong><del>薛定谔的猫</del></li>
+</ul>
+<h2 id="分段扫描"><a href="#分段扫描" class="headerlink" title="分段扫描"></a>分段扫描</h2><p>原理：将一个完整的 TCP 报文分割封装到 2 个或多个 IP 报文，分别独立发送。</p>
+<ul>
+<li>关闭的端口响应。</li>
+<li>无响应则开放</li>
+</ul>
+<p>优点：隐蔽性好，可穿越防火墙，</p>
+<p>缺点：可能被丢弃，某些程序在处理这些小数据包时会出现异常。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>汇编语言学习（七）</title>
+    <url>/2021/02/28/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%83%EF%BC%89/</url>
+    <content><![CDATA[<h1 id="汇编语言学习（七）"><a href="#汇编语言学习（七）" class="headerlink" title="汇编语言学习（七）"></a>汇编语言学习（七）</h1><h2 id="and和or指令"><a href="#and和or指令" class="headerlink" title="and和or指令"></a>and和or指令</h2><p>首先，介绍两条指令and和or。</p>
+<ol>
+<li>and指令：逻辑与指令，按位进行与运算</li>
+</ol>
+<p>例如指令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov al,01100011B</span><br><span class="line">and al,00111011B</span><br></pre></td></tr></table></figure>
+
+<p>执行后：<code>al=00100011B</code></p>
+<p>通过该指令可将操作对象的相应位设为0，其他位不变。</p>
+<p>例如：</p>
+<p>将al的第6位设为0的指令是：<code>and al,10111111B</code><br>将al的第7位设为0的指令是：<code>and al,01111111B</code></p>
+<p>注：与运算是逻辑乘，与1运算本身不改变。<code>1 and 1 = 1、1 and 0 = 0</code></p>
+<ol start="2">
+<li>or指令：逻辑或指令，按位进行或运算</li>
+</ol>
+<p>例如指令：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov al,01100011B</span><br><span class="line">or al,00111011B</span><br></pre></td></tr></table></figure>
+
+<p>执行后: al=01111011B</p>
+<p>通过该指令可将操作对象相应位设为1，其他位不变</p>
+<p>例如：</p>
+<p>将al的第6位设为1的指令是：<code>or al,01000000B</code><br>将al的第7位设为1的指令是：<code>or al,10000000B</code></p>
+<h2 id="以字符形式给出的数据"><a href="#以字符形式给出的数据" class="headerlink" title="以字符形式给出的数据"></a>以字符形式给出的数据</h2><p>我们可以在汇编程序中，用<code>......</code>的方式指明数据是以字符的形式给出的，编译器将它们转化为相对应的ASCII码。如下面的程序。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">assume cs:code,ds:data</span><br><span class="line">data segment</span><br><span class="line">    db &#39;unIX&#39;</span><br><span class="line">    db &#39;foRK&#39;</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">    start: mov al,&#39;a&#39;</span><br><span class="line">           mov bl,&#39;b&#39;</span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line">code ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<p>在上面的源程序中：<br><code>db &#39;unIX&#39;</code>相当于<code>db 75H,6EH,49H,58H</code>，<code>u、n、I、X</code>的ASCII码分别为<code>75H、6EH、49H、58H</code></p>
+<p><code>mov al,&#39;a&#39;</code>相当于<code>mov al,61H</code>，<code>a</code>的ASCII码为<code>61H</code></p>
+<h2 id="大小写转换的问题"><a href="#大小写转换的问题" class="headerlink" title="大小写转换的问题"></a>大小写转换的问题</h2><p>下面考虑一个问题，在<code>codesg</code>中填写代码，将<code>datasg</code>中的第一个字符串转化为大写，第二个字符串转化为小写</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">assume cs:codesg,datasg</span><br><span class="line"></span><br><span class="line">datasg segment</span><br><span class="line">    db &#96;BaSiC&#96;</span><br><span class="line">    db &#96;iNfOrMaTiOn&#96;</span><br><span class="line">datasg ends</span><br><span class="line"></span><br><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,ax</span><br><span class="line">                        ;设置ds指向datasg段</span><br><span class="line">           mov bx,0</span><br><span class="line">                        ;设置(bx)&#x3D;0,ds:bx指向&#39;BaSiC&#39;的第一个字母</span><br><span class="line">           mov cx,5     ;设置循环次数5</span><br><span class="line">        s: mov al,[bx]</span><br><span class="line">           and al,11011111B     ;将al中的ASCII码的第5位置为0，变为大写字母</span><br><span class="line">           mov [bx],al          ;将转变后的ASCII码写回原单元</span><br><span class="line">           inc bx</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov bx,5,ds:bx指向&#39;iNfOrMaTiOn&#39;的第一个字母</span><br><span class="line"></span><br><span class="line">           mov cx,11    ;设置循环次数11</span><br><span class="line"></span><br><span class="line">        s0: mov al,[bx]</span><br><span class="line">           or al,00100000       ;将al中的ASCII码的第5位置为1，变成小写字母</span><br><span class="line">           mov [bx],al</span><br><span class="line">           inc bx</span><br><span class="line">           loop s0</span><br><span class="line"></span><br><span class="line">           mov ax 4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<h2 id="bx-idata"><a href="#bx-idata" class="headerlink" title="[bx+idata]"></a>[bx+idata]</h2><p>前面我们用<code>[bx]</code>的方式指明一个内存单元，其实还可以使用<code>[bx+idata]</code>来表示一个内存单元，它的偏移地址为<code>(bx)+idata</code>：bx中的数值再加上idata</p>
+<p>指令<code>mov ax,[bx+200]</code>的含义：</p>
+<blockquote>
+<p>将一个内存单元的内容送入ax，这个内存单元的长度为2个字节，存放一个字，偏移地址为bx中的数值加上200，段地址在ds中。即(ax)=((ds)*16+(bx)+200)</p>
+</blockquote>
+<p>也可写作：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov ax,[200+bx]</span><br><span class="line">mov ax,200[bx]</span><br><span class="line">mov ax,bx.200</span><br></pre></td></tr></table></figure>
+
+<h2 id="用-bx-idata-的方式进行数组的处理"><a href="#用-bx-idata-的方式进行数组的处理" class="headerlink" title="用[bx+idata]的方式进行数组的处理"></a>用[bx+idata]的方式进行数组的处理</h2><p>通过<code>[bx+idata]</code>，我们可以简化上面大小写转换的程序。通过<code>[0+bx]</code>和<code>[5+bx]</code>的方式在同一循环中定位这两个字符串中的字符。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    mov ax,datasg</span><br><span class="line">    mov ds,ax</span><br><span class="line">    mov bx,0</span><br><span class="line"></span><br><span class="line">    mov cx,5</span><br><span class="line">s:  mov al,[bx]</span><br><span class="line">    and al,11011111b</span><br><span class="line">    mov [bx],al</span><br><span class="line">    mov al,[5+bx]</span><br><span class="line">    or al,00100000b</span><br><span class="line">    mov [5+bx],al</span><br><span class="line">    inc bx</span><br><span class="line">    loop s</span><br></pre></td></tr></table></figure>
+
+<h2 id="SI和DI"><a href="#SI和DI" class="headerlink" title="SI和DI"></a>SI和DI</h2><p>si和di是8086CPU中和bx功能相近的寄存器，si和di不能够分成两个8位寄存器来使用。</p>
+<p>下面的三组指令实现了相同的功能。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov bx,0</span><br><span class="line">mov ax,[bx]</span><br><span class="line"></span><br><span class="line">mov si,0</span><br><span class="line">mov ax,[si]</span><br><span class="line"></span><br><span class="line">mov di,0</span><br><span class="line">mov ax,[di]</span><br></pre></td></tr></table></figure>
+
+<p>下面的3组指令也实现了相同的功能</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov bx,0</span><br><span class="line">mov ax,[bx+123]</span><br><span class="line"></span><br><span class="line">mov si,0</span><br><span class="line">mov ax,[si+123]</span><br><span class="line"></span><br><span class="line">mov di,0</span><br><span class="line">mov ax,[di+123]</span><br></pre></td></tr></table></figure>
+
+<p>用si和di实现字符串’welcome to masm!’复制到它后面的数据区</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">assume cs:codesg,ds:datasg</span><br><span class="line"></span><br><span class="line">datasg segment</span><br><span class="line">    db &#39;welcome to masm&#39;</span><br><span class="line">    db &#39;...............&#39;</span><br><span class="line">datasg ends</span><br><span class="line"></span><br><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,dx</span><br><span class="line">           mov si,0</span><br><span class="line">           mov di,16</span><br><span class="line"></span><br><span class="line">           mov cx,8</span><br><span class="line">        s: mov ax,[si]</span><br><span class="line">           mvo [di],ax</span><br><span class="line">           add si,2</span><br><span class="line">           add di,2</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<p>简化版：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,ax</span><br><span class="line">           mov si,0</span><br><span class="line">           mov cx,8</span><br><span class="line"></span><br><span class="line">        s: mov ax,0[si]</span><br><span class="line">           mov 16[si],ax</span><br><span class="line">           add si,2</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<h2 id="bx-si-和-bx-di"><a href="#bx-si-和-bx-di" class="headerlink" title="[bx+si]和[bx+di]"></a>[bx+si]和[bx+di]</h2><p><code>[bx+si]</code>和<code>[bx+di]</code>的含义相似，我们以[bx+si]为例进行讲解</p>
+<p>指令<code>mov ax,[bx+si]</code>的含义如下：</p>
+<blockquote>
+<p>将一个内存单元的内容送入ax，这个内存单元的长度为2字节，存放一个字，偏移地址为bx中的数值加上si中的数值，段地址在ds中，即(ax)=((ds)*16+(bx)+(si))</p>
+</blockquote>
+<p>也可写作<code>mov ax,[bx][si]</code></p>
+<h2 id="bx-si-idata-和-bx-di-idata"><a href="#bx-si-idata-和-bx-di-idata" class="headerlink" title="[bx+si+idata]和[bx+di+idata]"></a>[bx+si+idata]和[bx+di+idata]</h2><p>两者含义相似，选一者讲解。</p>
+<p>指令<code>mov ax,[bx+si+idata]</code>的含义如下：</p>
+<blockquote>
+<p>将一个内存单元的内容送入ax，这个内存单元的长度为2字节，存放一个字，偏移地址为bx中的数值加上si中的数值再加上idata，段地址在ds中，即(ax)=((ds)*16+(bx)+(si)+(idata))</p>
+</blockquote>
+<p>也可写作</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov ax,[bx+200+si]</span><br><span class="line">mov ax,[200+bx+si]</span><br><span class="line">mov ax,200[bx][si]</span><br><span class="line">mov ax,[bx].200[si]</span><br><span class="line">mov ax,[bx][si].200</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+]]></content>
+  </entry>
+  <entry>
+    <title>汇编语言学习（三）</title>
+    <url>/2021/02/18/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89/</url>
+    <content><![CDATA[<h1 id="汇编语言学习（三）"><a href="#汇编语言学习（三）" class="headerlink" title="汇编语言学习（三）"></a>汇编语言学习（三）</h1><p>在前两篇中了解了8086CPU的逻辑结构，形成物理地址的方法、相关寄存器以及一些指令。这一篇将从访问内存的角度继续学习几个寄存器。</p>
+<h2 id="内存中字的存储"><a href="#内存中字的存储" class="headerlink" title="内存中字的存储"></a>内存中字的存储</h2><p>CPU中，用16位寄存器来存储一个字。高8位存放高位字节，低8位存放低位字节。在内存中存放时，由于内存单元时字节单元，则一个字要用两个地址连续的内存单元来存放。</p>
+<p>字单元的概念：字单元，即存放一个字型数据（16位）的内存单元，由两个地址连续的内存单元组成。高地址单元中存放字型数据的高位字节，低地址内存单元中存放字型数据的低位字节。</p>
+<h2 id="DS和-address"><a href="#DS和-address" class="headerlink" title="DS和[address]"></a>DS和[address]</h2><p>CPU要读写一个内存单元的时候，必须先给出这个内存单元的地址，在8086PC中，内存地址由段地址和偏移地址组成。8086CPU中有一个DS寄存器，通常用来存放要访问的段地址。例如读取10000H单元的内容，可使用如下的程序段进行。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov bx,1000H</span><br><span class="line">mov ds,bx</span><br><span class="line">mov al,[0]</span><br></pre></td></tr></table></figure>
+<p>这三条指令将10000H（1000:0）中的数据读到al中。</p>
+<p>在这里，mov指令将一个内存单元中的内容送入到一个寄存器中。“[…]”表示一个内存单元，“[…]”中的0表示内存单元的偏移地址。然而仅有一个偏移地址不能定位一个内存单元，因此在指令执行后，8086CPU自动读取ds中的数据作为内存单元的段地址。</p>
+<p>此外，8086CPU不支持将数据直接送入段寄存器的操作，ds是一个段寄存器，所以<code>mov ds,1000H</code>这条指令时非法的。</p>
+<h2 id="字的传送"><a href="#字的传送" class="headerlink" title="字的传送"></a>字的传送</h2><p>前面使用mov指令在寄存器和内存之间进行字节型数据的传送。因为8086CPU时16位结构，有16根数据线，可以一次性传送16位数据，即可以一次性传送一个字。</p>
+<h2 id="mov、add、sub指令"><a href="#mov、add、sub指令" class="headerlink" title="mov、add、sub指令"></a>mov、add、sub指令</h2><p>mov指令的几种形式如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov 寄存器，数据        比如：mov ax,8</span><br><span class="line">mov 寄存器，寄存器      比如：mov ax,bx</span><br><span class="line">mov 寄存器，内存单元    比如：mov ax,[0]</span><br><span class="line">mov 内存单元，寄存器    比如：mov [0],ax</span><br><span class="line">mov 段寄存器，寄存器    比如：mov ds,ax</span><br><span class="line">mov 寄存器，段寄存器    比如：mov ax,ds</span><br></pre></td></tr></table></figure>
+
+<p>add和sub指令同mov一样，都有两个操作对象。它们也有以下几种形式</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">add 寄存器，数据        比如：add ax,9</span><br><span class="line">add 寄存器，寄存器      比如：add ax,bx</span><br><span class="line">add 寄存器，内存单元    比如：add ax,[0]</span><br><span class="line">add 内存单元，寄存器    比如：add [0],ax</span><br><span class="line">sub 寄存器，数据        比如：sub ax,9</span><br><span class="line">sub 寄存器，寄存器      比如：sub ax,bx</span><br><span class="line">sub 寄存器，内存单元    比如：sub ax,[0]</span><br><span class="line">sub 内存单元，寄存器    比如：sub [0],ax</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h2><p>对于8086PC机，在编程时，可以根据需要，将一组内存单元定义为一个段。我们可以将一组长度为N、地址连续、起始地址为16的倍数的内存单元当作专门存储数据的内存空间，从而定义了一个数据段。</p>
+<p>比如，将123B0H~123B9H的内存单元定义为数据段。现在累加这个数据段中二定前3个单元中的数据，代码如下。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov ax,123BH</span><br><span class="line">mox ds,ax       ;将123BH送入ds中，作为数据段的段地址</span><br><span class="line">mov al,0        ；用al存放累加结果</span><br><span class="line">add al,[0]      ；将数据段第一个单元（偏移地址为0）中的数值加到al中</span><br><span class="line">add al,[1]      ；将数据段第二个单元（偏移地址为1）中的数值加到al中</span><br><span class="line">add al,[2]      ；将数据段第三个单元（偏移地址为2）中的数值加到al中</span><br></pre></td></tr></table></figure>
+
+<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p>LIFO</p>
+<h2 id="CPU提供的栈机制"><a href="#CPU提供的栈机制" class="headerlink" title="CPU提供的栈机制"></a>CPU提供的栈机制</h2><p>现今的CPU中都有栈的设计，8086CPU也不例外。8086CPU提供相关的指令以栈二定方式访问内存空间。</p>
+<p>8086CPU提供入栈和出栈的指令，最基本的两个是<code>PUSH（入栈）</code>和<code>POP（出栈）</code>。比如，<code>push ax</code>表示将寄存器ax中的数据送入栈中，<code>pop ax</code>表示从栈顶取出数据送入ax。8086CPU的入栈和出栈操作都是以字为单位进行的。</p>
+<p>在第二篇中提到在CPU中，CS、IP中存放着当前指令的段地址和偏移地址。而在此处，段寄存器SS和寄存器SP，栈顶的段地址存放在SS中，偏移地址存放在SP中。任意时刻，SS:SP总指向栈顶元素。push指令和pop指令执行时，CPU从SS和SP中得到栈顶的位置。</p>
+<p><code>push ax</code>的执行由两步完成</p>
+<ol>
+<li>SP=SP-2，SS:SP指向当前栈顶前面的单元，以当前栈顶前面的单元为新的栈顶；</li>
+<li>将ax中的内容送入SS:SP指向的内存单元处，SS:SP此时指向新栈顶。</li>
+</ol>
+<p><code>pop ax</code>的执行过程和<code>push ax</code>恰好相反</p>
+<ol>
+<li>将SS:SP指向的内存单元处的数据送入ax中；</li>
+<li>SP=SP+2,SS:SP指向当前栈顶下面的单元，以当前栈顶下面的单元为新的栈顶。</li>
+</ol>
+<h2 id="栈顶超界的问题"><a href="#栈顶超界的问题" class="headerlink" title="栈顶超界的问题"></a>栈顶超界的问题</h2><p>8086CPU用SS和SP指示栈顶的地址，并提供push和pop指令实现入栈和出栈。</p>
+<p>假设我们将10010H~1001FH当作栈空间，该栈空间容量为16字节（8字），初始状态为空，SS=1000H、SP=0020H，SS:SP指向10020H；</p>
+<p>在执行8次push ax后，向栈中压入8个字，栈满，SS:SP指向10010H；</p>
+<p>再次只想<code>push ax</code>：sp=sp-2，SS:SP指向1000EH，栈顶超出了栈空间，ax中的数据送入1000EH单元处，将栈空间外的数据覆盖。</p>
+<p>再假设当前状态为满，SS=10000H、SP=0010H，SS:SP指向10010H；</p>
+<p>在执行8次<code>pop ax</code>后，从栈中弹出8个字，栈空，SS:SP指向10020H；</p>
+<p>再次执行<code>pop ax</code>：sp=sp+2，SS:SP指向10022H，栈顶超出了栈空间。此后，如果再执行push指令，10020H、10021H中的数据将被覆盖。</p>
+<h2 id="push、pop指令"><a href="#push、pop指令" class="headerlink" title="push、pop指令"></a>push、pop指令</h2><p><code>push</code>和<code>pop</code>指令的格式可以是如下形式：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">push 寄存器       ；将一个寄存器中的数据入栈</span><br><span class="line">pop 寄存器        ；出栈，一个寄存器接收出栈的数据</span><br><span class="line">push 段寄存器       ；将一个段寄存器中的数据入栈</span><br><span class="line">pop 段寄存器        ；出栈，用一个段寄存器接收出栈的数据</span><br><span class="line">push 内存单元       ；将一个内存字单元处的字入栈</span><br><span class="line">pop 内存单元        ；出栈，用一个内存单元接收出栈的数据</span><br></pre></td></tr></table></figure>
+<p>比如</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov ax,1000H</span><br><span class="line">mov ds,ax</span><br><span class="line">push [0]</span><br><span class="line">pop [2]</span><br></pre></td></tr></table></figure>
+
+<h2 id="栈段"><a href="#栈段" class="headerlink" title="栈段"></a>栈段</h2><p>我们可以将长度为N(N&lt;=64KB)的一组地址连续、起始地址为16的倍数的内存单元，当作栈空间来用，从而定义了一个栈段。</p>
+<p>一个栈段的容量最大为64KB。因为push、pop等指令在执行的时候只会修改SP，所以栈顶二定变化范围是0~FFFFH，从栈空时的SP=0，一直压栈，直到栈满时SP=0。如果再次压栈，栈顶将环绕，覆盖原来栈中的内容。</p>
+]]></content>
+  </entry>
+  <entry>
     <title>汇编语言学习（一）</title>
     <url>/2021/02/05/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%80%EF%BC%89/</url>
     <content><![CDATA[<h1 id="汇编语言学习（一）"><a href="#汇编语言学习（一）" class="headerlink" title="汇编语言学习（一）"></a>汇编语言学习（一）</h1><h2 id="汇编语言的组成"><a href="#汇编语言的组成" class="headerlink" title="汇编语言的组成"></a>汇编语言的组成</h2><ol>
@@ -459,75 +678,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>常见端口扫描类型总结</title>
-    <url>/2021/05/31/%E5%B8%B8%E8%A7%81%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%B1%BB%E5%9E%8B%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h1 id="常见端口扫描类型总结"><a href="#常见端口扫描类型总结" class="headerlink" title="常见端口扫描类型总结"></a>常见端口扫描类型总结</h1><h2 id="TCP-SYN-扫描"><a href="#TCP-SYN-扫描" class="headerlink" title="TCP SYN 扫描"></a>TCP SYN 扫描</h2><p>原理：扫描器向目的主机的一个端口发送请求连接的SYN包，扫描器在收到SYN/ACK后，不采用发送ACK应答的方式而是发送RST请求断开连接，则三次握手不会完成，没有建立正常的TCP连接，此次扫描也不会被记录到系统日志中。这种扫描方式不会再目的主机上留下痕迹。但是这种扫描器需要有<strong>root权限</strong>。</p>
-<ul>
-<li>若收到SYN/ACK则端口开放</li>
-<li>若收到RST表示端口关闭</li>
-</ul>
-<p>优点：扫描隐蔽。</p>
-<h2 id="Connect扫描"><a href="#Connect扫描" class="headerlink" title="Connect扫描"></a>Connect扫描</h2><p>原理即为与TCP端口进行“三次握手”通信。</p>
-<ul>
-<li>若建立成功，端口开放</li>
-<li>反之则关闭</li>
-</ul>
-<p>优点：实现简单，没有<strong>权限</strong>要求。并且扫描速度快，可同时打开多个套接字从而加速扫描。</p>
-<p>缺点：会在目标主机的日志记录中留下<strong>痕迹</strong>，易被发现，并且数据包会被过滤。目标主机的logs文件会显示一连串的连接和连接出错的服务信息，并且能很快地使它关闭。</p>
-<h2 id="NULL扫描（反向扫描）"><a href="#NULL扫描（反向扫描）" class="headerlink" title="NULL扫描（反向扫描）"></a>NULL扫描（反向扫描）</h2><p>原理：将一个没有设置任何标志位的数据包发给TCP端口。对于遵守FRC 793的主机（*nix）：</p>
-<ul>
-<li>端口关闭：舍弃该分段，并发送一个RST数据包。</li>
-<li>端口开启：不会响应</li>
-</ul>
-<p>对于不遵循的主机，例如Windows主机，只要收到无标志位的数据包，无论端口开放还是关闭都响应RST数据包。</p>
-<p><del>为什么称作反向扫描呢？与前两种相比，前两种方式收到响应包表示端口开放，而NULL扫描收到则表示端口关闭</del></p>
-<p>优点：隐蔽性高，可粗略判断系统。</p>
-<p>缺点：精确度相对较低。</p>
-<h2 id="FIN扫描"><a href="#FIN扫描" class="headerlink" title="FIN扫描"></a>FIN扫描</h2><p>原理：FIN表示TCP会话结束，FIN扫描中发送一个设置了FIN位的数据包：</p>
-<ul>
-<li>响应RST数据包，端口关闭</li>
-<li>无响应，端口关闭</li>
-</ul>
-<p>优点：隐蔽</p>
-<p>缺点：不能判断Windows系统上端口开放情况</p>
-<h2 id="ACK扫描"><a href="#ACK扫描" class="headerlink" title="ACK扫描"></a>ACK扫描</h2><p>原理：扫描主机向目标主机发送ACK数据包，根据返回的RST数据包可以得到端口信息。</p>
-<ul>
-<li>RST的TTL小于等于64，端口开放</li>
-<li>反之关闭</li>
-</ul>
-<p>优点：隐蔽</p>
-<h2 id="Xmas-Tree扫描"><a href="#Xmas-Tree扫描" class="headerlink" title="Xmas-Tree扫描"></a>Xmas-Tree扫描</h2><p>通过发送带有以下标志位的TCP数据包：</p>
-<ul>
-<li>URG：指示数据时紧急数据，应立即处理。</li>
-<li>PSH：强制将数据压入缓冲区。</li>
-<li>FIN：在结束TCP会话时使用。</li>
-</ul>
-<p>通常这三种标志位不能被同时设置。我们可以通过这种扫描来判断端口情况。</p>
-<ul>
-<li>无响应，端口开放</li>
-<li>响应RST，端口关闭</li>
-</ul>
-<p>XMAS扫描原理和NULL扫描的类似，将TCP数据包中的ACK、FIN、RST、SYN、URG、PSH标志位置1后发送给目标主机。</p>
-<p>优点：隐蔽</p>
-<p>缺点：不能判断Windows系统上端口开放情况</p>
-<h2 id="Dump扫描"><a href="#Dump扫描" class="headerlink" title="Dump扫描"></a>Dump扫描</h2><p>也被称为Idle扫描或反向扫描，在扫描主机时应用了第三方僵尸计算机扫描。由僵尸主机向目标主机发送SYN包。目标主机端口开放时响应SYN|ACK，关闭时返回RST，僵尸主机对SYN|ACK回应RST，对RST不做回应。从僵尸主机上进行扫描时，进行的是一个从本地计算机到僵尸主机的、连续的ping操作。查看僵尸主机返回的Echo响应的ID字段，能确定目标主机上哪些端口是开放的还是关闭的。</p>
-<h2 id="UDP扫描"><a href="#UDP扫描" class="headerlink" title="UDP扫描"></a>UDP扫描</h2><p>原理：UDP为无连接协议。无连接的协议则不会事先建立客户端和服务器之间的通信信道，只要客户端到服务器存在可用信道，就会假设目标是可达的然后向对方发送数据。</p>
-<ul>
-<li>若响应，端口开放</li>
-<li>返回ICMP目标不可达，端口关闭</li>
-<li>如果服务器返回一个 ICMP 错误类型3且代码为1，2，3，9，10或13的数据包，则说明目标端口被服务器过滤了。</li>
-<li>无响应，<strong>无法判断</strong><del>薛定谔的猫</del></li>
-</ul>
-<h2 id="分段扫描"><a href="#分段扫描" class="headerlink" title="分段扫描"></a>分段扫描</h2><p>原理：将一个完整的 TCP 报文分割封装到 2 个或多个 IP 报文，分别独立发送。</p>
-<ul>
-<li>关闭的端口响应。</li>
-<li>无响应则开放</li>
-</ul>
-<p>优点：隐蔽性好，可穿越防火墙，</p>
-<p>缺点：可能被丢弃，某些程序在处理这些小数据包时会出现异常。</p>
-]]></content>
-  </entry>
-  <entry>
     <title>汇编语言学习（九）</title>
     <url>/2021/03/22/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B9%9D%EF%BC%89/</url>
     <content><![CDATA[<h1 id="汇编语言学习（九）"><a href="#汇编语言学习（九）" class="headerlink" title="汇编语言学习（九）"></a>汇编语言学习（九）</h1><p><strong>可以修改IP，或同时修改CS和IP的指令统称为转移指令。</strong></p>
@@ -594,135 +744,6 @@
 <h2 id="jcxz指令"><a href="#jcxz指令" class="headerlink" title="jcxz指令"></a>jcxz指令</h2><p>对IP的修改范围：-128~127</p>
 <p>指令格式：jcxz 标号(如果(cx)=0，转移到标号处执行。)<br>操作：当(cx)=0时，(IP)=(IP)+8位位移<br>8位位移的标号处地址-jcxz指令后第一个字节的地址<br>8位位移的范围为-128~127，用补码表示<br>8位位移由编译程序在编译时算出</p>
 <h2 id="loop指令"><a href="#loop指令" class="headerlink" title="loop指令"></a>loop指令</h2><p>loop指令为循环指令，所有的循环指令都是<strong>短转移</strong>，在对应的机器码中包含转移的位移，而不是目的地址。对IP的修改范围都为：-128~127</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>汇编语言学习（三）</title>
-    <url>/2021/02/18/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%89%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="汇编语言学习（三）"><a href="#汇编语言学习（三）" class="headerlink" title="汇编语言学习（三）"></a>汇编语言学习（三）</h1><p>在前两篇中了解了8086CPU的逻辑结构，形成物理地址的方法、相关寄存器以及一些指令。这一篇将从访问内存的角度继续学习几个寄存器。</p>
-<h2 id="内存中字的存储"><a href="#内存中字的存储" class="headerlink" title="内存中字的存储"></a>内存中字的存储</h2><p>CPU中，用16位寄存器来存储一个字。高8位存放高位字节，低8位存放低位字节。在内存中存放时，由于内存单元时字节单元，则一个字要用两个地址连续的内存单元来存放。</p>
-<p>字单元的概念：字单元，即存放一个字型数据（16位）的内存单元，由两个地址连续的内存单元组成。高地址单元中存放字型数据的高位字节，低地址内存单元中存放字型数据的低位字节。</p>
-<h2 id="DS和-address"><a href="#DS和-address" class="headerlink" title="DS和[address]"></a>DS和[address]</h2><p>CPU要读写一个内存单元的时候，必须先给出这个内存单元的地址，在8086PC中，内存地址由段地址和偏移地址组成。8086CPU中有一个DS寄存器，通常用来存放要访问的段地址。例如读取10000H单元的内容，可使用如下的程序段进行。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov bx,1000H</span><br><span class="line">mov ds,bx</span><br><span class="line">mov al,[0]</span><br></pre></td></tr></table></figure>
-<p>这三条指令将10000H（1000:0）中的数据读到al中。</p>
-<p>在这里，mov指令将一个内存单元中的内容送入到一个寄存器中。“[…]”表示一个内存单元，“[…]”中的0表示内存单元的偏移地址。然而仅有一个偏移地址不能定位一个内存单元，因此在指令执行后，8086CPU自动读取ds中的数据作为内存单元的段地址。</p>
-<p>此外，8086CPU不支持将数据直接送入段寄存器的操作，ds是一个段寄存器，所以<code>mov ds,1000H</code>这条指令时非法的。</p>
-<h2 id="字的传送"><a href="#字的传送" class="headerlink" title="字的传送"></a>字的传送</h2><p>前面使用mov指令在寄存器和内存之间进行字节型数据的传送。因为8086CPU时16位结构，有16根数据线，可以一次性传送16位数据，即可以一次性传送一个字。</p>
-<h2 id="mov、add、sub指令"><a href="#mov、add、sub指令" class="headerlink" title="mov、add、sub指令"></a>mov、add、sub指令</h2><p>mov指令的几种形式如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov 寄存器，数据        比如：mov ax,8</span><br><span class="line">mov 寄存器，寄存器      比如：mov ax,bx</span><br><span class="line">mov 寄存器，内存单元    比如：mov ax,[0]</span><br><span class="line">mov 内存单元，寄存器    比如：mov [0],ax</span><br><span class="line">mov 段寄存器，寄存器    比如：mov ds,ax</span><br><span class="line">mov 寄存器，段寄存器    比如：mov ax,ds</span><br></pre></td></tr></table></figure>
-
-<p>add和sub指令同mov一样，都有两个操作对象。它们也有以下几种形式</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">add 寄存器，数据        比如：add ax,9</span><br><span class="line">add 寄存器，寄存器      比如：add ax,bx</span><br><span class="line">add 寄存器，内存单元    比如：add ax,[0]</span><br><span class="line">add 内存单元，寄存器    比如：add [0],ax</span><br><span class="line">sub 寄存器，数据        比如：sub ax,9</span><br><span class="line">sub 寄存器，寄存器      比如：sub ax,bx</span><br><span class="line">sub 寄存器，内存单元    比如：sub ax,[0]</span><br><span class="line">sub 内存单元，寄存器    比如：sub [0],ax</span><br></pre></td></tr></table></figure>
-
-<h2 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h2><p>对于8086PC机，在编程时，可以根据需要，将一组内存单元定义为一个段。我们可以将一组长度为N、地址连续、起始地址为16的倍数的内存单元当作专门存储数据的内存空间，从而定义了一个数据段。</p>
-<p>比如，将123B0H~123B9H的内存单元定义为数据段。现在累加这个数据段中二定前3个单元中的数据，代码如下。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov ax,123BH</span><br><span class="line">mox ds,ax       ;将123BH送入ds中，作为数据段的段地址</span><br><span class="line">mov al,0        ；用al存放累加结果</span><br><span class="line">add al,[0]      ；将数据段第一个单元（偏移地址为0）中的数值加到al中</span><br><span class="line">add al,[1]      ；将数据段第二个单元（偏移地址为1）中的数值加到al中</span><br><span class="line">add al,[2]      ；将数据段第三个单元（偏移地址为2）中的数值加到al中</span><br></pre></td></tr></table></figure>
-
-<h2 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h2><p>LIFO</p>
-<h2 id="CPU提供的栈机制"><a href="#CPU提供的栈机制" class="headerlink" title="CPU提供的栈机制"></a>CPU提供的栈机制</h2><p>现今的CPU中都有栈的设计，8086CPU也不例外。8086CPU提供相关的指令以栈二定方式访问内存空间。</p>
-<p>8086CPU提供入栈和出栈的指令，最基本的两个是<code>PUSH（入栈）</code>和<code>POP（出栈）</code>。比如，<code>push ax</code>表示将寄存器ax中的数据送入栈中，<code>pop ax</code>表示从栈顶取出数据送入ax。8086CPU的入栈和出栈操作都是以字为单位进行的。</p>
-<p>在第二篇中提到在CPU中，CS、IP中存放着当前指令的段地址和偏移地址。而在此处，段寄存器SS和寄存器SP，栈顶的段地址存放在SS中，偏移地址存放在SP中。任意时刻，SS:SP总指向栈顶元素。push指令和pop指令执行时，CPU从SS和SP中得到栈顶的位置。</p>
-<p><code>push ax</code>的执行由两步完成</p>
-<ol>
-<li>SP=SP-2，SS:SP指向当前栈顶前面的单元，以当前栈顶前面的单元为新的栈顶；</li>
-<li>将ax中的内容送入SS:SP指向的内存单元处，SS:SP此时指向新栈顶。</li>
-</ol>
-<p><code>pop ax</code>的执行过程和<code>push ax</code>恰好相反</p>
-<ol>
-<li>将SS:SP指向的内存单元处的数据送入ax中；</li>
-<li>SP=SP+2,SS:SP指向当前栈顶下面的单元，以当前栈顶下面的单元为新的栈顶。</li>
-</ol>
-<h2 id="栈顶超界的问题"><a href="#栈顶超界的问题" class="headerlink" title="栈顶超界的问题"></a>栈顶超界的问题</h2><p>8086CPU用SS和SP指示栈顶的地址，并提供push和pop指令实现入栈和出栈。</p>
-<p>假设我们将10010H~1001FH当作栈空间，该栈空间容量为16字节（8字），初始状态为空，SS=1000H、SP=0020H，SS:SP指向10020H；</p>
-<p>在执行8次push ax后，向栈中压入8个字，栈满，SS:SP指向10010H；</p>
-<p>再次只想<code>push ax</code>：sp=sp-2，SS:SP指向1000EH，栈顶超出了栈空间，ax中的数据送入1000EH单元处，将栈空间外的数据覆盖。</p>
-<p>再假设当前状态为满，SS=10000H、SP=0010H，SS:SP指向10010H；</p>
-<p>在执行8次<code>pop ax</code>后，从栈中弹出8个字，栈空，SS:SP指向10020H；</p>
-<p>再次执行<code>pop ax</code>：sp=sp+2，SS:SP指向10022H，栈顶超出了栈空间。此后，如果再执行push指令，10020H、10021H中的数据将被覆盖。</p>
-<h2 id="push、pop指令"><a href="#push、pop指令" class="headerlink" title="push、pop指令"></a>push、pop指令</h2><p><code>push</code>和<code>pop</code>指令的格式可以是如下形式：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">push 寄存器       ；将一个寄存器中的数据入栈</span><br><span class="line">pop 寄存器        ；出栈，一个寄存器接收出栈的数据</span><br><span class="line">push 段寄存器       ；将一个段寄存器中的数据入栈</span><br><span class="line">pop 段寄存器        ；出栈，用一个段寄存器接收出栈的数据</span><br><span class="line">push 内存单元       ；将一个内存字单元处的字入栈</span><br><span class="line">pop 内存单元        ；出栈，用一个内存单元接收出栈的数据</span><br></pre></td></tr></table></figure>
-<p>比如</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov ax,1000H</span><br><span class="line">mov ds,ax</span><br><span class="line">push [0]</span><br><span class="line">pop [2]</span><br></pre></td></tr></table></figure>
-
-<h2 id="栈段"><a href="#栈段" class="headerlink" title="栈段"></a>栈段</h2><p>我们可以将长度为N(N&lt;=64KB)的一组地址连续、起始地址为16的倍数的内存单元，当作栈空间来用，从而定义了一个栈段。</p>
-<p>一个栈段的容量最大为64KB。因为push、pop等指令在执行的时候只会修改SP，所以栈顶二定变化范围是0~FFFFH，从栈空时的SP=0，一直压栈，直到栈满时SP=0。如果再次压栈，栈顶将环绕，覆盖原来栈中的内容。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>汇编语言学习（七）</title>
-    <url>/2021/02/28/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%B8%83%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="汇编语言学习（七）"><a href="#汇编语言学习（七）" class="headerlink" title="汇编语言学习（七）"></a>汇编语言学习（七）</h1><h2 id="and和or指令"><a href="#and和or指令" class="headerlink" title="and和or指令"></a>and和or指令</h2><p>首先，介绍两条指令and和or。</p>
-<ol>
-<li>and指令：逻辑与指令，按位进行与运算</li>
-</ol>
-<p>例如指令：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov al,01100011B</span><br><span class="line">and al,00111011B</span><br></pre></td></tr></table></figure>
-
-<p>执行后：<code>al=00100011B</code></p>
-<p>通过该指令可将操作对象的相应位设为0，其他位不变。</p>
-<p>例如：</p>
-<p>将al的第6位设为0的指令是：<code>and al,10111111B</code><br>将al的第7位设为0的指令是：<code>and al,01111111B</code></p>
-<p>注：与运算是逻辑乘，与1运算本身不改变。<code>1 and 1 = 1、1 and 0 = 0</code></p>
-<ol start="2">
-<li>or指令：逻辑或指令，按位进行或运算</li>
-</ol>
-<p>例如指令：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov al,01100011B</span><br><span class="line">or al,00111011B</span><br></pre></td></tr></table></figure>
-
-<p>执行后: al=01111011B</p>
-<p>通过该指令可将操作对象相应位设为1，其他位不变</p>
-<p>例如：</p>
-<p>将al的第6位设为1的指令是：<code>or al,01000000B</code><br>将al的第7位设为1的指令是：<code>or al,10000000B</code></p>
-<h2 id="以字符形式给出的数据"><a href="#以字符形式给出的数据" class="headerlink" title="以字符形式给出的数据"></a>以字符形式给出的数据</h2><p>我们可以在汇编程序中，用<code>......</code>的方式指明数据是以字符的形式给出的，编译器将它们转化为相对应的ASCII码。如下面的程序。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">assume cs:code,ds:data</span><br><span class="line">data segment</span><br><span class="line">    db &#39;unIX&#39;</span><br><span class="line">    db &#39;foRK&#39;</span><br><span class="line">data ends</span><br><span class="line">code segment</span><br><span class="line">    start: mov al,&#39;a&#39;</span><br><span class="line">           mov bl,&#39;b&#39;</span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line">code ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
-
-<p>在上面的源程序中：<br><code>db &#39;unIX&#39;</code>相当于<code>db 75H,6EH,49H,58H</code>，<code>u、n、I、X</code>的ASCII码分别为<code>75H、6EH、49H、58H</code></p>
-<p><code>mov al,&#39;a&#39;</code>相当于<code>mov al,61H</code>，<code>a</code>的ASCII码为<code>61H</code></p>
-<h2 id="大小写转换的问题"><a href="#大小写转换的问题" class="headerlink" title="大小写转换的问题"></a>大小写转换的问题</h2><p>下面考虑一个问题，在<code>codesg</code>中填写代码，将<code>datasg</code>中的第一个字符串转化为大写，第二个字符串转化为小写</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">assume cs:codesg,datasg</span><br><span class="line"></span><br><span class="line">datasg segment</span><br><span class="line">    db &#96;BaSiC&#96;</span><br><span class="line">    db &#96;iNfOrMaTiOn&#96;</span><br><span class="line">datasg ends</span><br><span class="line"></span><br><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,ax</span><br><span class="line">                        ;设置ds指向datasg段</span><br><span class="line">           mov bx,0</span><br><span class="line">                        ;设置(bx)&#x3D;0,ds:bx指向&#39;BaSiC&#39;的第一个字母</span><br><span class="line">           mov cx,5     ;设置循环次数5</span><br><span class="line">        s: mov al,[bx]</span><br><span class="line">           and al,11011111B     ;将al中的ASCII码的第5位置为0，变为大写字母</span><br><span class="line">           mov [bx],al          ;将转变后的ASCII码写回原单元</span><br><span class="line">           inc bx</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov bx,5,ds:bx指向&#39;iNfOrMaTiOn&#39;的第一个字母</span><br><span class="line"></span><br><span class="line">           mov cx,11    ;设置循环次数11</span><br><span class="line"></span><br><span class="line">        s0: mov al,[bx]</span><br><span class="line">           or al,00100000       ;将al中的ASCII码的第5位置为1，变成小写字母</span><br><span class="line">           mov [bx],al</span><br><span class="line">           inc bx</span><br><span class="line">           loop s0</span><br><span class="line"></span><br><span class="line">           mov ax 4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
-
-<h2 id="bx-idata"><a href="#bx-idata" class="headerlink" title="[bx+idata]"></a>[bx+idata]</h2><p>前面我们用<code>[bx]</code>的方式指明一个内存单元，其实还可以使用<code>[bx+idata]</code>来表示一个内存单元，它的偏移地址为<code>(bx)+idata</code>：bx中的数值再加上idata</p>
-<p>指令<code>mov ax,[bx+200]</code>的含义：</p>
-<blockquote>
-<p>将一个内存单元的内容送入ax，这个内存单元的长度为2个字节，存放一个字，偏移地址为bx中的数值加上200，段地址在ds中。即(ax)=((ds)*16+(bx)+200)</p>
-</blockquote>
-<p>也可写作：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov ax,[200+bx]</span><br><span class="line">mov ax,200[bx]</span><br><span class="line">mov ax,bx.200</span><br></pre></td></tr></table></figure>
-
-<h2 id="用-bx-idata-的方式进行数组的处理"><a href="#用-bx-idata-的方式进行数组的处理" class="headerlink" title="用[bx+idata]的方式进行数组的处理"></a>用[bx+idata]的方式进行数组的处理</h2><p>通过<code>[bx+idata]</code>，我们可以简化上面大小写转换的程序。通过<code>[0+bx]</code>和<code>[5+bx]</code>的方式在同一循环中定位这两个字符串中的字符。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">    mov ax,datasg</span><br><span class="line">    mov ds,ax</span><br><span class="line">    mov bx,0</span><br><span class="line"></span><br><span class="line">    mov cx,5</span><br><span class="line">s:  mov al,[bx]</span><br><span class="line">    and al,11011111b</span><br><span class="line">    mov [bx],al</span><br><span class="line">    mov al,[5+bx]</span><br><span class="line">    or al,00100000b</span><br><span class="line">    mov [5+bx],al</span><br><span class="line">    inc bx</span><br><span class="line">    loop s</span><br></pre></td></tr></table></figure>
-
-<h2 id="SI和DI"><a href="#SI和DI" class="headerlink" title="SI和DI"></a>SI和DI</h2><p>si和di是8086CPU中和bx功能相近的寄存器，si和di不能够分成两个8位寄存器来使用。</p>
-<p>下面的三组指令实现了相同的功能。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov bx,0</span><br><span class="line">mov ax,[bx]</span><br><span class="line"></span><br><span class="line">mov si,0</span><br><span class="line">mov ax,[si]</span><br><span class="line"></span><br><span class="line">mov di,0</span><br><span class="line">mov ax,[di]</span><br></pre></td></tr></table></figure>
-
-<p>下面的3组指令也实现了相同的功能</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov bx,0</span><br><span class="line">mov ax,[bx+123]</span><br><span class="line"></span><br><span class="line">mov si,0</span><br><span class="line">mov ax,[si+123]</span><br><span class="line"></span><br><span class="line">mov di,0</span><br><span class="line">mov ax,[di+123]</span><br></pre></td></tr></table></figure>
-
-<p>用si和di实现字符串’welcome to masm!’复制到它后面的数据区</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">assume cs:codesg,ds:datasg</span><br><span class="line"></span><br><span class="line">datasg segment</span><br><span class="line">    db &#39;welcome to masm&#39;</span><br><span class="line">    db &#39;...............&#39;</span><br><span class="line">datasg ends</span><br><span class="line"></span><br><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,dx</span><br><span class="line">           mov si,0</span><br><span class="line">           mov di,16</span><br><span class="line"></span><br><span class="line">           mov cx,8</span><br><span class="line">        s: mov ax,[si]</span><br><span class="line">           mvo [di],ax</span><br><span class="line">           add si,2</span><br><span class="line">           add di,2</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
-
-<p>简化版：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">codesg segment</span><br><span class="line">    start: mov ax,datasg</span><br><span class="line">           mov ds,ax</span><br><span class="line">           mov si,0</span><br><span class="line">           mov cx,8</span><br><span class="line"></span><br><span class="line">        s: mov ax,0[si]</span><br><span class="line">           mov 16[si],ax</span><br><span class="line">           add si,2</span><br><span class="line">           loop s</span><br><span class="line"></span><br><span class="line">           mov ax,4c00h</span><br><span class="line">           int 21h</span><br><span class="line"></span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
-
-<h2 id="bx-si-和-bx-di"><a href="#bx-si-和-bx-di" class="headerlink" title="[bx+si]和[bx+di]"></a>[bx+si]和[bx+di]</h2><p><code>[bx+si]</code>和<code>[bx+di]</code>的含义相似，我们以[bx+si]为例进行讲解</p>
-<p>指令<code>mov ax,[bx+si]</code>的含义如下：</p>
-<blockquote>
-<p>将一个内存单元的内容送入ax，这个内存单元的长度为2字节，存放一个字，偏移地址为bx中的数值加上si中的数值，段地址在ds中，即(ax)=((ds)*16+(bx)+(si))</p>
-</blockquote>
-<p>也可写作<code>mov ax,[bx][si]</code></p>
-<h2 id="bx-si-idata-和-bx-di-idata"><a href="#bx-si-idata-和-bx-di-idata" class="headerlink" title="[bx+si+idata]和[bx+di+idata]"></a>[bx+si+idata]和[bx+di+idata]</h2><p>两者含义相似，选一者讲解。</p>
-<p>指令<code>mov ax,[bx+si+idata]</code>的含义如下：</p>
-<blockquote>
-<p>将一个内存单元的内容送入ax，这个内存单元的长度为2字节，存放一个字，偏移地址为bx中的数值加上si中的数值再加上idata，段地址在ds中，即(ax)=((ds)*16+(bx)+(si)+(idata))</p>
-</blockquote>
-<p>也可写作</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov ax,[bx+200+si]</span><br><span class="line">mov ax,[200+bx+si]</span><br><span class="line">mov ax,200[bx][si]</span><br><span class="line">mov ax,[bx].200[si]</span><br><span class="line">mov ax,[bx][si].200</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 ]]></content>
   </entry>
   <entry>
@@ -1155,11 +1176,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>汇编语言学习（十）</title>
-    <url>/2021/03/22/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%8D%81%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="汇编语言学习（十）"><a href="#汇编语言学习（十）" class="headerlink" title="汇编语言学习（十）"></a>汇编语言学习（十）</h1>]]></content>
-  </entry>
-  <entry>
     <title>汇编语言学习（六）</title>
     <url>/2021/02/26/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%85%AD%EF%BC%89/</url>
     <content><![CDATA[<h1 id="汇编语言学习（六）"><a href="#汇编语言学习（六）" class="headerlink" title="汇编语言学习（六）"></a>汇编语言学习（六）</h1><p>前面的程序中只有一个代码段。而如果程序需要用其他空间来存放数据又使用哪里？</p>
@@ -1202,6 +1218,11 @@
 <p>我们为3个段起名，这样命名是为了使程序便于阅读。<br>我们在源程序中用伪指令<code>assume cs:code,ds:data,ss:stack</code>将<code>cs</code>、<code>ds</code>和<code>ss</code>分别和<code>code</code>、<code>data</code>、<code>stack</code>段相连。但是CPU也并不会将<code>cs</code>指向<code>code</code>，<code>ds</code>指向<code>data</code>，<code>ss</code>指向<code>stack</code>，因为<code>assume</code>使伪指令，是由编译器执行的。它将我们定义的具有一定用途的段和相关的寄存器联系起来。</p>
 </blockquote>
 ]]></content>
+  </entry>
+  <entry>
+    <title>汇编语言学习（十）</title>
+    <url>/2021/03/22/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0%EF%BC%88%E5%8D%81%EF%BC%89/</url>
+    <content><![CDATA[<h1 id="汇编语言学习（十）"><a href="#汇编语言学习（十）" class="headerlink" title="汇编语言学习（十）"></a>汇编语言学习（十）</h1>]]></content>
   </entry>
   <entry>
     <title>汇编语言学习（四）</title>
@@ -1395,7 +1416,7 @@
 <h2 id="MiSC"><a href="#MiSC" class="headerlink" title="MiSC"></a>MiSC</h2><hr>
 <h3 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h3><p>关注公众号</p>
 <hr>
-<h3 id="easy-encode"><a href="#easy-encode" class="headerlink" title="easy_encode"></a>easy_encode</h3><p>下载得到<br><img src="https://gitee.com/auxein/images/raw/master/scuctf2020/easy_encode1.png"><br>猜测为摩斯密码，在word文件里进行替换<br><img src="https://gitee.com/auxein/images/raw/master/scuctf2020/easy_encode2.png"><br>解密得到thankyoufororderingyeltsakcir‘<a class="link"   href="mailto:&#115;&#x66;&#108;&#97;&#x67;&#x64;&#101;&#108;&#105;&#x76;&#x65;&#x72;&#121;&#121;&#x6f;&#x75;&#x72;&#x66;&#108;&#x61;&#x67;&#105;&#x73;&#x73;&#x63;&#117;&#99;&#x74;&#x66;&#114;&#51;&#x40;&#x64;&#x5f;&#98;&#51;&#x74;&#119;&#51;&#x33;&#110;&#x5f;&#x74;&#104;&#51;&#95;&#108;&#x31;&#110;&#x33;&#x73;&#46;&#x77;&#101;&#x68;&#111;&#112;&#101;&#121;&#x6f;&#x75;&#x6c;&#x69;&#107;&#101;&#x6f;&#x75;&#114;&#115;&#101;&#114;&#x76;&#105;&#99;&#101;&#97;&#110;&#x64;&#116;&#x72;&#121;&#x61;&#103;&#x61;&#x69;&#x6e;" >&#115;&#x66;&#108;&#97;&#x67;&#x64;&#101;&#108;&#105;&#x76;&#x65;&#x72;&#121;&#121;&#x6f;&#x75;&#x72;&#x66;&#108;&#x61;&#x67;&#105;&#x73;&#x73;&#x63;&#117;&#99;&#x74;&#x66;&#114;&#51;&#x40;&#x64;&#x5f;&#98;&#51;&#x74;&#119;&#51;&#x33;&#110;&#x5f;&#x74;&#104;&#51;&#95;&#108;&#x31;&#110;&#x33;&#x73;&#46;&#x77;&#101;&#x68;&#111;&#112;&#101;&#121;&#x6f;&#x75;&#x6c;&#x69;&#107;&#101;&#x6f;&#x75;&#114;&#115;&#101;&#114;&#x76;&#105;&#99;&#101;&#97;&#110;&#x64;&#116;&#x72;&#121;&#x61;&#103;&#x61;&#x69;&#x6e;<i class="fas fa-external-link-alt"></i></a>.<br><img src="https://gitee.com/auxein/images/raw/master/scuctf2020/easy_encode3.png"></p>
+<h3 id="easy-encode"><a href="#easy-encode" class="headerlink" title="easy_encode"></a>easy_encode</h3><p>下载得到<br><img src="https://gitee.com/auxein/images/raw/master/scuctf2020/easy_encode1.png"><br>猜测为摩斯密码，在word文件里进行替换<br><img src="https://gitee.com/auxein/images/raw/master/scuctf2020/easy_encode2.png"><br>解密得到thankyoufororderingyeltsakcir‘<a class="link"   href="mailto:&#x73;&#x66;&#108;&#x61;&#103;&#100;&#x65;&#x6c;&#x69;&#118;&#x65;&#x72;&#121;&#x79;&#111;&#x75;&#114;&#x66;&#108;&#x61;&#103;&#105;&#115;&#115;&#x63;&#117;&#99;&#x74;&#102;&#x72;&#x33;&#x40;&#x64;&#x5f;&#98;&#x33;&#x74;&#x77;&#51;&#51;&#110;&#x5f;&#116;&#104;&#51;&#x5f;&#108;&#49;&#110;&#x33;&#115;&#x2e;&#x77;&#x65;&#x68;&#x6f;&#x70;&#101;&#x79;&#111;&#117;&#108;&#x69;&#107;&#x65;&#111;&#x75;&#114;&#115;&#x65;&#x72;&#x76;&#105;&#99;&#101;&#x61;&#110;&#100;&#116;&#114;&#121;&#97;&#103;&#x61;&#105;&#x6e;" >&#x73;&#x66;&#108;&#x61;&#103;&#100;&#x65;&#x6c;&#x69;&#118;&#x65;&#x72;&#121;&#x79;&#111;&#x75;&#114;&#x66;&#108;&#x61;&#103;&#105;&#115;&#115;&#x63;&#117;&#99;&#x74;&#102;&#x72;&#x33;&#x40;&#x64;&#x5f;&#98;&#x33;&#x74;&#x77;&#51;&#51;&#110;&#x5f;&#116;&#104;&#51;&#x5f;&#108;&#49;&#110;&#x33;&#115;&#x2e;&#x77;&#x65;&#x68;&#x6f;&#x70;&#101;&#x79;&#111;&#117;&#108;&#x69;&#107;&#x65;&#111;&#x75;&#114;&#115;&#x65;&#x72;&#x76;&#105;&#99;&#101;&#x61;&#110;&#100;&#116;&#114;&#121;&#97;&#103;&#x61;&#105;&#x6e;<i class="fas fa-external-link-alt"></i></a>.<br><img src="https://gitee.com/auxein/images/raw/master/scuctf2020/easy_encode3.png"></p>
 <hr>
 <h3 id="Excalibur"><a href="#Excalibur" class="headerlink" title="Excalibur"></a>Excalibur</h3><p>用jd-gui打开<br><img src="https://gitee.com/auxein/images/raw/master/scuctf2020/excalibur1.png"><br>得到flag</p>
 <p><img src="https://gitee.com/auxein/images/raw/master/scuctf2020/excalibur2.png"></p>
@@ -1599,6 +1620,275 @@
 <p>The <a class="link"   href="https://cryptopals.com/static/challenge-data/10.txt" >file<i class="fas fa-external-link-alt"></i></a> here is intelligible (somewhat) when CBC decrypted against “YELLOW SUBMARINE” with an IV of all ASCII 0 (\x00\x00\x00 &amp;c)</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> types <span class="keyword">import</span> DynamicClassAttribute</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.primitives.ciphers <span class="keyword">import</span> Cipher, algorithms, modes</span><br><span class="line"><span class="keyword">from</span> cryptography.hazmat.backends <span class="keyword">import</span> default_backend</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> math <span class="keyword">import</span> ceil</span><br><span class="line"></span><br><span class="line">backend = default_backend()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encrypt_aes_128_block</span>(<span class="params">msg,key</span>):</span></span><br><span class="line">    cipher = Cipher(algorithms.AES(key),modes.ECB(),backend=backend)</span><br><span class="line">    encryptor = cipher.encryptor()</span><br><span class="line">    <span class="keyword">return</span> encryptor.update(msg) + encryptor.finalize()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt_aes_128_block</span>(<span class="params">ctxt,key</span>):</span></span><br><span class="line">    cipher = Cipher(algorithms.AES(key),modes.ECB(),backend=backend)</span><br><span class="line">    decryptor = cipher.decryptor()</span><br><span class="line">    decrypted_data = decryptor.update(ctxt) + decryptor.finalize()</span><br><span class="line">    <span class="keyword">return</span> decrypted_data</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">split_bytes_in_blocks</span>(<span class="params">x,blocksize</span>):</span></span><br><span class="line">    nb_blocks = ceil(<span class="built_in">len</span>(x)/blocksize)</span><br><span class="line">    <span class="keyword">return</span> [x[i * blocksize: (i+<span class="number">1</span>) * blocksize] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(nb_blocks)]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">padding</span>(<span class="params">message, block_length</span>):</span></span><br><span class="line">    padding_length = block_length - (<span class="built_in">len</span>(message) % block_length)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> padding_length == <span class="number">0</span>:</span><br><span class="line">        padding_length = block_length</span><br><span class="line">    padding = <span class="built_in">bytes</span>([padding_length]) * padding_length</span><br><span class="line">    <span class="keyword">return</span> message + padding</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">restore_padding</span>(<span class="params">message</span>):</span></span><br><span class="line">    padding_len = message[-<span class="number">1</span>]</span><br><span class="line">    <span class="keyword">return</span> message[:-padding_len]</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bxor</span>(<span class="params">a,b</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">bytes</span>([i ^ j <span class="keyword">for</span> i, j <span class="keyword">in</span> <span class="built_in">zip</span>(a,b)])</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encrypt_aes_128_cbc</span>(<span class="params">msg,iv,key</span>):</span></span><br><span class="line">    res = <span class="string">b&#x27;&#x27;</span></span><br><span class="line">    previous_ctxt_block = iv</span><br><span class="line">    paddedtxt = padding(msg,<span class="number">16</span>)</span><br><span class="line">    blocks = split_bytes_in_blocks(paddedtxt,<span class="number">16</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> block <span class="keyword">in</span> blocks:</span><br><span class="line">        to_encrypt = bxor(iv,block)</span><br><span class="line">        cipher = encrypt_aes_128_block(to_encrypt,key)</span><br><span class="line">        res += cipher</span><br><span class="line">        previous_ctxt_block = cipher</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decrypt_aes_128_cbc</span>(<span class="params">ctxt,iv,key</span>):</span></span><br><span class="line">    res = <span class="string">b&#x27;&#x27;</span></span><br><span class="line">    previous_ctxt_block = iv</span><br><span class="line">    blocks = split_bytes_in_blocks(ctxt, <span class="number">16</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> block <span class="keyword">in</span> blocks:</span><br><span class="line">        to_decrypt = decrypt_aes_128_block(block, key)</span><br><span class="line">        res += bxor(to_decrypt, previous_ctxt_block)</span><br><span class="line">        previous_ctxt_block = block</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> restore_padding(res)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;10.txt&#x27;</span>,<span class="string">&#x27;r&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    data = <span class="built_in">bytes</span>(f.read().encode())</span><br><span class="line"></span><br><span class="line">iv = <span class="string">b&#x27;\x00&#x27;</span> * <span class="number">16</span></span><br><span class="line">key = <span class="string">b&#x27;YELLOW SUBMARINE&#x27;</span></span><br><span class="line">res = decrypt_aes_128_cbc(data, iv, key)</span><br></pre></td></tr></table></figure>
 
+]]></content>
+  </entry>
+  <entry>
+    <title>Python包管理工具小记</title>
+    <url>/2021/12/09/Python%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%B0%8F%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="Python包管理工具小记"><a href="#Python包管理工具小记" class="headerlink" title="Python包管理工具小记"></a>Python包管理工具小记</h1><p>python的源码包与二进制包</p>
+<blockquote>
+<p>源码包：源码包安装的过程，是先解压，再编译，最后才安装，所以它是跨平台的，由于每次安装都要进行编译，相对二进包安装方式来说安装速度较慢。源码包的本质是一个压缩包，其常见的格式有.zip，.tar，.gz，.bz2，.Z</p>
+</blockquote>
+<blockquote>
+<p>二进制包：二进制包的安装过程省去了编译的过程，直接进行解压安装，所以安装速度较源码包来说更快。由于不同平台的编译出来的包无法通用，所以在发布时，需事先编译好多个平台的包。二进制包的常见格式有.egg，.whl</p>
+</blockquote>
+<h2 id="包管理工具"><a href="#包管理工具" class="headerlink" title="包管理工具"></a>包管理工具</h2><p>以下对这些包管理工具按时间顺序进行介绍</p>
+<h3 id="distutils"><a href="#distutils" class="headerlink" title="distutils"></a>distutils</h3><p><code>distutils</code>是<code>python</code>标准库的一部分，2000年发布。使用它能够进行<code>python</code>模块的安装和发布。<br><code>setup.py</code>就是利用<code>distutils</code>的功能写成。<br>关于<code>setup.py</code>所有格式的详细描述：<a class="link"   href="https://docs.python.org/3/distutils/setupscript.html" >Writing the Setup Script<i class="fas fa-external-link-alt"></i></a></p>
+<p>安装方式</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python setup.py install</span><br></pre></td></tr></table></figure>
+
+<p>不同的打包命令</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">python setup.py sdist --formats=gztar,<span class="built_in">zip</span></span><br></pre></td></tr></table></figure>
+<p>其他可用格式</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Description</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>zip</td>
+<td>zip file(.zip)</td>
+<td>(1),(3)</td>
+</tr>
+<tr>
+<td>gztar</td>
+<td>gzip’ed tar file (.tar.gz)</td>
+<td>(2)</td>
+</tr>
+<tr>
+<td>bztar</td>
+<td>bzip2’ed tar file (.tar.bz2)</td>
+<td></td>
+</tr>
+<tr>
+<td>xztar</td>
+<td>xz’ed tar file (.tar.xz)</td>
+<td></td>
+</tr>
+<tr>
+<td>ztar</td>
+<td>compressed tar file (.tar.Z)</td>
+<td>(4)</td>
+</tr>
+<tr>
+<td>tar</td>
+<td>tar file (.tar)</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Notes:</p>
+<ol>
+<li>default on Windows</li>
+<li>default on Unix</li>
+<li>requires either external zip utility or zipfile module (part of the standard Python library since Python 1.6)</li>
+<li>requires the compress program. Notice that this format is now pending for deprecation and will be removed in the future versions of Python.</li>
+</ol>
+<h3 id="setuptools-和-distribute"><a href="#setuptools-和-distribute" class="headerlink" title="setuptools 和 distribute"></a>setuptools 和 distribute</h3><p><code>setuptools</code>是一个为了增强<code>distutils</code>而开发的集合，2004年发布。它包含了<code>easy_install</code>这个工具。<br><code>ez_setup.py</code>是<code>setuptools</code>的安装工具。<code>ez</code>就是<code>easy</code>的缩写。</p>
+<p><code>setuptools</code>是一个项目的名称，是基础组件。而<code>easy_install</code>是这个项目中提供的工具，它依赖基础组件工作。</p>
+<p>下文中提到的<code>setuptools</code>被认为与<code>easy_install</code>同义。<br>例子来源于<a class="link"   href="http://peak.telecommunity.com/DevCenter/EasyInstall" >此处<i class="fas fa-external-link-alt"></i></a></p>
+<p><strong>Example 1.</strong> Install a package by name, searching PyPI for the <strong>latest</strong> version, and automatically downloading, building, and installing it(ps:高版本依赖问题)</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">easy_install SQLObject</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example 2.</strong> Install or upgrade a package by name and version by finding links on a given “download page”:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">easy_install -f http:&#x2F;&#x2F;pythonpaste.org&#x2F;package_index.html SQLObject</span><br></pre></td></tr></table></figure>
+<p><strong>Example 3.</strong> Download a source distribution from a specified URL, automatically building and installing it:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">easy_install http:&#x2F;&#x2F;example.com&#x2F;path&#x2F;to&#x2F;MyPackage-1.2.3.tgz</span><br></pre></td></tr></table></figure>
+<p><strong>Example 4.</strong> Install an already-downloaded .egg file:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">easy_install &#x2F;my_downloads&#x2F;OtherPackage-3.2.1-py2.3.egg</span><br></pre></td></tr></table></figure>
+
+
+<p><code>distribute</code>是<code>setuptools</code>的一个分支版本。分支的原因可能是有一部分开发者认为<code>setuptools</code>开发太慢了。但现在<code>distribute</code>又合并回了<code>setuptools</code>中。因此，我们可以认为它们是同一个东西。事实上，如果你查看一下<code>easy_install</code>的版本，会发现它本质上就是<code>distribute</code>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># easy_install --version</span><br><span class="line">distribute 0.6.28</span><br></pre></td></tr></table></figure>
+
+<h3 id="Eggs"><a href="#Eggs" class="headerlink" title="Eggs"></a>Eggs</h3><p><code>Eggs</code>格式是<code>setuptools</code>引入的一种文件格式，它使用<code>.egg</code>扩展名，用于<code>Python</code>模块的安装。</p>
+<blockquote>
+<p>Eggs are to Pythons as Jars are to Java..</p>
+</blockquote>
+<p><code>eggs</code>通过将一些额外的信息与<code>Python</code>项目绑定在一起，使得整个项目的依赖项在运行时能够得到满足，同时允许项目能够为其他项目提供扩展功能。有几种二进制格式可以体现<code>egg</code>，但最常见的是<code>.egg</code>压缩文件格式，因为它是一种较为方便的发布项目的格式。所有的格式都支持包括包的特定数据、项目范围的元数据、<code>C Extensions</code>和Python代码。</p>
+<p>其安装方法即为上文所提到的<code>easy install</code>。</p>
+<p>some benefits：</p>
+<blockquote>
+<p>They enable tools like the “Easy Install” Python package manager</p>
+</blockquote>
+<blockquote>
+<p>.egg files are a “zero installation” format for a Python package; no build or install step is required, just put them on PYTHONPATH or sys.path and use them <strong>(may require the runtime installed if C extensions or data files are used)</strong></p>
+</blockquote>
+<blockquote>
+<p>They can include package metadata, such as the other eggs they depend on</p>
+</blockquote>
+<blockquote>
+<p>They allow “namespace packages” (packages that just contain other packages) to be split into separate distributions (e.g. zope.<em>, twisted.</em>, peak.* packages can be distributed as separate eggs, unlike normal packages which must always be placed under the same parent directory. This allows what are now huge monolithic packages to be distributed as separate components.)</p>
+</blockquote>
+<blockquote>
+<p>They allow applications or libraries to specify the needed version of a library, so that you can e.g. require(“Twisted-Internet&gt;=2.0”) before doing an import twisted.internet.</p>
+</blockquote>
+<p><del>(ps:<code>.whl</code>同理？但是依赖项又是如何check的呢？</del></p>
+<h4 id="使用eggs"><a href="#使用eggs" class="headerlink" title="使用eggs"></a>使用eggs</h4><p>如果我们安装的是一个纯粹的<code>python</code> <code>.egg</code>文件，并且不使用任何包内数据文件（这里有点没理解），并且不介意手动将包移动到<code>sys.path</code>或<code>PYTHONPATH</code>时，我们就可以不安装<code>setuptools</code>并进行安装。</p>
+<p>但是对于那些比如包含<code>C Extensions</code>的文件，或者那些需要访问非<code>python</code>数据的包内文件（打包在<code>.egg</code>种的文件，如README.md，这下前面的部分理解了），就必须要使用<code>setuptools</code>中的<code>pkg_resources</code>模块安装了！</p>
+<p>除了为使用包含<code>C Extensions</code>或数据文件的提供运行时支持外，<code>pkg_resources</code>模块还提供了一个 API，用于自动定位<code>egg</code>及其依赖关系，并在运行时将其添加到<code>sys.path</code>中。(详见 <a class="link"   href="http://peak.telecommunity.com/DevCenter/PkgResources" >API<i class="fas fa-external-link-alt"></i></a> 文档和 <a class="link"   href="http://peak.telecommunity.com/DevCenter/PkgResources" >setuptools<i class="fas fa-external-link-alt"></i></a> 文档)。</p>
+<p>如此情况我们可以安装一个包的不同版本，只要我们在运行时能够自动选择正确的版本。如果某个依赖错误，则会抛出<code>DistributionNotFound</code>异常，告知需要的包及其版本。</p>
+<p>那么如何判断纯<code>python</code>的<code>.egg</code>文件和那些包含<code>C Extensions</code>的<code>.egg</code>文件呢？答案是我们可以通过包名来判断，纯<code>.egg</code>文件往往是平台独立的，而那些包含<code>C Extensions</code>的文件则会在其文件名末尾上带上目标平台名。如果使用<code>pkg_resources</code>运行时自动查找包，它会忽略掉那些和我们的平台不兼容的<code>eggs</code>。如果我们不使用的话，就需要自己留意<code>egg</code>是否兼容了。</p>
+<p>当我们安装了我们的<code>egg</code>文件后，就需要将它添加到<code>sys.path</code>了。我们可以手动完成这个过程，在<code>PYTHONPATH</code>环境变量处添加，或者我们在代码中将他们呢添加到<code>sys.path</code>。长远来看，手动安装显然不是一个好的策略。</p>
+<h4 id="自动查找"><a href="#自动查找" class="headerlink" title="自动查找"></a>自动查找</h4><p>一种好的管理策略是我们将这些包放置到一个已经添加到<code>sys.path</code>的目录下，比如<code>site-packages</code>，或者一些我们自己手动添加到<code>PYTHONPATH</code>和<code>sys.path</code>的目录。</p>
+<p>看下面一串代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> pkg_resources <span class="keyword">import</span> require</span><br><span class="line">require(<span class="string">&quot;FooBar&gt;=1.2&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这个代码会在<code>sys.path</code>的所有目录中查找名叫<code>FooBar</code>并且版本号大于<code>1.2</code>的<code>egg</code>，并且自动匹配最新的版本，连同FooBar需要的任意<code>eggs</code>。</p>
+<p><code>require</code>查找方式对大小写不敏感。</p>
+<p>当我们想提供一些额外的可选功能时，这时候可能就需要定位并且将一些额外的<code>egg</code>文件添加到<code>sys.path</code>。例如，<code>FooBarWeb</code>web框架可能提供可选的<code>FastCGI</code>支持，我们就可以使用<code>(&quot;require[FastCGI] &gt;= 1.0&quot;)</code>来查找了，这样这些额外的包就可以被添加到<code>sys.path</code>。（没有找到抛出<code>pkg_resources.DistributionNotFound</code>异常）</p>
+<p><strong>在<code>EGG-INFO/depends.txt</code>文件中记录了<code>egg</code>需要与可选的依赖项</strong></p>
+<p><strong>Note:</strong> <code>pkg_resources</code>不会在PyPI上自动查找<code>eggs</code>文件或者从某个地方进行下载，它们必须是可以在<code>sys.path</code>目录下可用的<code>eggs</code>，但是我们可以捕获这个错误并且**自动从PyPI或者任何地方下载这些<code>eggs</code>**。要想自动安装这些依赖我们就可以利用一些工具了，如<code>EasyInstall</code>，<code>setuptools</code>需要被用于build<code>eggs</code>。</p>
+<h4 id="Build-eggs"><a href="#Build-eggs" class="headerlink" title="Build eggs"></a>Build <code>eggs</code></h4><p>如果我们从<code>setup.py</code> build <code>egg</code>就需要安装<code>setuptools</code>了。</p>
+<p>添加目标包的<code>setup</code>文件，添加<code>from setuptools import setup</code>使其能够替代现有导入的<code>setup</code>函数，然后运行<code>setup.py bdist_egg</code>。</p>
+<p>然后一个<code>.egg</code>文件会被放在<code>dist</code>目录下，静静等待下一次使用。如果想添加一些特殊的元数据文件，可以在<code>SomePackage.egg-info</code>目录下添加（由<code>bdist_egg</code>创建，<code>SomePackage</code>即为我们安装的包名）。那些被放在该目录下的文件会被拷贝到<code>egg</code>文件的<code>EGG-INFO</code>目录下，以便在运行时使用。其他元数据文件会自动生成，不需要编辑。下次执行<code>setup</code>时会被自动<code>overwrite</code>。</p>
+<h4 id="声明依赖"><a href="#声明依赖" class="headerlink" title="声明依赖"></a>声明依赖</h4><p>然而，库并不总可以调用<code>require()</code>，而且在任何情况下，库的源代码很少是声明其版本依赖关系的地方。所以<code>setuptools</code>允许我们在项目的<code>setup</code>中声明依赖关系，这样它们就会被绑定在<code>egg</code>的元数据目录中，然后运行时和<code>EasyInstall</code>可以自动找到所需的额外<code>eggs</code>，当项目被安装或在运行时通过<code>require()</code>将它们加入到<code>sys.path</code> 中。</p>
+<blockquote>
+<p>So far, we’ve only covered how to use eggs that have actually been installed, by building them with the distutils and then putting them in a directory on sys.path. </p>
+</blockquote>
+<p>更多详细信息参见此处<a class="link"   href="http://peak.telecommunity.com/DevCenter/PythonEggs#id6" >The Quick Guide to Python Eggs<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="pip"><a href="#pip" class="headerlink" title="pip"></a>pip</h3><p>从这里开始，<code>easy_install</code>和<code>setuptools</code>不再同义</p>
+<p><code>pip</code>是目前<code>python</code>包管理的事实标准，2008年发布。它被用作 <code>easy_install</code>的替代品，但是它仍有大量的功能建立在<code>setuptools</code>组件之上。</p>
+<p><code>pip</code>希望不再使用<code>Eggs</code>格式（虽然它支持<code>Eggs</code>），而更希望采用“源码发行版”（使用<code>python setup.py sdist</code>创建）。这可以充分利用<a class="link"   href="https://pip.pypa.io/en/latest/cli/pip_install/" >Requirements File Format<i class="fas fa-external-link-alt"></i></a>提供的方便功能。</p>
+<p><code>pip</code>可以利用<code>requirments.txt</code>来实现在依赖的安装。在<code>setup.py</code>中，也存在一个<code>install_requires</code>表来指定依赖的安装。它们的区别在哪里？</p>
+<h4 id="setup-py-VS-requirements-txt"><a href="#setup-py-VS-requirements-txt" class="headerlink" title="setup.py VS requirements.txt"></a>setup.py VS requirements.txt</h4><h5 id="Python库"><a href="#Python库" class="headerlink" title="Python库"></a>Python库</h5><p>这里的Python库指代一个开发出来供他人使用而发布的包，在<a class="link"   href="https://pypi.python.org/pypi" >PyPI<i class="fas fa-external-link-alt"></i></a>中我们可以找到很多的样例。在<code>setup.py</code>中包含了一个库的基本信息。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> setup</span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    name=<span class="string">&quot;MyLibrary&quot;</span>,</span><br><span class="line">    version=<span class="string">&quot;1.0&quot;</span>,</span><br><span class="line">    install_requires=[</span><br><span class="line">        <span class="string">&quot;requests&quot;</span>,</span><br><span class="line">        <span class="string">&quot;bcrypt&quot;</span>,</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这样就很简单声明了<code>Python</code>库的一些信息，但是并没有显式提供一个<code>url</code>来获取这些依赖，仅告诉了我们依赖是什么。我们可以称这种声明方式为“抽象的依赖”，它们只是以名字（或者加上了一个具体的版本号） 的方式来出现的。这就像我们说的“鸭子类型”，你不在乎它是什么样子的只要它看起来是<code>requests</code>。</p>
+<blockquote>
+<p><a class="link"   href="https://cloud.tencent.com/developer/article/1484390" >鸭子类型<i class="fas fa-external-link-alt"></i></a>（duck typing）在程序设计中是动态类型的一种风格。 在这种风格中，一个对象有效的语义，不是由继承自特定的类或实现特定的接口，而是由”当前方法和属性的集合”决定。</p>
+</blockquote>
+<h5 id="Python应用"><a href="#Python应用" class="headerlink" title="Python应用"></a>Python应用</h5><p>这里的Python应用指我们要部署的一些东西，区别于前面的<code>Python</code>库。Python应用中往往会在应用外放至一个文件用于声明该应用部署所需的依赖。</p>
+<p>一个应用往往会有许多依赖。通常由requirements来对它们进行声明。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># This is an implicit value, here for clarity</span><br><span class="line">--index https:&#x2F;&#x2F;pypi.python.org&#x2F;simple&#x2F;</span><br><span class="line"></span><br><span class="line">MyPackage&#x3D;&#x3D;1.0</span><br><span class="line">requests&#x3D;&#x3D;1.2.0</span><br><span class="line">bcrypt&#x3D;&#x3D;1.0.2</span><br></pre></td></tr></table></figure>
+<p>文件的头部有一个 <code>--index https://pypi.python.org/simple/</code> ，一般我们不需要声明这项，除非我们使用的不是PyPI。</p>
+<p>这一行把一个抽象的依赖声明<code>requests==1.2.0</code>转变为一个具体的依赖声明<code>requests 1.2.0 from pypi.python.org/simple/</code>，这不像“鸭子类型”，倒像一次<code>isinstance</code>检查。</p>
+<h5 id="抽象与具体"><a href="#抽象与具体" class="headerlink" title="抽象与具体"></a>抽象与具体</h5><p>对于抽象依赖和具体依赖的区分是非常重要的，这点使我们的<code>PyPI</code>镜像源正常工作，这点允许我们可以在公司里搭建我们私有的包索引服务，甚至这点允许了你去fork一个包并改造它。因为一个抽象的依赖只是一个名字和一个可选的版本号，你可以从<code>PyPi</code>来安装它，或者从你自己的文件系统，你可以fork它并改造它，只要你指明了正确的名字和版本号你就可以一直这么使用下去。</p>
+<p>然而当我们在一个该使用抽象依赖的地方使用了具体依赖，就可能出现问题。当我们替换一个底层依赖的时候，还需要改动依赖这个库的其他依赖对该库的依赖声明。</p>
+<h5 id="Setuptools的dependcy-links"><a href="#Setuptools的dependcy-links" class="headerlink" title="Setuptools的dependcy_links"></a>Setuptools的dependcy_links</h5><p>在<code>Setuptools</code>中有一个参数是<code>dependency_link</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">from setuptools import setup</span><br><span class="line"></span><br><span class="line">setup(</span><br><span class="line">    # ...</span><br><span class="line">    dependency_links &#x3D; [</span><br><span class="line">        &quot;http:&#x2F;&#x2F;packages.example.com&#x2F;snapshots&#x2F;&quot;,</span><br><span class="line">        &quot;http:&#x2F;&#x2F;example2.com&#x2F;p&#x2F;bar-1.0.tar.gz&quot;,</span><br><span class="line">    ],</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>这一功能除去了依赖的抽象特性，直接把依赖的获取url标在了setup.py里。就像在Go语言中修改依赖包一样，我们只需要修改依赖链中每个包的<code>dependency_links</code>。</p>
+<h5 id="开发可复用的包与不重复自己"><a href="#开发可复用的包与不重复自己" class="headerlink" title="开发可复用的包与不重复自己"></a>开发可复用的包与不重复自己</h5><p>那么我们写依赖声明的时候需要在 setup.py 中写好抽象依赖，在 <code>requirements.txt</code>中写好具体的依赖，但是我们并不想维护两份依赖文件，这样会让我们很难做好同步。编写好<code>requirements.txt</code>可以解决这个问题，我们可以在有<code>setup.py</code>的目录里写下一个这样的 requirements.txt</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">--index https:&#x2F;&#x2F;pypi.python.org&#x2F;simple&#x2F;</span><br><span class="line"></span><br><span class="line">-e .</span><br></pre></td></tr></table></figure>
+<p>这样<code>pip install -r requirements.txt</code>可以照常工作，它会先安装该文件路径下的包，然后继续开始解析抽象依赖(setup.py内的依赖)，结合<code>--index</code>选项后转换为具体依赖然后再进行安装。</p>
+<p>这个办法可以让我们解决一种类似这样的情形：比如我们有两个或两个以上的包在一起开发但是是分开发行的，或者说你有一个尚未发布的包并把它分成了几个部分。如果你的顶层的包依然仅仅按照“名字”来依赖的话，我们依然可以使用<code>requirements.txt</code>来安装开发版本的依赖包:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">--index https:&#x2F;&#x2F;pypi.python.org&#x2F;simple&#x2F;</span><br><span class="line"></span><br><span class="line">-e https:&#x2F;&#x2F;github.com&#x2F;foo&#x2F;bar.git#egg&#x3D;bar</span><br><span class="line">-e .</span><br></pre></td></tr></table></figure>
+<p>这会首先从<code>https://github.com/foo/bar.git</code>来安装包<code>bar</code>， 然后进行到第二行<code>-e .</code>，开始安装<code>setup</code>中的抽象依赖，但是包<code>bar</code>已经安装过了， 所以<code>pip</code>会跳过安装，而是仍然使用<code>github.com</code>上安装了的开发版本的包<code>bar</code>。</p>
+<h4 id="pip-vs-easy-install"><a href="#pip-vs-easy-install" class="headerlink" title="pip vs easy_install"></a>pip vs easy_install</h4><p><code>pip</code>支持<code>git/svn/hg</code>等流行的<code>VCS</code>系统，可以直接从<code>gz</code>或者<code>zip</code>压缩包安装，支持搜索包，以及指定服务器安装等等功能。</p>
+<p>那么<code>pip</code>和<code>easy_install</code>的区别</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>pip</th>
+<th>easy_install</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Installs from Wheels</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Uninstall Packages</td>
+<td>Yes (python -m pip uninstall)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Dependency Overrides</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>List Installed Packages</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>PEP 438 Support</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Installation format</td>
+<td>‘Flat’ packages with egg-info metadata.(包含<code>egg-info</code>元数据的包)</td>
+<td>Encapsulated Egg format(封装的<code>egg</code>包)</td>
+</tr>
+<tr>
+<td>sys.path modification</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Installs from eggs</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>pylauncher support</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Multi-version Installs</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Exclude scripts during installs</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>per project index</td>
+<td>Only in virtualenv</td>
+<td>Yes, via setup.cfg</td>
+</tr>
+</tbody></table>
+<p>源自<a class="link"   href="https://packaging.python.org/en/latest/discussions/pip-vs-easy-install/" >此处<i class="fas fa-external-link-alt"></i></a></p>
+<h3 id="wheel"><a href="#wheel" class="headerlink" title="wheel"></a>wheel</h3><p><code>wheel</code>本质上是一个<code>zip</code>包格式，它使用<code>.whl</code>扩展名，用于<code>Python</code>模块安装，是<code>.egg</code>文件的替代品。</p>
+<p><code>wheel</code>还提供了一个<code>bdist_wheel</code>作为<code>setuptools</code>的扩展命令，这个命令可以用来生成<code>wheel</code>包。</p>
+<p><code>pip</code>提供了一个<code>wheel</code>子命令来安装<code>wheel</code>包。当然，需要先安装<code>wheel</code>模块。</p>
+<h4 id="whl使用"><a href="#whl使用" class="headerlink" title="whl使用"></a>whl使用</h4><p>将一个基于<code>setuptools</code>的项目<code>build</code>为<code>.whl</code>文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">python setup.py bdist_wheel</span><br></pre></td></tr></table></figure>
+
+<p>我们打包好的<code>.whl</code>会被生成在<code>dist</code>目录下，名为<code>yourproject-&lt;tags&gt;.whl</code></p>
+<p>或者制作一个<code>python2/3</code>兼容的纯<code>Python</code>文件，就需要在<code>setup.cfg</code>中添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[bdsit_wheel]</span><br><span class="line">universal &#x3D; 1</span><br></pre></td></tr></table></figure>
+
+<p>一些包转换命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">wheel convert youreggfile.egg   #egg转wheel</span><br><span class="line">wheel convert yourinstaller.exe #exe转wheel</span><br></pre></td></tr></table></figure>
+
+<p>如何将我们的<code>license file</code>包含在生成的<code>.wheel</code>文件中呢？</p>
+<p>通常我们的项目中会被要求包含一些开源许可证。默认情况下，wheel方便地在<code>.dist-info</code>目录中包含与下列glob模式匹配的文件。</p>
+<blockquote>
+<p>glob是python自带的一个操作文件的相关模块，由于模块功能比较少，所以很容易掌握。用它可以查找符合特定规则的文件路径名。使用该模块查找文件，只需要用到： “*”, “?”, “[]”这三个匹配符;</p>
+</blockquote>
+<ul>
+<li><code>AUTHORS*</code></li>
+<li><code>COPYING*</code></li>
+<li><code>LICEN[CS]E*</code></li>
+<li><code>NOTICE*</code></li>
+</ul>
+<p>这些文件我们都可以通过<code>setup.cfg</code>文件中的<code>[metadata]</code>参数来进行重写</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[metadata]</span><br><span class="line">license_files &#x3D;</span><br><span class="line">   license.txt</span><br><span class="line">   3rdparty&#x2F;*.txt</span><br></pre></td></tr></table></figure>
+<p><a class="link"   href="https://wheel.readthedocs.io/en/latest/#defining-the-python-version" >setup.cfg<i class="fas fa-external-link-alt"></i></a>可以用来定义<code>wheel</code>打包时的相关信息</p>
+<h3 id="distutils2-和-distlib"><a href="#distutils2-和-distlib" class="headerlink" title="distutils2 和 distlib"></a>distutils2 和 distlib</h3><p><code>distutils2</code>被设计为<code>distutils</code>的替代品。从2009年开发到2012年。它包含更多的功能，并希望以<code>packaging</code>作为名称进入<code>python 3.3</code>成为标准库的一部分。但这个计划后来停滞了</p>
+<p><code>distlib</code>是<code>distutils2</code>的部分，它为<code>distutils2/packaging</code>提供的低级功能增加高级<code>API</code>，使其便于使用。</p>
+<p><a class="link"   href="https://pythonhosted.org/distlib/overview.html" >这里<i class="fas fa-external-link-alt"></i></a>介绍了<code>distlib</code>没有进入<code>python 3.3</code>标准库的一些原因。</p>
+<p>因此，可以暂时不必了解这两个工具，静观其变即可。</p>
+<p>参考链接：</p>
+<ol>
+<li><a class="link"   href="https://docs.python.org/3/distutils/sourcedist.html" >https://docs.python.org/3/distutils/sourcedist.html<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   href="https://blog.zengrong.net/post/python_packaging/#%E4%BA%8Cpython-%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%A4%A7%E4%B9%B1%E6%96%97" >https://blog.zengrong.net/post/python_packaging/#%E4%BA%8Cpython-%E5%8C%85%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%A4%A7%E4%B9%B1%E6%96%97<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   href="http://peak.telecommunity.com/DevCenter/PythonEggs" >http://peak.telecommunity.com/DevCenter/PythonEggs<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   href="http://peak.telecommunity.com/DevCenter/EasyInstall" >http://peak.telecommunity.com/DevCenter/EasyInstall<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   href="https://pyzh.readthedocs.io/en/latest/python-setup-dot-py-vs-requirements-dot-txt.html" >https://pyzh.readthedocs.io/en/latest/python-setup-dot-py-vs-requirements-dot-txt.html<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   href="https://packaging.python.org/en/latest/discussions/pip-vs-easy-install/" >https://packaging.python.org/en/latest/discussions/pip-vs-easy-install/<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   href="https://wheel.readthedocs.io/en/latest/#defining-the-python-version" >https://wheel.readthedocs.io/en/latest/#defining-the-python-version<i class="fas fa-external-link-alt"></i></a></li>
+<li><a class="link"   href="https://stackoverflow.com/questions/6344076/differences-between-distribute-distutils-setuptools-and-distutils2/14753678#14753678" >https://stackoverflow.com/questions/6344076/differences-between-distribute-distutils-setuptools-and-distutils2/14753678#14753678<i class="fas fa-external-link-alt"></i></a></li>
+</ol>
 ]]></content>
   </entry>
   <entry>
@@ -2123,22 +2413,6 @@
 <li>相对近址32位寻址</li>
 </ul>
 <p>以上两种重定位方式指令修正方式每个被修正的位置的长度都为32位，即4个字节。唯一的区别就是绝对寻址和相对寻址。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>Python Import 机制小记</title>
-    <url>/2021/10/22/Python%20Import%20%E6%9C%BA%E5%88%B6%E5%B0%8F%E8%AE%B0/</url>
-    <content><![CDATA[<h1 id="Python-Import-机制小记"><a href="#Python-Import-机制小记" class="headerlink" title="Python Import 机制小记"></a>Python Import 机制小记</h1><h2 id="模块（module）与包-（package）"><a href="#模块（module）与包-（package）" class="headerlink" title="模块（module）与包 （package）"></a>模块（module）与包 （package）</h2><h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>典型的，一个 <code>.py</code> 后缀文件即是 Python 的一个模块。在模块的内部，可以通过全局变量 <code>__name__</code> 来获得模块名。模块可以包含可执行的语句，这些语句会在模块 <strong>初始化</strong> 的时候执行 —— 当所在模块被 <code>import</code> 导入时它们有且只会执行一次。</p>
-<h3 id="包"><a href="#包" class="headerlink" title="包"></a>包</h3><p>根据目前 <code>PEP420</code> 的提案，目前的 <code>Python</code> 实际上是有两种包的存在：<strong>正规包</strong>（<code>regular Package</code>） 以及 <strong>命名空间包</strong>（<code>Namespace package</code>）</p>
-<ul>
-<li><p>正规包：<br>在 Python 3.2 之前就已经存在了的，通常是以包含一个 <code>__init__.py</code> 文件的目录形式展现。当 package 被导入时，这个 <code>__init__.py</code> 文件会被 <em>隐式</em> 地执行。</p>
-</li>
-<li><p>命名空间包</p>
-<p>根据 PEP420 的定义，命名空间包是由多个 <em>portion</em> 组成的 —— <em>portion</em> 类似于父包下的子包，但它们物理位置上不一定相邻，而且它们可能表现为 .zip 中的文件、网络上的文件等等。命名空间包不需要 <code>__init__.py</code> 文件，只要它本身或者子包（也就是 <em>portion*）被导入时，Python 就会给顶级的部分创建为命名空间包 —— 因此，命名空间包不一定直接对应到文件系统中的对象，它可以是一个 *虚拟</em> 的 module 。</p>
-</li>
-</ul>
-<h2 id="Import-机制"><a href="#Import-机制" class="headerlink" title="Import 机制"></a>Import 机制</h2><p>模块中的 Python 代码可以通过 import（导入）操作访问另一个模块内的代码。<code>import</code> 语句时调起导入机制的常用方式，但不是唯一方式。<code>importlib.import_module()</code> 以及内置的 <code>__import__()</code> 函数都可以调起导入机制。</p>
-<p>未完待续……..</p>
 ]]></content>
   </entry>
 </search>
