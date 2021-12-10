@@ -172,7 +172,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>416 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>412 字</span>
         </span>
     
     
@@ -193,7 +193,7 @@
         
 
         <div class="article-content markdown-body">
-            <h1 id="Python-Import-机制小记"><a href="#Python-Import-机制小记" class="headerlink" title="Python Import 机制小记"></a>Python Import 机制小记</h1><h2 id="模块（module）与包-（package）"><a href="#模块（module）与包-（package）" class="headerlink" title="模块（module）与包 （package）"></a>模块（module）与包 （package）</h2><h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>典型的，一个 <code>.py</code> 后缀文件即是 Python 的一个模块。在模块的内部，可以通过全局变量 <code>__name__</code> 来获得模块名。模块可以包含可执行的语句，这些语句会在模块 <strong>初始化</strong> 的时候执行 —— 当所在模块被 <code>import</code> 导入时它们有且只会执行一次。</p>
+            <h1 id="Python-Import-机制小记"><a href="#Python-Import-机制小记" class="headerlink" title="Python Import 机制小记"></a>Python Import 机制小记</h1><h2 id="模块（module）与包-（package）"><a href="#模块（module）与包-（package）" class="headerlink" title="模块（module）与包 （package）"></a>模块（module）与包 （package）</h2><h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>典型的，一个 <code>.py</code> 后缀文件即是<code>Python</code>的一个模块。在模块的内部，可以通过全局变量 <code>__name__</code> 来获得模块名。模块可以包含可执行的语句，这些语句会在模块 <strong>初始化</strong> 的时候执行 —— 当所在模块被 <code>import</code> 导入时它们有且只会执行一次。</p>
 <h3 id="包"><a href="#包" class="headerlink" title="包"></a>包</h3><p>根据目前 <code>PEP420</code> 的提案，目前的 <code>Python</code> 实际上是有两种包的存在：<strong>正规包</strong>（<code>regular Package</code>） 以及 <strong>命名空间包</strong>（<code>Namespace package</code>）</p>
 <ul>
 <li><p>正规包：<br>在 Python 3.2 之前就已经存在了的，通常是以包含一个 <code>__init__.py</code> 文件的目录形式展现。当 package 被导入时，这个 <code>__init__.py</code> 文件会被 <em>隐式</em> 地执行。</p>
@@ -203,7 +203,6 @@
 </li>
 </ul>
 <h2 id="Import-机制"><a href="#Import-机制" class="headerlink" title="Import 机制"></a>Import 机制</h2><p>模块中的 Python 代码可以通过 import（导入）操作访问另一个模块内的代码。<code>import</code> 语句时调起导入机制的常用方式，但不是唯一方式。<code>importlib.import_module()</code> 以及内置的 <code>__import__()</code> 函数都可以调起导入机制。</p>
-<p>未完待续……..</p>
 
         </div>
 
