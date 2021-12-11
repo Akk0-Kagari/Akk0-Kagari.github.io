@@ -286,7 +286,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> site</span><br><span class="line"><span class="comment"># 不同的平台返回的结果不同，其结果是一个路径列表</span></span><br><span class="line">site.getsitepackages()</span><br><span class="line">[<span class="string">&#x27;D:\\Python\\Python3.7.0&#x27;</span>, <span class="string">&#x27;D:\\Python\\Python3.7.0\\lib\\site-packages&#x27;</span>]</span><br></pre></td></tr></table></figure>
 
 <p><code>Python</code>导入的默认机制大体如上文，但是实际情况往往更复杂。</p>
-<p>首先我们需要获取导入模块的**完全限定名(fully qualified name)**，我们可以通过<code>import</code>语句的参数得到，或者从函数 <code>importlib.import_module()</code> 或 <code>__import__()</code> 中得到。</p>
+<p>首先我们需要获取导入模块的 <strong>完全限定名(fully qualified name)</strong> ，我们可以通过<code>import</code>语句的参数得到，或者从函数 <code>importlib.import_module()</code> 或 <code>__import__()</code> 中得到。</p>
 <h5 id="缓存Cache"><a href="#缓存Cache" class="headerlink" title="缓存Cache"></a>缓存Cache</h5><p>在导入搜索开始前，会先检查<code>sys.modules</code>，它是导入系统的缓存，本质上是一个字典，如果之前已经导入过<code>foo.bar.baz</code>，则将会包含 <code>foo</code> ，<code>foo.bar</code> 以及 <code>foo.bar.baz</code> 键，其对应的值为各自的<code>module</code>对象。</p>
 <p>如果缓存中存在对应模块的键，取出对应的值，导入完成。否则就进行搜索操作。</p>
 <blockquote>
@@ -311,7 +311,31 @@
 <p>find_spec(fullname, path, target=None)</p>
 </blockquote>
 <p>以 <code>foo.bar.baz</code> 模块为例对 <code>find_spec</code> 进行说明</p>
-<p>参数说明：<br>|参数|说明|示例|<br>|-|-|-|<br>|fullname    |被导入模块的完全限定名（fully qualified name）|<code>foo.bar.baz</code>|<br>|path|供搜索使用的路径列表，对于最顶级模块，这个值为 None；对于子包，这个值为父包的 <code>__path__</code> 属性值|<code>foo.bar.__path__</code>|<br>|target|用作稍后加载目标的现有模块对象，这个值仅会在重载模块时传入|<code>None</code>|</p>
+<p>参数说明：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>fullname</td>
+<td>被导入模块的完全限定名（fully qualified name）</td>
+<td>foo.bar.baz</td>
+</tr>
+<tr>
+<td>path</td>
+<td>供搜索使用的路径列表，对于最顶级模块，这个值为 None；对于子包，这个值为父包的 __path__ 属性值</td>
+<td>foo.bar.__path__</td>
+</tr>
+<tr>
+<td>target</td>
+<td>用作稍后加载目标的现有模块对象，这个值仅会在重载模块时传入</td>
+<td>None</td>
+</tr>
+</tbody></table>
 <p>对于单个导入请求可能会多次遍历<code>meta_path</code>，以这个示例的为例，我们的缓存中不存在这些模块，则会在每个 <code>finder</code> (以 <code>mpf</code> 命名) 上依次调用</p>
 <ol>
 <li><code>mpf.find_spec(&quot;foo&quot;, None, None)</code></li>
