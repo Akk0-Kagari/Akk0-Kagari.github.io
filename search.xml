@@ -2835,59 +2835,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>图神经网络学习.md</title>
-    <url>/2022/02/05/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0-md/</url>
-    <content><![CDATA[<h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><h2 id="图的基本定义"><a href="#图的基本定义" class="headerlink" title="图的基本定义"></a>图的基本定义</h2><p>数学中图由顶点（Vertex）以及连接顶点的边（Edge）构成。顶点表示研究的对象，边表示两个对象之间特定的关系。</p>
-<h2 id="图的基本类型"><a href="#图的基本类型" class="headerlink" title="图的基本类型"></a>图的基本类型</h2><ol>
-<li>有向图与无向图</li>
-</ol>
-<p>区别是图中的边是否存在方向性。</p>
-<ol start="2">
-<li>非加权图与加权图</li>
-</ol>
-<p>图中的每条边有一个实数与之对应。</p>
-<ol start="3">
-<li>连通图与非连通图</li>
-</ol>
-<p>图中存在孤立的顶点，没有任何边与之相连，这样的图被称为非连通图。</p>
-<ol start="4">
-<li>二部图</li>
-</ol>
-<p>将图G中的顶点集合V拆分成两个子集A和B，如果对于图中的任何一条边e（连接vi与vj）都有vi∈A，vj∈B，则图G为二部图。二部图描述两类对象之间的关系，如用户与商品，作者与论文。</p>
-<h2 id="图的一些定义"><a href="#图的一些定义" class="headerlink" title="图的一些定义"></a>图的一些定义</h2><ul>
-<li>同一条边连接的两个顶点互为<strong>邻居</strong>。</li>
-<li>顶点连接的所有边的数目称为<strong>度</strong>。</li>
-<li>所有节点的度数之和为边数的两倍。</li>
-<li>有向图中度分为出度与入度，顶点的度数等于二者之和。</li>
-<li>图的顶点集与边集分别是另一个图的子集，则其为后者的子图。</li>
-<li>从顶点触发沿着一些边经过一些顶点形成的序列称之为路径（Path），路径的长度是路径的边数。</li>
-<li>顶点的距离为最短路径长度。</li>
-<li>设两顶点间的距离为k，则顶点间互为k阶邻居。</li>
-<li>某个顶点的k阶子图则是由其不大于k阶的邻居组成。</li>
-</ul>
-<h2 id="图的存储方式"><a href="#图的存储方式" class="headerlink" title="图的存储方式"></a>图的存储方式</h2><p>邻接矩阵（Adjacency matrix）与关联矩阵（Incidence matrix）</p>
-<p>邻接矩阵的一维数组表示顶点集合，二维数据表示邻接矩阵，其值表示顶点间的关联关系，当邻接矩阵中存在大量0值时可以采用稀疏矩阵的方式来存储。无向图的邻接矩阵是对称的。</p>
-<p>关联矩阵描述节点与边之间的关系。</p>
-<h2 id="图的遍历"><a href="#图的遍历" class="headerlink" title="图的遍历"></a>图的遍历</h2><p>图的遍历是指从图中的某一顶点触发，按照某种算法沿着图中的边对图中的所有顶点访问且仅访问一次。算法主要分为两种，深度优先与广度优先。</p>
-<h2 id="图数据的应用"><a href="#图数据的应用" class="headerlink" title="图数据的应用"></a>图数据的应用</h2><p>在实际的数据场景中，我们通常将其称为网络（Network）。</p>
-<p>下面列举其中比较重要的四类图数据。</p>
-<ul>
-<li>同构图：同构图是指图中的节点类型和关系类型都仅有一种。</li>
-<li>异构图：与同构图相反，异构图是指图中的节点类型或关系类型多于一种。</li>
-<li>属性图：相较于异构图，属性图给图数据增加了额外的属性信息。对于一个属性图而言，节点和关系都有标签（Label）和属性（Property），这里的标签是指节点或关系的类型。</li>
-<li>非显式图：非显式图是指数据之间没有显式地定义出关系，需要依据某种规则或计算方式将数据地关系表达出来，进而将数据当成一种图数据进行研究。</li>
-</ul>
-<h2 id="图数据相关任务分类"><a href="#图数据相关任务分类" class="headerlink" title="图数据相关任务分类"></a>图数据相关任务分类</h2><ol>
-<li><p>节点层面（Node Level）的任务<br>节点层面的任务主要包括分类任务和回归任务。节点分类</p>
-</li>
-<li><p>边层面（Link Level）的任务<br>边层面的任务主要包括边的分类和预测任务。</p>
-</li>
-<li><p>图层面（Graph Level）的任务<br>图层面的任务不依赖于某个节点或某条边的属性，而是从图的整体结构出发实现分类、表示和生成等任务。</p>
-</li>
-</ol>
-]]></content>
-  </entry>
-  <entry>
     <title>操作系统编写小记</title>
     <url>/2022/07/25/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%BC%96%E5%86%99%E5%B0%8F%E8%AE%B0/</url>
     <content><![CDATA[<h1 id="工作环境准备"><a href="#工作环境准备" class="headerlink" title="工作环境准备"></a>工作环境准备</h1><h2 id="bohcs安装"><a href="#bohcs安装" class="headerlink" title="bohcs安装"></a>bohcs安装</h2><ol>
@@ -2925,7 +2872,95 @@
 
 <p>尝试启动报错<code>boot failed: not a bootable disk</code>，显然启动盘的编写操作不可能如此简单粗暴。</p>
 <h1 id="MBR主引导"><a href="#MBR主引导" class="headerlink" title="MBR主引导"></a>MBR主引导</h1><p>Intel 8086 20 条地址线，故其可以访问1MB的内存空间。</p>
-<p>以下为实模式下的内存布局<br>|起始|结束|大小|用途|<br>|-|-|-|-|<br>|FFFF0|FFFFF|16B|BIOS入口地址，此地址也属于BIOS代码。内容为跳转指令 jmp f000:e05b|<br>|F0000|FFFEF|64KB-16B|系统BIOS范围是 F0000~FFFFF共64KB ，为说明入口地址， 将最上面16字节从此处去掉了，所以此处终止地址 0XFFFEF|<br>|C8000|EFFFF|160KB|映射硬件适配器的 ROM 或内存映射式 I/O|<br>|C0000|C7FFF|32KB|显示适配器BIOS|<br>|B8000|BFFFF|32KB|用于文本模式显示适配器|<br>|B0000|B7FFF|32KB|用于黑白显示适配器|<br>|A0000|AFFFF|64KB|用于彩色显示适配器|<br>|9FC00|9FFFF|1KB|EBDA(Extended BIOS Data Area)扩展BIOS数据区|<br>|7E00|9FBFF|622080B|可用区域|<br>|7C00|7DFF|512B|MBR被BIOS加载到此处，共512字节|<br>|500|7BFF|30464B|可用区域|<br>|400|4FF|256B|BIOS Data Area (BIOS数据区)|<br>|000|3FF|1KB|Interrupt Vector Table(中断向量表)|</p>
+<p>以下为实模式下的内存布局</p>
+<table>
+<thead>
+<tr>
+<th>起始</th>
+<th>结束</th>
+<th>大小</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FFFF0</td>
+<td>FFFFF</td>
+<td>16B</td>
+<td>BIOS入口地址，此地址也属于BIOS代码。内容为跳转指令 jmp f000:e05b</td>
+</tr>
+<tr>
+<td>F0000</td>
+<td>FFFEF</td>
+<td>64KB-16B</td>
+<td>系统BIOS范围是 F0000~FFFFF共64KB ，为说明入口地址， 将最上面16字节从此处去掉了，所以此处终止地址 0XFFFEF</td>
+</tr>
+<tr>
+<td>C8000</td>
+<td>EFFFF</td>
+<td>160KB</td>
+<td>映射硬件适配器的 ROM 或内存映射式 I/O</td>
+</tr>
+<tr>
+<td>C0000</td>
+<td>C7FFF</td>
+<td>32KB</td>
+<td>显示适配器BIOS</td>
+</tr>
+<tr>
+<td>B8000</td>
+<td>BFFFF</td>
+<td>32KB</td>
+<td>用于文本模式显示适配器</td>
+</tr>
+<tr>
+<td>B0000</td>
+<td>B7FFF</td>
+<td>32KB</td>
+<td>用于黑白显示适配器</td>
+</tr>
+<tr>
+<td>A0000</td>
+<td>AFFFF</td>
+<td>64KB</td>
+<td>用于彩色显示适配器</td>
+</tr>
+<tr>
+<td>9FC00</td>
+<td>9FFFF</td>
+<td>1KB</td>
+<td>EBDA(Extended BIOS Data Area)扩展BIOS数据区</td>
+</tr>
+<tr>
+<td>7E00</td>
+<td>9FBFF</td>
+<td>622080B</td>
+<td>可用区域</td>
+</tr>
+<tr>
+<td>7C00</td>
+<td>7DFF</td>
+<td>512B</td>
+<td>MBR被BIOS加载到此处，共512字节</td>
+</tr>
+<tr>
+<td>500</td>
+<td>7BFF</td>
+<td>30464B</td>
+<td>可用区域</td>
+</tr>
+<tr>
+<td>400</td>
+<td>4FF</td>
+<td>256B</td>
+<td>BIOS Data Area (BIOS数据区)</td>
+</tr>
+<tr>
+<td>000</td>
+<td>3FF</td>
+<td>1KB</td>
+<td>Interrupt Vector Table(中断向量表)</td>
+</tr>
+</tbody></table>
 <p>地址0~0x9FFFF处是DRAM(Dynamic Random Access Memory)，即动态随机访问内存。</p>
 <p>其中地址总线除了指向DRAM外还会指向其他外设。</p>
 <p>BIOS作为计算机上第一个运行的软件，不可能自己加载自己，显然只能由硬件进行加载，即只读存储器ROM，而ROM同样也是块内存，被映射在低端1MB的内存顶层，如上表所示。</p>
@@ -3079,7 +3114,50 @@
 <p>寻址方式也发生了相应的改变：<br>由基址寄存器、变址寄存器和偏移量的基础上增加了比例因子，并增加了可供使用的寄存器</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">实模式：</span><br><span class="line">&#123;BX|BP&#125; + &#123;SI|DI&#125; + &#123;立即数&#125;</span><br><span class="line">保护模式：</span><br><span class="line">&#123;eax|ebx|ecx|edx|esi|edi|ebp|esp&#125; + &#123;eax|ebx|ecx|edx|esi|edi|ebp&#125; * &#123;1|2|4|8&#125; + &#123;立即数&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="段描述符"><a href="#段描述符" class="headerlink" title="段描述符"></a>段描述符</h2><p>段描述符结构：<br>高32位<br>|31<del>24|23|22|21|20|19</del>16|15|14<del>13|12|11</del>8|7<del>0|<br>|-|-|-|-|-|-|-|-|-|-|-|-|<br>|段基址|G|D/B|L|AVL|段界限|P|DPL|S|TYPE|段基址|<br>低32位<br>|31</del>16|15~0|<br>|-|-|<br>|段基址|段界限|</p>
+<h2 id="段描述符"><a href="#段描述符" class="headerlink" title="段描述符"></a>段描述符</h2><p>段描述符结构：<br>高32位</p>
+<table>
+<thead>
+<tr>
+<th>31-24</th>
+<th>23</th>
+<th>22</th>
+<th>21</th>
+<th>20</th>
+<th>19-16</th>
+<th>15</th>
+<th>14-13</th>
+<th>12</th>
+<th>11-8</th>
+<th>7-0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>段基址</td>
+<td>G</td>
+<td>D/B</td>
+<td>L</td>
+<td>AVL</td>
+<td>段界限</td>
+<td>P</td>
+<td>DPL</td>
+<td>S</td>
+<td>TYPE</td>
+<td>段基址</td>
+</tr>
+</tbody></table>
+<p>低32位</p>
+<table>
+<thead>
+<tr>
+<th>31~16</th>
+<th>15~0</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>段基址</td>
+<td>段界限</td>
+</tr>
+</tbody></table>
 <p>段界限表示段边界的扩展最值，即最大扩展到多少或最小扩展到多少。扩展方向只有上下两种。对于数据段和代码段，段的扩展方向是向上，即地址越来越高，此时的段界限用来表示段内偏移的最大值。对于栈段，段的扩展方向是向下，即地址越来越低，此时的段界限用来表示段内偏移的最小值。段界限用 20 个二进制位来表示。只不过此段界限只是个单位量，它的单位要么是字节，要么是4KB，即段大小要么是1MB要么是4GB，而单位由描述符中的G位指定。</p>
 <p>具体的段界限边界值计算方法如下：</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(描述符中的段界限值+1)*(段界限粒度：1或4KB) - 1</span><br></pre></td></tr></table></figure>
