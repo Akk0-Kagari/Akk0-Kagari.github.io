@@ -2834,4 +2834,283 @@
 <p>以上两种重定位方式指令修正方式每个被修正的位置的长度都为32位，即4个字节。唯一的区别就是绝对寻址和相对寻址。</p>
 ]]></content>
   </entry>
+  <entry>
+    <title>图神经网络学习.md</title>
+    <url>/2022/02/05/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%AD%A6%E4%B9%A0-md/</url>
+    <content><![CDATA[<h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><h2 id="图的基本定义"><a href="#图的基本定义" class="headerlink" title="图的基本定义"></a>图的基本定义</h2><p>数学中图由顶点（Vertex）以及连接顶点的边（Edge）构成。顶点表示研究的对象，边表示两个对象之间特定的关系。</p>
+<h2 id="图的基本类型"><a href="#图的基本类型" class="headerlink" title="图的基本类型"></a>图的基本类型</h2><ol>
+<li>有向图与无向图</li>
+</ol>
+<p>区别是图中的边是否存在方向性。</p>
+<ol start="2">
+<li>非加权图与加权图</li>
+</ol>
+<p>图中的每条边有一个实数与之对应。</p>
+<ol start="3">
+<li>连通图与非连通图</li>
+</ol>
+<p>图中存在孤立的顶点，没有任何边与之相连，这样的图被称为非连通图。</p>
+<ol start="4">
+<li>二部图</li>
+</ol>
+<p>将图G中的顶点集合V拆分成两个子集A和B，如果对于图中的任何一条边e（连接vi与vj）都有vi∈A，vj∈B，则图G为二部图。二部图描述两类对象之间的关系，如用户与商品，作者与论文。</p>
+<h2 id="图的一些定义"><a href="#图的一些定义" class="headerlink" title="图的一些定义"></a>图的一些定义</h2><ul>
+<li>同一条边连接的两个顶点互为<strong>邻居</strong>。</li>
+<li>顶点连接的所有边的数目称为<strong>度</strong>。</li>
+<li>所有节点的度数之和为边数的两倍。</li>
+<li>有向图中度分为出度与入度，顶点的度数等于二者之和。</li>
+<li>图的顶点集与边集分别是另一个图的子集，则其为后者的子图。</li>
+<li>从顶点触发沿着一些边经过一些顶点形成的序列称之为路径（Path），路径的长度是路径的边数。</li>
+<li>顶点的距离为最短路径长度。</li>
+<li>设两顶点间的距离为k，则顶点间互为k阶邻居。</li>
+<li>某个顶点的k阶子图则是由其不大于k阶的邻居组成。</li>
+</ul>
+<h2 id="图的存储方式"><a href="#图的存储方式" class="headerlink" title="图的存储方式"></a>图的存储方式</h2><p>邻接矩阵（Adjacency matrix）与关联矩阵（Incidence matrix）</p>
+<p>邻接矩阵的一维数组表示顶点集合，二维数据表示邻接矩阵，其值表示顶点间的关联关系，当邻接矩阵中存在大量0值时可以采用稀疏矩阵的方式来存储。无向图的邻接矩阵是对称的。</p>
+<p>关联矩阵描述节点与边之间的关系。</p>
+<h2 id="图的遍历"><a href="#图的遍历" class="headerlink" title="图的遍历"></a>图的遍历</h2><p>图的遍历是指从图中的某一顶点触发，按照某种算法沿着图中的边对图中的所有顶点访问且仅访问一次。算法主要分为两种，深度优先与广度优先。</p>
+<h2 id="图数据的应用"><a href="#图数据的应用" class="headerlink" title="图数据的应用"></a>图数据的应用</h2><p>在实际的数据场景中，我们通常将其称为网络（Network）。</p>
+<p>下面列举其中比较重要的四类图数据。</p>
+<ul>
+<li>同构图：同构图是指图中的节点类型和关系类型都仅有一种。</li>
+<li>异构图：与同构图相反，异构图是指图中的节点类型或关系类型多于一种。</li>
+<li>属性图：相较于异构图，属性图给图数据增加了额外的属性信息。对于一个属性图而言，节点和关系都有标签（Label）和属性（Property），这里的标签是指节点或关系的类型。</li>
+<li>非显式图：非显式图是指数据之间没有显式地定义出关系，需要依据某种规则或计算方式将数据地关系表达出来，进而将数据当成一种图数据进行研究。</li>
+</ul>
+<h2 id="图数据相关任务分类"><a href="#图数据相关任务分类" class="headerlink" title="图数据相关任务分类"></a>图数据相关任务分类</h2><ol>
+<li><p>节点层面（Node Level）的任务<br>节点层面的任务主要包括分类任务和回归任务。节点分类</p>
+</li>
+<li><p>边层面（Link Level）的任务<br>边层面的任务主要包括边的分类和预测任务。</p>
+</li>
+<li><p>图层面（Graph Level）的任务<br>图层面的任务不依赖于某个节点或某条边的属性，而是从图的整体结构出发实现分类、表示和生成等任务。</p>
+</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>操作系统编写小记</title>
+    <url>/2022/07/25/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%BC%96%E5%86%99%E5%B0%8F%E8%AE%B0/</url>
+    <content><![CDATA[<h1 id="工作环境准备"><a href="#工作环境准备" class="headerlink" title="工作环境准备"></a>工作环境准备</h1><h2 id="bohcs安装"><a href="#bohcs安装" class="headerlink" title="bohcs安装"></a>bohcs安装</h2><ol>
+<li><p>下载<a class="link"   href="https://sourceforge.net/projects/bochs/files/bochs/2.6.2/bochs-2.6.2.tar.gz/download" >bochs<i class="fas fa-external-link-alt"></i></a></p>
+</li>
+<li><p>解压压缩包</p>
+</li>
+</ol>
+<p><code>tar zxvf bochs-2.6.2.tar.gz</code></p>
+<ol start="3">
+<li>编译</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">./configure \</span><br><span class="line">--prefix=/abs_path/bochs-2.6.2/bochos \</span><br><span class="line">--enable-debugger \</span><br><span class="line">--enable-disasm \</span><br><span class="line">--enable-iodebug \</span><br><span class="line">--enable-x86-debugger \</span><br><span class="line">--with-x \</span><br><span class="line">--with-x11</span><br></pre></td></tr></table></figure>
+<p>若需使用<code>gdb</code>调试，修改参数<code>--enable-debugger</code>为<code>--enable-gdb-stub</code></p>
+<p>生成Makefile开始编译，期间若缺少文件，尝试安装对应软件包即可。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+<p>若在编译过程中出现以下的问题，尝试修改makefile中的参数</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">undefined reference to &#39;pthread_create&#39;</span><br><span class="line">undefined reference to &#39;pthread_join&#39;</span><br><span class="line"></span><br><span class="line">&gt; vim makefile</span><br><span class="line">&gt; :92</span><br><span class="line">LIBS &#x3D;  -lm -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lfontconfig -lfreetype -lpthread</span><br></pre></td></tr></table></figure>
+
+<p>若成功编译，执行<code>install</code></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">make install</span><br></pre></td></tr></table></figure>
+<h2 id="bochs配置"><a href="#bochs配置" class="headerlink" title="bochs配置"></a>bochs配置</h2><p>参考文件<code>/abspath/bochs-2.6.2/bochos/share/doc/bochs/bochsrc-sample.txt</code></p>
+<p>bochs 配置文件:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">############################################### </span><br><span class="line"># Configuration file for Bochs </span><br><span class="line">############################################### </span><br><span class="line"># memory setup</span><br><span class="line">megs: 32</span><br><span class="line"># bios and vgabios setup</span><br><span class="line"></span><br><span class="line">romimage: file&#x3D;&#x2F;home&#x2F;ikebana&#x2F;bochos&#x2F;bochs-2.6.2&#x2F;bochos&#x2F;share&#x2F;bochs&#x2F;BIOS-bochs-latest</span><br><span class="line">vgaromimage: file&#x3D;&#x2F;home&#x2F;ikebana&#x2F;bochos&#x2F;bochs-2.6.2&#x2F;bochos&#x2F;share&#x2F;bochs&#x2F;VGABIOS-lgpl-latest</span><br><span class="line"></span><br><span class="line"># disk setup</span><br><span class="line"># floppya: 1_44&#x3D;a.img, status&#x3D;inserted</span><br><span class="line"></span><br><span class="line"># start disk setup</span><br><span class="line"># boot: floppya # default soft disk</span><br><span class="line">boot: disk</span><br><span class="line"></span><br><span class="line"># log output setup</span><br><span class="line">log: bochs.out</span><br><span class="line"></span><br><span class="line"># mouse turn down, keyboard turn up</span><br><span class="line">mouse: enabled&#x3D;0</span><br><span class="line">keyboard_mapping: enabled&#x3D;1, map&#x3D;&#x2F;home&#x2F;ikebana&#x2F;bochos&#x2F;bochs-2.6.2&#x2F;bochos&#x2F;share&#x2F;bochs&#x2F;keymaps&#x2F;x11-pc-us.map</span><br><span class="line"></span><br><span class="line"># hard disk setup</span><br><span class="line">ata0: enabled&#x3D;1, ioaddr1&#x3D;0x1f0, ioaddr2&#x3D;0x3f0, irq&#x3D;14</span><br><span class="line"></span><br><span class="line"># gdbstub: enabled&#x3D;1, port&#x3D;1234, text_base&#x3D;0, data_base&#x3D;0, bss_base&#x3D;0</span><br><span class="line"></span><br><span class="line">#######################End of the Configuration#########################</span><br></pre></td></tr></table></figure>
+
+<p>尝试启动bochs</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; bin&#x2F;bochs</span><br><span class="line"></span><br><span class="line">You can also start bochs with the -q option to skip these menus.</span><br><span class="line"></span><br><span class="line">1. Restore factory default configuration</span><br><span class="line">2. Read options from...</span><br><span class="line">3. Edit options</span><br><span class="line">4. Save options to...</span><br><span class="line">5. Restore the Bochs state from...</span><br><span class="line">6. Begin simulation</span><br><span class="line">7. Quit now</span><br><span class="line"></span><br><span class="line">Please choose one: [2] # default option 2</span><br><span class="line"></span><br><span class="line">What is the configuration file name?</span><br><span class="line">To cancel, type &#39;none&#39;. [none] bochsrc.disk # enter file name</span><br><span class="line">00000000000i[     ] reading configuration from bochsrc.disk</span><br><span class="line">00000000000e[     ] bochsrc.disk:23: &#39;keyboard_mapping&#39; will be replaced by new &#39;keyboard&#39; option.</span><br><span class="line">------------------------------</span><br><span class="line">Bochs Configuration: Main Menu</span><br><span class="line">------------------------------</span><br><span class="line"></span><br><span class="line">This is the Bochs Configuration Interface, where you can describe the</span><br><span class="line">machine that you want to simulate.  Bochs has already searched for a</span><br><span class="line">configuration file (typically called bochsrc.txt) and loaded it if it</span><br><span class="line">could be found.  When you are satisfied with the configuration, go</span><br><span class="line">ahead and start the simulation.</span><br><span class="line"></span><br><span class="line">You can also start bochs with the -q option to skip these menus.</span><br><span class="line"></span><br><span class="line">1. Restore factory default configuration</span><br><span class="line">2. Read options from...</span><br><span class="line">3. Edit options</span><br><span class="line">4. Save options to...</span><br><span class="line">5. Restore the Bochs state from...</span><br><span class="line">6. Begin simulation</span><br><span class="line">7. Quit now</span><br><span class="line"></span><br><span class="line">Please choose one: [6] # enter</span><br><span class="line">00000000000i[     ] installing x module as the Bochs GUI</span><br><span class="line">00000000000i[     ] using log file bochs.out</span><br><span class="line">Next at t&#x3D;0</span><br></pre></td></tr></table></figure>
+
+<p>随后会提示缺少<code>bootable device</code>，即缺少启动盘</p>
+<p>创建虚拟硬盘</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">bin&#x2F;bximage -hd -mode&#x3D;”flat&quot; -si ze&#x3D;60 -q hd60M.img</span><br></pre></td></tr></table></figure>
+
+<p>更新我们的配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># Examples:</span><br><span class="line">#   ata0-master: type&#x3D;disk, mode&#x3D;flat, path&#x3D;10M.sample, cylinders&#x3D;306, heads&#x3D;4, spt&#x3D;17</span><br><span class="line">#   ata0-slave:  type&#x3D;disk, mode&#x3D;flat, path&#x3D;20M.sample, cylinders&#x3D;615, heads&#x3D;4, spt&#x3D;17</span><br><span class="line">#   ata1-master: type&#x3D;disk, mode&#x3D;flat, path&#x3D;30M.sample, cylinders&#x3D;615, heads&#x3D;6, spt&#x3D;17</span><br><span class="line">#   ata1-slave:  type&#x3D;disk, mode&#x3D;flat, path&#x3D;46M.sample, cylinders&#x3D;940, heads&#x3D;6, spt&#x3D;17</span><br><span class="line">#   ata2-master: type&#x3D;disk, mode&#x3D;flat, path&#x3D;62M.sample, cylinders&#x3D;940, heads&#x3D;8, spt&#x3D;17</span><br><span class="line">#   ata2-slave:  type&#x3D;disk, mode&#x3D;flat, path&#x3D;112M.sample, cylinders&#x3D;900, heads&#x3D;15, spt&#x3D;17</span><br><span class="line">#   ata3-master: type&#x3D;disk, mode&#x3D;flat, path&#x3D;483M.sample, cylinders&#x3D;1024, heads&#x3D;15, spt&#x3D;63</span><br><span class="line">#   ata3-slave:  type&#x3D;cdrom, path&#x3D;iso.sample, status&#x3D;inserted</span><br><span class="line">#&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</span><br><span class="line"></span><br><span class="line">ata0: enabled&#x3D;1, ioaddr1&#x3D;0x1f0, ioaddr2&#x3D;0x3f0, irq&#x3D;14</span><br><span class="line">ata0:-master: type&#x3D;disk, path&#x3D;hd60M.img, cylinders&#x3D;121, heads&#x3D; 16, spt&#x3D;63</span><br></pre></td></tr></table></figure>
+
+<p>尝试启动报错<code>boot failed: not a bootable disk</code>，显然启动盘的编写操作不可能如此简单粗暴。</p>
+<h1 id="MBR主引导"><a href="#MBR主引导" class="headerlink" title="MBR主引导"></a>MBR主引导</h1><p>Intel 8086 20 条地址线，故其可以访问1MB的内存空间。</p>
+<p>以下为实模式下的内存布局<br>|起始|结束|大小|用途|<br>|-|-|-|-|<br>|FFFF0|FFFFF|16B|BIOS入口地址，此地址也属于BIOS代码。内容为跳转指令 jmp f000:e05b|<br>|F0000|FFFEF|64KB-16B|系统BIOS范围是 F0000~FFFFF共64KB ，为说明入口地址， 将最上面16字节从此处去掉了，所以此处终止地址 0XFFFEF|<br>|C8000|EFFFF|160KB|映射硬件适配器的 ROM 或内存映射式 I/O|<br>|C0000|C7FFF|32KB|显示适配器BIOS|<br>|B8000|BFFFF|32KB|用于文本模式显示适配器|<br>|B0000|B7FFF|32KB|用于黑白显示适配器|<br>|A0000|AFFFF|64KB|用于彩色显示适配器|<br>|9FC00|9FFFF|1KB|EBDA(Extended BIOS Data Area)扩展BIOS数据区|<br>|7E00|9FBFF|622080B|可用区域|<br>|7C00|7DFF|512B|MBR被BIOS加载到此处，共512字节|<br>|500|7BFF|30464B|可用区域|<br>|400|4FF|256B|BIOS Data Area (BIOS数据区)|<br>|000|3FF|1KB|Interrupt Vector Table(中断向量表)|</p>
+<p>地址0~0x9FFFF处是DRAM(Dynamic Random Access Memory)，即动态随机访问内存。</p>
+<p>其中地址总线除了指向DRAM外还会指向其他外设。</p>
+<p>BIOS作为计算机上第一个运行的软件，不可能自己加载自己，显然只能由硬件进行加载，即只读存储器ROM，而ROM同样也是块内存，被映射在低端1MB的内存顶层，如上表所示。</p>
+<p>BIOS是在实模式下运行的，而实模式只能访问1MB空间，仅有16B的BIOS入口地址，真正的BIOS代码不可能在此，BIOS需要检测硬件、做初始化工作以及建立中断向量表，故在此进行跳转以执行真正的BIOS代码。</p>
+<p>我们已经知道了<code>0xf0000 + 0xe05b</code>是BIOS代码真正开始的地方，接着BIOS便开始检测内存、显卡等外设信息，当检测通过，并初始化好硬件后，开始在内存中<code>0x000~0x3FF</code>处建数据结构，中断向量表<code>IVT</code>并填写中断例程。</p>
+<h2 id="MBR基本知识"><a href="#MBR基本知识" class="headerlink" title="MBR基本知识"></a>MBR基本知识</h2><p>在这之后BIOS的最后一项任务便是校验启动盘中位于0盘0道1扇区的内容。</p>
+<blockquote>
+<p>0盘0道1扇区本质上就是0盘0道0扇区。硬盘扇区的表示法有两种，这里描述0盘0道0扇区用的便是其中的一种： CHS 方法，即柱面 Cylinder Header 扇区 Sector （另外一种是 LBA 方式），“0盘”说的是0磁头，因为一张盘是有上下两个盘面的，一个盘面上对应一个磁头，所以用磁头 Header 来表示盘面。“0道”是指0柱面，柱面 Cylinder指的是所有盘面上、编号相同的磁道的集合，组合在一起之后是个立体的管状。扇区是将磁道等距划分成一段段的小区间，由于磁道是圆形的，确切地说是圆环，这些被划分出来的小区间便是扇形，所以称为扇区。在CHS方式中扇区的编号是从1开始的。</p>
+</blockquote>
+<p>如果此扇区末尾的两个字节分别是魔数0x55和0xaa，BIOS便认为此扇区中确实存在可执<br>行的程序，便加载到物理地址<code>0x7c00</code>，随后跳转到此地址，继续执行。</p>
+<p>BIOS的跳转指令为<code>jmp 0: 0x7c00</code>，直接绝对远转移会将cs寄存器中的值进行替换。</p>
+<p><a class="link"   href="https://www.glamenv-septzen.net/en/view/6" >为什么是0x7c00？<i class="fas fa-external-link-alt"></i></a></p>
+<p>MBR的大小必须是 512 字节，这是为了保证<code>0x55</code>和<code>0xaa</code>跑这两个魔数恰好出现在该扇区的最后两个字节处。</p>
+<p>MBR的代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">; 主引导程序</span><br><span class="line">SECTION MBR vstart&#x3D;0x7c00</span><br><span class="line">    mov ax, cs</span><br><span class="line">    mov ds, ax</span><br><span class="line">    mov es, ax</span><br><span class="line">    mov ss, ax</span><br><span class="line">    mov fs, ax</span><br><span class="line">    mov sp, 0x7c00</span><br><span class="line"></span><br><span class="line">; 0x06号功能，上卷全部行</span><br><span class="line">; INT 0x10 功能号 0x06</span><br><span class="line">; 输入 ：</span><br><span class="line">; AH &#x3D; 0x06</span><br><span class="line">; AL &#x3D; 上卷行数</span><br><span class="line">; BH &#x3D; 上卷行属性</span><br><span class="line">; (CL,CH)&#x3D;窗口左上角(X,Y)</span><br><span class="line">; (DL,DH)&#x3D;窗口右下角(X,Y)</span><br><span class="line">; 无返回值</span><br><span class="line"></span><br><span class="line">    mov ax, 0x600</span><br><span class="line">    mov bx, 0x700</span><br><span class="line">    mov cx, 0           ; (0,0)</span><br><span class="line">    mov dx, 0x184f      ; (79,24)</span><br><span class="line">                        ; VGA 文本模式中一行容纳80个字符， 共25行</span><br><span class="line">                        ; 下标从0 开始</span><br><span class="line">    int 0x10</span><br><span class="line"></span><br><span class="line">    ;使用10h中断，调用13号子功能打印字符串</span><br><span class="line">    mov ax, message</span><br><span class="line">    mov bp, ax          ;es:bp 为串首地址，es与cs一致</span><br><span class="line"></span><br><span class="line">    ;光标位置使用dx寄存器中内容，cx中的光标位置可忽略</span><br><span class="line">    mov cx, 5           ; cx为串长度</span><br><span class="line">    mov ax, 0x1301      ; 子功能号13显示字符及属性，13存入ah寄存器</span><br><span class="line">                        ; al设置写字符方式，显示字符串，光标跟随移动</span><br><span class="line">    mov bx, 0x2         ; bh存储显示的页号，此处为0</span><br><span class="line">                        ; bl为字符属性，此处属性为黑底绿字</span><br><span class="line">    int 0x10</span><br><span class="line"></span><br><span class="line">    jmp $               ; 程序悬停</span><br><span class="line"></span><br><span class="line">    message db &quot;1 MBR&quot;</span><br><span class="line">    times 510- ($-$$) db 0</span><br><span class="line">    db 0x55, 0xaa</span><br></pre></td></tr></table></figure>
+
+<p>使用nasm生成二进制文件，并对磁盘进行覆写</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt;nasm -o mbr.bin mbr.S</span><br><span class="line">&gt;ls -lb mbr.bin</span><br><span class="line">-rw-rw-r-- 1 root root 512 7月 11 20:14 mbr.bin</span><br><span class="line">&gt;dd if&#x3D;&#x2F;abspath&#x2F;bochos&#x2F;mbr.bin of&#x3D;&#x2F;abspath&#x2F;bochos&#x2F;hd60M.img bs&#x3D;512 count&#x3D;1 conv&#x3D;notrunc</span><br><span class="line">记录了1+0 的读入</span><br><span class="line">记录了1+0 的写出</span><br><span class="line">512字节已复制，0.000279708 s，1.8 MB&#x2F;s</span><br><span class="line">&gt;bin&#x2F;bochs -f bochsrc.disk</span><br></pre></td></tr></table></figure>
+
+<p>简单的MBR已经可以成功运行。</p>
+<h2 id="深入MBR"><a href="#深入MBR" class="headerlink" title="深入MBR"></a>深入MBR</h2><p>在前面的MBR代码处存在关键字<code>vstart</code>，该关键字与<code>org</code>用法相同，他们只负责告知编译器按该地址进行编址。</p>
+<p>MBR用<code>vstart=0x7c00</code>来修饰的原因，是因为开发人员知道MBR要被加载器(BIOS)加载到物理地址<code>0x7c00</code>，MBR中后续的物理地址都是<code>0x7c00+</code>。另外，因为BIOS进入MBR是通过<code>jmp 0: 7c00</code>来实现的，故此时cs己经变成0，相当于“平坦模型”了，只不过此“平坦模型”大小只是 65536 字节，而不是 4GB。所以 MBR 中各数据编译出来的地址（大于等于0x7c00）实际上都成了偏移地址。所以用<code>vstart</code>的时机是：我预先知道我的程序将来被加载到某地址处。程序只有加载到非0地址时<code>vstart</code>才是有用的，程序默认起始地址是0。</p>
+<p>面临如此多的外设，CPU不可能与之一一交互，因此之间也存在着一层代理：IO接口。例如机箱里的声卡就是驱动音响设备的IO接口，显卡则是驱动显示器的IO接口。IO接口是连接CPU与外部设备的逻辑控制部件，既然称为逻辑，就说明可分为硬件和软件两部分。硬件部分所做的都是些实质具体的工作，其功能是协调CPU和外设之间的种种不匹配，如双方由于速度不匹配，那IO接口就实现数据缓冲以减少等待时间，数据格式不匹配，IO接口就在这两种格式间互相转换。 IO接口内部实际上也是由软件来控制运作的，这就是所谓的“逻辑”部分，所以软件是指用来控制接口电路工作的驱动程序以及完成内部数据传输所需要的程序。IO接口芯片又可按照是否可编程来分类，分为可编程与不可编程接口芯片。</p>
+<p>计算机与IO接口的通信是通过计算机指令实现的，当需要定制某些功能时，也必须用计算机指令告诉IO接口：哪些设备连接在此IO接口上，此IO接口的工作模式等。这种通过软件指令选择IO接口上的功能、工作模式的做法，称为“IO接口控制编程”。这通常是用端口读写指令 in/out 来实现的。</p>
+<p>同一时刻，CPU 只能和一个IO接口通信，同样通过分层来解决问题，这层的责任是除了仲裁IO接口的竞争，还要连接各种内部总线。因此它的名字就叫做输入输出控制中心(I/O control hub, ICH），也就是南桥芯片。南桥连接低速设备，北桥连接高速设备。</p>
+<p>CPU通过内部总线连接南桥芯片的内部，在南桥内部集成了IO接口，如并口硬盘PATA、串口硬盘SAIA、USB、PCI 设备、电源管理等接口。南桥提供了专门用于扩展的PCI接口。</p>
+<p>在IO接口内部有专用于数据交互的寄存器，为了区别于CPU内部的寄存器， IO接口中的寄存器就称为端口（不同于网络应用程序中所指代的端口）。</p>
+<p>由于这些寄存器是独立编制，因此CPU提供了专门的指令进行操作：in和out。</p>
+<h3 id="显卡交互"><a href="#显卡交互" class="headerlink" title="显卡交互"></a>显卡交互</h3><p>在上面的MBR代码中，我们是直接利用BIOS的中断来进行字符串的打印，即依赖于中断向量表，显然这种方式不可能长久使用，因为中断向量表只存在于实模式下。保护模式下无法使用。与其通过封装好的BIOS中断来进行操作显卡，我们不如尝试直接与显卡进行交互。显卡则是我们上面提到的负责与显示器交互的IO接口。</p>
+<p>我们将要打印的字符输入到显存的对应位置，具体的MBR代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">; 主引导程序</span><br><span class="line">SECTION MBR vstart&#x3D;0x7c00</span><br><span class="line">    mov ax, cs</span><br><span class="line">    mov ds, ax</span><br><span class="line">    mov es, ax</span><br><span class="line">    mov ss, ax</span><br><span class="line">    mov fs, ax</span><br><span class="line">    mov sp, 0x7c00</span><br><span class="line">    mov ax, 0xb800          ;显存模式内存地址</span><br><span class="line">    mov gs, ax</span><br><span class="line"></span><br><span class="line">; 0x06号功能，上卷全部行</span><br><span class="line">; INT 0x10 功能号 0x06</span><br><span class="line">; 输入 ：</span><br><span class="line">; AH &#x3D; 0x06</span><br><span class="line">; AL &#x3D; 上卷行数</span><br><span class="line">; BH &#x3D; 上卷行属性</span><br><span class="line">; (CL,CH)&#x3D;窗口左上角(X,Y)</span><br><span class="line">; (DL,DH)&#x3D;窗口右下角(X,Y)</span><br><span class="line">; 无返回值</span><br><span class="line"></span><br><span class="line">    mov ax, 0600h</span><br><span class="line">    mov bx, 0700h</span><br><span class="line">    mov cx, 0           ; (0,0)</span><br><span class="line">    mov dx, 184fh      ; (79,24)</span><br><span class="line">                        ; VGA 文本模式中一行容纳80个字符， 共25行</span><br><span class="line">                        ; 下标从0 开始</span><br><span class="line">    int 10h</span><br><span class="line"></span><br><span class="line">    ; 输出背景颜色绿色，前景色红色，字符跳动</span><br><span class="line">    mov byte [gs:0x00], &#39;1&#39;</span><br><span class="line">    mov byte [gs:0x01], 0xA4    ;A为绿色背景闪烁，4为前景色红色</span><br><span class="line"></span><br><span class="line">    mov byte [gs:0x02], &#39; &#39;</span><br><span class="line">    mov byte [gs:0x03], 0xA4</span><br><span class="line"></span><br><span class="line">    mov byte [gs:0x04], &#39;M&#39;</span><br><span class="line">    mov byte [gs:0x05], 0xA4  </span><br><span class="line"></span><br><span class="line">    mov byte [gs:0x06], &#39;B&#39;</span><br><span class="line">    mov byte [gs:0x07], 0xA4  </span><br><span class="line"></span><br><span class="line">    mov byte [gs:0x08], &#39;R&#39;</span><br><span class="line">    mov byte [gs:0x09], 0xA4</span><br><span class="line"></span><br><span class="line">    jmp $               ; 程序悬停</span><br><span class="line"></span><br><span class="line">    message db &quot;1 MBR&quot;</span><br><span class="line">    times 510- ($-$$) db 0</span><br><span class="line">    db 0x55, 0xaa</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="硬盘交互"><a href="#硬盘交互" class="headerlink" title="硬盘交互"></a>硬盘交互</h3><p>CPU与硬盘间通过硬盘控制器进行交互，同样属于IO接口。</p>
+<p>磁盘的寻址主要通过LBA low、LBA mid、LBA high以及device等寄存器进行。</p>
+<table>
+<thead>
+<tr>
+<th>Primary 通道</th>
+<th>Secondary 通道</th>
+<th>读操作</th>
+<th>写操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x1F0</td>
+<td>0x170</td>
+<td>Data</td>
+<td>Data</td>
+</tr>
+<tr>
+<td>0x1F1</td>
+<td>0x171</td>
+<td>Error</td>
+<td>Features</td>
+</tr>
+<tr>
+<td>0x1F2</td>
+<td>0x172</td>
+<td>Sector count</td>
+<td>Sector count</td>
+</tr>
+<tr>
+<td>0x1F3</td>
+<td>0x173</td>
+<td>LBA low</td>
+<td>LBA low</td>
+</tr>
+<tr>
+<td>0x1F4</td>
+<td>0x174</td>
+<td>LBA mid</td>
+<td>LBA mid</td>
+</tr>
+<tr>
+<td>0x1F5</td>
+<td>0x175</td>
+<td>LBA high</td>
+<td>LBA high</td>
+</tr>
+<tr>
+<td>0x1F6</td>
+<td>0x176</td>
+<td>Device</td>
+<td>device</td>
+</tr>
+<tr>
+<td>0x1F7</td>
+<td>0x177</td>
+<td>Status</td>
+<td>Status</td>
+</tr>
+<tr>
+<td>0x3F6</td>
+<td>0x376</td>
+<td>Alternate status</td>
+<td>Device Control</td>
+</tr>
+</tbody></table>
+<p>端口可以被分为两组, Command Block registers 和 Control Block registers。Command Block registers 用于向硬盘驱动器写入命令字或者从硬盘控制器获得硬盘状态， Control Block registers 用于控制硬盘工作状态。</p>
+<p>这些端口并不是直接针对某块硬盘，要对某块硬盘进行操作，我们需要通过device寄存器进行指定。同时该寄存器是个杂项寄存器，还包含了许多其他用途。</p>
+<p>硬盘中的扇区在物理上是用“柱面、磁头、扇区”来定位的(Cylinder Head Sector)，简称为CHS，该方法对磁盘来说很直观，但在操作时并不方便。之前提到过还有另一中定位方法，LBA，即逻辑块(Logical Block Address)，包含LBA28与LBA48两种，数字表示其最大的寻址范围，28即2的28次方。</p>
+<p><strong>硬盘操作方法</strong></p>
+<ol>
+<li>选择通道，往通道的sector count寄存器中写入待操作的扇区数</li>
+<li>往该通道的三个LBA寄存器中写入扇区起始地址的低24位</li>
+<li>往device寄存器中写入LBA地址的24~27位，并置第6位为1，使其为LBA模式，设置第4位，选择操作的硬盘（主从硬盘）</li>
+<li>往该通道的command寄存器写入操作命令</li>
+<li>读取该通道上的status寄存器，判断硬盘工作是否完成</li>
+<li>如果以上步骤是读硬盘，则进入下一步骤，否则完成</li>
+<li>将硬盘数据读出</li>
+</ol>
+<p><strong>硬盘数据传送方式</strong></p>
+<ol>
+<li>无条件传送方式</li>
+<li>查询传送方式</li>
+<li>中断传送方式</li>
+<li>直接存储器存储方式（DMA）</li>
+<li>I/O处理机传送方式</li>
+</ol>
+<p>第1种“无条件传送方式”，应用此方式的数据源设备一定是随时准备好了数据，CPU随时取随时拿都没问题，如寄存器、内存就是类似这样的设备。</p>
+<p>第2种“查询传送方式”也称为程序I/O、PIO(Programming Input/Output Model)，是指传输之前，由程序先去检测设备的状态。数据源设备在一定条件下才能传送数据，这类设备通常是低速设备，比CPU慢很多。硬盘中有status寄存器，里面保存了工作状态，所以对硬盘可以用该方式来获取数据。</p>
+<p>第3种“中断传送方式”，也称为中断驱动I/O。上面提到的“查询传送方式”有这样的缺陆，由于 CPU需要不断查询设备状态，所以意味着只有最后一刻的查询才是有意义的，之前的查询都是发生在数据尚未准备好的时间段里，所以说效率不高，仅对于不要求速度的系统可以采用。通过以中断的方式来通知CPU，当数据源准备好数据时，它通过发送中断来通知CPU拿数据，这样避免了CPU花在查询上的时间。</p>
+<p>第4种“直接存储器存取方式（DMA）”。在中断传送方式中，虽然极大地提高了CPU的利用率，但<br>通过中断方式来通知CPU, CPU就要通过压找来保护现场，还要执行传输指令，最后还要恢复现场。而DMA则不需要CPU参与传输，完全由数据源设备和内存直接传输。CPU直接到内存中拿数据就好了。DMA是由硬件实现的，不是软件概念，所以需要DMA控制器。</p>
+<p>第5种“I/O处理机传送方式”。它专门用于处理I/O，并且它其实是一种处理器，只不过用的是另一套擅长I/O的指令系统，随时可以处理数据。在I/O处理机的协助下， CPU可以不知道有传输这回事。同样，这也是需要单独的硬件来支持。</p>
+<h2 id="MBR操作硬盘"><a href="#MBR操作硬盘" class="headerlink" title="MBR操作硬盘"></a>MBR操作硬盘</h2><p>我们将对MBR进行改进使得它可以对硬盘进行操作。我们的MBR局限于一个512字节的扇区中，后续的工作显然不能全部在此完成，因此引入了一个loader，而MBR则负责从硬盘上将其加载到内存，然后使其运行。</p>
+<p>我们的程序采用的是查询传送方式。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">; 主引导程序</span><br><span class="line">%include &quot;boot.inc&quot;</span><br><span class="line">SECTION MBR vstart&#x3D;0x7c00</span><br><span class="line">    mov ax, cs</span><br><span class="line">    mov ds, ax</span><br><span class="line">    mov es, ax</span><br><span class="line">    mov ss, ax</span><br><span class="line">    mov fs, ax</span><br><span class="line">    mov sp, 0x7c00</span><br><span class="line">    mov ax, 0xb800          ;显存模式内存地址</span><br><span class="line">    mov gs, ax</span><br><span class="line"></span><br><span class="line">; 0x06号功能，上卷全部行</span><br><span class="line">; INT 0x10 功能号 0x06</span><br><span class="line">; 输入 ：</span><br><span class="line">; AH &#x3D; 0x06</span><br><span class="line">; AL &#x3D; 上卷行数</span><br><span class="line">; BH &#x3D; 上卷行属性</span><br><span class="line">; (CL,CH)&#x3D;窗口左上角(X,Y)</span><br><span class="line">; (DL,DH)&#x3D;窗口右下角(X,Y)</span><br><span class="line">; 无返回值</span><br><span class="line"></span><br><span class="line">    mov ax, 0600h</span><br><span class="line">    mov bx, 0700h</span><br><span class="line">    mov cx, 0           ; (0,0)</span><br><span class="line">    mov dx, 184fh      ; (79,24)</span><br><span class="line">                        ; VGA 文本模式中一行容纳80个字符， 共25行</span><br><span class="line">                        ; 下标从0 开始</span><br><span class="line">    int 10h</span><br><span class="line"></span><br><span class="line">    ; 输出背景颜色绿色，前景色红色，字符跳动</span><br><span class="line">    mov byte [gs:0x00], &#39;1&#39;</span><br><span class="line">    mov byte [gs:0x01], 0xA4    ;A为绿色背景闪烁，4为前景色红色</span><br><span class="line"></span><br><span class="line">    mov byte [gs:0x02], &#39; &#39;</span><br><span class="line">    mov byte [gs:0x03], 0xA4</span><br><span class="line"></span><br><span class="line">    mov byte [gs:0x04], &#39;M&#39;</span><br><span class="line">    mov byte [gs:0x05], 0xA4  </span><br><span class="line"></span><br><span class="line">    mov byte [gs:0x06], &#39;B&#39;</span><br><span class="line">    mov byte [gs:0x07], 0xA4  </span><br><span class="line"></span><br><span class="line">    mov byte [gs:0x08], &#39;R&#39;</span><br><span class="line">    mov byte [gs:0x09], 0xA4</span><br><span class="line"></span><br><span class="line">    mov eax, LOADER_START_SECTOR    ;起始扇区lba的地址</span><br><span class="line">    mov bx, LOADER_BASE_ADDR        ;写入地址</span><br><span class="line">    mov cx, 1                        ;待读入的扇区数</span><br><span class="line">    call rd_disk_m_16               ;以下读取程序的起始部分（一个扇区）</span><br><span class="line"></span><br><span class="line">    jmp LOADER_BASE_ADDR</span><br><span class="line"></span><br><span class="line">rd_disk_m_16:</span><br><span class="line">    ;功能，读取硬盘的n个扇区</span><br><span class="line">    ;eax&#x3D;LBA扇区号</span><br><span class="line">    ;ebx&#x3D;将数据写入的内存地址</span><br><span class="line">    ;ecx&#x3D;读入的扇区数</span><br><span class="line">    mov esi, eax    ;备份eax</span><br><span class="line">    mov di, cx      ;备份cx</span><br><span class="line"></span><br><span class="line">;读写硬盘：</span><br><span class="line">;第1步：设置要读取的扇区数</span><br><span class="line">    mov dx,0x1f2</span><br><span class="line">    mov al,cl</span><br><span class="line">    out dx,al       ;读取的扇区数</span><br><span class="line"></span><br><span class="line">    mov eax,esi     ;恢复ax</span><br><span class="line"></span><br><span class="line">;第2步：将LBA地址存入0x1f3 ~ 0x1f6</span><br><span class="line">    ;LBA7~0位写入端口0x1f3</span><br><span class="line">    mov dx, 0x1f3</span><br><span class="line">    out dx,al </span><br><span class="line"></span><br><span class="line">    ;LBA15~8位写入端口0x1f4</span><br><span class="line">    mov cl,8</span><br><span class="line">    shr eax,cl</span><br><span class="line">    mov dx, 0x1f4</span><br><span class="line">    out dx,al</span><br><span class="line"></span><br><span class="line">    ;LBA地址23~16位写入端口0x1f5</span><br><span class="line">    shr eax, cl</span><br><span class="line">    mov dx, 0x1f5</span><br><span class="line">    out dx,al</span><br><span class="line"></span><br><span class="line">    shr eax, cl</span><br><span class="line">    and al,0x0f     ;LBA第24~27位</span><br><span class="line">    or al,0xe0      ;设置7~4位为1110，表示lba模式</span><br><span class="line">    mov dx,0x1f6</span><br><span class="line">    out dx,al</span><br><span class="line"></span><br><span class="line">;第3步：向0x1f7端口写入读命令，0x20</span><br><span class="line">    mov dx, 0x1f7</span><br><span class="line">    mov al,0x20</span><br><span class="line">    out dx,al</span><br><span class="line"></span><br><span class="line">;第4步：检测硬盘状态</span><br><span class="line"> .not_ready:</span><br><span class="line">    ;同一端口，写时表示写入命令字，读时表示读入硬盘状态</span><br><span class="line">    nop</span><br><span class="line">    in al,dx</span><br><span class="line">    and al,0x88     ;第4位为1表示硬盘控制器已准备好数据传输，第7位为1表示硬盘忙</span><br><span class="line">    cmp al,0x08</span><br><span class="line">    jnz .not_ready</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">;第5步：从0x1f0端口读数据</span><br><span class="line">    mov ax, di</span><br><span class="line">    mov dx, 256</span><br><span class="line">    mul dx</span><br><span class="line">    mov cx, ax      ;di为要读取的扇区数，一个扇区有512字节，每次读入一个字</span><br><span class="line">                    ;共需 di*512&#x2F;2次，所以di*256</span><br><span class="line">    mov dx, 0x1f0</span><br><span class="line"> .go_on_read:</span><br><span class="line">    in ax,dx</span><br><span class="line">    mov [bx],ax</span><br><span class="line">    add bx,2</span><br><span class="line">    loop .go_on_read</span><br><span class="line">    ret</span><br><span class="line"></span><br><span class="line"> times 510-($-$$) db 0</span><br><span class="line"> db 0x55, 0xaa</span><br></pre></td></tr></table></figure>
+
+<p>我们新建一个<code>include</code>文件夹并包含文件<code>boot.inc</code>，其中定义了我们的加载内存地址和读取的磁盘扇区。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">;-------------	 loader和kernel   ----------</span><br><span class="line">LOADER_BASE_ADDR equ 0x900 </span><br><span class="line">LOADER_START_SECTOR equ 0x2</span><br></pre></td></tr></table></figure>
+
+<p><code>loader</code>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">%include &quot;boot.inc&quot;</span><br><span class="line">section loader vstart&#x3D;LOADER_BASE_ADDR</span><br><span class="line"></span><br><span class="line">; 输出背景色绿色，前景色红色，并且跳动的字符串&quot;2 LOADER&quot;</span><br><span class="line">mov byte [gs:0x00],&#39;2&#39;</span><br><span class="line">mov byte [gs:0x01],0xA4     ; A表示绿色背景闪烁，4表示前景色为红色</span><br><span class="line"></span><br><span class="line">mov byte [gs:0x02],&#39; &#39;</span><br><span class="line">mov byte [gs:0x03],0xA4</span><br><span class="line"></span><br><span class="line">mov byte [gs:0x04],&#39;L&#39;</span><br><span class="line">mov byte [gs:0x05],0xA4   </span><br><span class="line"></span><br><span class="line">mov byte [gs:0x06],&#39;O&#39;</span><br><span class="line">mov byte [gs:0x07],0xA4</span><br><span class="line"></span><br><span class="line">mov byte [gs:0x08],&#39;A&#39;</span><br><span class="line">mov byte [gs:0x09],0xA4</span><br><span class="line"></span><br><span class="line">mov byte [gs:0x0a],&#39;D&#39;</span><br><span class="line">mov byte [gs:0x0b],0xA4</span><br><span class="line"></span><br><span class="line">mov byte [gs:0x0c],&#39;E&#39;</span><br><span class="line">mov byte [gs:0x0d],0xA4</span><br><span class="line"></span><br><span class="line">mov byte [gs:0x0e],&#39;R&#39;</span><br><span class="line">mov byte [gs:0x0f],0xA4</span><br><span class="line"></span><br><span class="line">jmp $		       ; 通过死循环使程序悬停在此</span><br></pre></td></tr></table></figure>
+
+<p>编译并写入磁盘</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&gt; nasm -I .&#x2F;include&#x2F; -o mbr.bin .&#x2F;mbr.S </span><br><span class="line">&gt; dd if&#x3D;.&#x2F;mbr.bin of&#x3D;.&#x2F;hd60M.img bs&#x3D;512 count&#x3D;1 conv&#x3D;notrunc</span><br><span class="line">&gt; nasm -I .&#x2F;include&#x2F; -o loader.bin loader.S</span><br><span class="line">&gt; dd if&#x3D;.&#x2F;loader.bin of&#x3D;.&#x2F;hd60M.img bs&#x3D;512 count&#x3D;1 seek&#x3D;2 conv&#x3D;notrunc</span><br></pre></td></tr></table></figure>
+
+<h1 id="从实模式到保护模式"><a href="#从实模式到保护模式" class="headerlink" title="从实模式到保护模式"></a>从实模式到保护模式</h1><p>细数实模式下的缺陷：</p>
+<ol>
+<li>实模式下操作系统和用户程序属于同一特权级，</li>
+<li>用户程序所引用的地址指向真正的物理地址，即逻辑地址等于物理地址</li>
+<li>用户程序可以修改段基址，即可以访问所有内存</li>
+<li>访问超过64KB的内存区域要随时切换段基址</li>
+<li>一次只能运行一个程序，无法充分利用计算资源</li>
+<li>共20条地址线，最大可用内存为1MB</li>
+</ol>
+<p>而32位CPU具备了保护模式和实模式两种运行模式，其地址总线和数据总线也发展到了32位，寻址空间达到了4GB，寄存器也进行了相应的扩展。</p>
+<p>为了对地址进行更好的约束，定义了新的数据结构——全局描述符表，每一个表项称为段描述符，大小为64字节，用来描述各内存段的起始地址、大小、权限等信息。由GDTR寄存器指向全局描述符表。</p>
+<p>而段寄存器中则负责保存选择子，用于索引全局描述符表中的段描述符。</p>
+<p>寻址方式也发生了相应的改变：<br>由基址寄存器、变址寄存器和偏移量的基础上增加了比例因子，并增加了可供使用的寄存器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">实模式：</span><br><span class="line">&#123;BX|BP&#125; + &#123;SI|DI&#125; + &#123;立即数&#125;</span><br><span class="line">保护模式：</span><br><span class="line">&#123;eax|ebx|ecx|edx|esi|edi|ebp|esp&#125; + &#123;eax|ebx|ecx|edx|esi|edi|ebp&#125; * &#123;1|2|4|8&#125; + &#123;立即数&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="段描述符"><a href="#段描述符" class="headerlink" title="段描述符"></a>段描述符</h2><p>段描述符结构：<br>高32位<br>|31<del>24|23|22|21|20|19</del>16|15|14<del>13|12|11</del>8|7<del>0|<br>|-|-|-|-|-|-|-|-|-|-|-|-|<br>|段基址|G|D/B|L|AVL|段界限|P|DPL|S|TYPE|段基址|<br>低32位<br>|31</del>16|15~0|<br>|-|-|<br>|段基址|段界限|</p>
+<p>段界限表示段边界的扩展最值，即最大扩展到多少或最小扩展到多少。扩展方向只有上下两种。对于数据段和代码段，段的扩展方向是向上，即地址越来越高，此时的段界限用来表示段内偏移的最大值。对于栈段，段的扩展方向是向下，即地址越来越低，此时的段界限用来表示段内偏移的最小值。段界限用 20 个二进制位来表示。只不过此段界限只是个单位量，它的单位要么是字节，要么是4KB，即段大小要么是1MB要么是4GB，而单位由描述符中的G位指定。</p>
+<p>具体的段界限边界值计算方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">(描述符中的段界限值+1)*(段界限粒度：1或4KB) - 1</span><br></pre></td></tr></table></figure>
+<p>如果G位为0，表示段界限粒度大小为1字节，如果为1，表示段界限粒度大小为 4KB 字节。段界限规定了是段内偏移地址的最大值（向上扩展）或最小值（向下扩展），否则CPU会抛出异常。</p>
+<p>8~11位是type字段，共4位，用来指定本描述符的类型。一个段描述符，在 CPU 眼里分为两大类，即系统段和数据段，由段描述符中的S位决定。凡是硬件运行需要用到的东西都可称之为系统，软件运行需要的东西称为数据。无论是代码，还是数据，甚至包括栈，它们都作为硬件的输入，都是给硬件的数据而己，所以代码段在段描述符中也属于数据段。S为0时表示系统段，为1时表示数据段。</p>
+<p><img src="https://s2.loli.net/2022/08/04/qxEVgtji6pXrUQh.png" alt="segtype.png"></p>
+<p>表中的A位表示Accessed位，这是由CPU来设置的，每当该段被CPU访问过后， CPU就将此位置为1。</p>
+<p>C表示一致性代码段，也称为依从代码段，Conforming。一致性代码段是指如果自己是转移的目标段，并且自己是一致性代码段，自己的特权级一定要高于当前特权级。转移后的特权级不与自己的DPL为主，而是与转移前的低特权级一致，也就是听从、依从转移前的低特权级。</p>
+<p>R则表示是否可读，用于限制代码段的访问。X表示是否可执行。E则表示是否可以扩展，0向上，1向下。W表示段是否可写。</p>
+<p>段描述符的第13~14位是DPL字段，Descriptor Privilege Level，即描述符特权级，这是保护模式提供的安全解决方案。共有0，1，2，3四种特权级，数字越小特权级越大。</p>
+<p>段描述符的第15位是P字段，Present，即段是否存在。如果段在内存中，P为1，否则为0.用于应对内存段换出的问题。</p>
+<p>段描述符的第20位为AVL字段，无实际用途。</p>
+<p>段描述符的第21位为L字段，用来设置是否是64位代码段。L为1表示64位代码段，否则表示32位代码段。</p>
+<p>段描述符的第22位是D/B字段，用来指示有效地址（段内偏移地址）及操作数的大小。用于兼容286的保护模式下的16位操作数，与该指令相关的内存段是代码段和栈段，所以此字段是D或B。</p>
+<p>对于代码段来说，此位是D位，若D为0，表示指令中的有效地址和操作数是16位，指令有效地址用IP寄存器。若D为1，表示指令中的有效地址及操作数是3 位，指令有效地址用EIP寄存器。</p>
+<p>对于栈段来说，此位是B位，用来指定操作数大小，此操作数涉及到栈指针寄存器的选择及栈的地址上限。若B为0，使用的是sp寄存器，也就是栈的起始地址是16位寄存器的最大寻址范围， 0xFFFF。若B为1，使用esp寄存器，栈的起始地址是32位寄存器的最大寻址范围，0xFFFFFFFF。</p>
+<p>段描述符的第23位是G字段， Granularity ，粒度，用来指定段界限的单位大小。</p>
+<h2 id="GDT"><a href="#GDT" class="headerlink" title="GDT"></a>GDT</h2><p>全局描述符表位于内存中，需要用专门的寄存器指向它后， CPU才知道它在哪里。这个专门的寄存器便是GDTR，GDT Register，专门用来存储GDT的内存地址及大小。GDTR是一个48位的寄存器。47~15位表示GDT的内存起始地址，15~0表示GDT界限，这16位相当于GDT的字节大小减1，每个描述符大小为8字节，故最大可以容纳<code>2^16 / 8 = 2 ^ 13 = 8192</code>个段或门。</p>
+<p>进行保护模式我们需要在实模式下执行lgdt指令，但是我们同样可以在保护模式下执行该指令。言外之意便是进入保护模式需要有GDT，但进入保护模式后，还可以再重新换个GDT加载。在保护模式下重新换个GDT的原因是实模式下只能访问低端1MB空间，所以GDT只能位于1MB之内。根据操作系统的实际情况，有可能需要把GDT放在其他的内存位置，所以在进入保护模式后，访问的内存空间突破了1MB ，可以将GDT放在合适的位置后再重新加载进来。</p>
+<p>由于在保护模式下段基址进入了段描述符中，段寄存器则用于存储选择子，以索引段描述符表中的段描述符。由于段寄存器是16位，故选择子也是16位，其低两位表示请求特权级RPL，同样包含四种特权。第2位是TI，Table Indicator，用来指示选择子是在GDT（0）中还是LDT–局部描述符表（1）中。高13位则为相应的索引值。由于在保护模式下已经是32位地址线和寄存器了，任意寄存器都能提供32位地址，直接使用选择子指向的段描述符中的段基址与段内偏移地址相加即可。</p>
+<p>GDT 中的第0个段描述符是不可用的，原因是定义在GDT中的段描述符是要用选择子来访问的，如果使用的选择子忘记初始化，选择子的值便会是0，这便会访问到第0个段描述符。</p>
+<h2 id="A20地址线"><a href="#A20地址线" class="headerlink" title="A20地址线"></a>A20地址线</h2><p>在实模式下只有1MB的寻址空间，但是访问策略可能会使内存访问超出，此时便采用地址回绕，即对地址进行取模。超出1MB的内存被称为高端内存区<code>HMA</code>。</p>
+<p>而在286CPU，实模式下的A20地址线是开启的，此时便不会进行回绕而是直接访问对应的物理地址。而为了兼容原有的8086下的实模式，添加了A20Gate用于限制A20地址线的有效性。打开方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">in al, 0x92</span><br><span class="line">or al, 0000_0010B</span><br><span class="line">out 0x92, al</span><br></pre></td></tr></table></figure>
+
+<h2 id="CR0寄存器"><a href="#CR0寄存器" class="headerlink" title="CR0寄存器"></a>CR0寄存器</h2><p>控制寄存器系列CRx是CPU的窗口，既可以用来展示CPU的内部状态，也可用于控制CPU的运行机制。而CR0寄存器的第0位，即PE位，Protection Enable，此位用于启用保护模式，是保护模式的开关。</p>
+<p>实模式下开启方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mov eax, cr0</span><br><span class="line">or eax, 00000001</span><br><span class="line">mov cr0, eax</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
 </search>

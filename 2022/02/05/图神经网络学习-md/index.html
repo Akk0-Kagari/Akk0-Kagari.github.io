@@ -9,7 +9,7 @@
     
     <title>
         
-            常见端口扫描类型总结 |
+            图神经网络学习.md |
         
         Akk0&#39;s Blog
     </title>
@@ -146,7 +146,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">常见端口扫描类型总结</span>
+            <span class="title-hover-animation">图神经网络学习.md</span>
         </div>
 
         
@@ -164,7 +164,7 @@
                     <div class="meta-info">
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
-        <i class="fas fa-edit"></i>&nbsp;2021-05-31 15:17:57
+        <i class="fas fa-edit"></i>&nbsp;2022-02-05 15:01:27
     </span>
     
     
@@ -172,7 +172,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>1.1k 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>922 字</span>
         </span>
     
     
@@ -193,70 +193,54 @@
         
 
         <div class="article-content markdown-body">
-            <h1 id="常见端口扫描类型总结"><a href="#常见端口扫描类型总结" class="headerlink" title="常见端口扫描类型总结"></a>常见端口扫描类型总结</h1><h2 id="TCP-SYN-扫描"><a href="#TCP-SYN-扫描" class="headerlink" title="TCP SYN 扫描"></a>TCP SYN 扫描</h2><p>原理：扫描器向目的主机的一个端口发送请求连接的SYN包，扫描器在收到SYN/ACK后，不采用发送ACK应答的方式而是发送RST请求断开连接，则三次握手不会完成，没有建立正常的TCP连接，此次扫描也不会被记录到系统日志中。这种扫描方式不会再目的主机上留下痕迹。但是这种扫描器需要有<strong>root权限</strong>。</p>
-<ul>
-<li>若收到SYN/ACK则端口开放</li>
-<li>若收到RST表示端口关闭</li>
+            <h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><h2 id="图的基本定义"><a href="#图的基本定义" class="headerlink" title="图的基本定义"></a>图的基本定义</h2><p>数学中图由顶点（Vertex）以及连接顶点的边（Edge）构成。顶点表示研究的对象，边表示两个对象之间特定的关系。</p>
+<h2 id="图的基本类型"><a href="#图的基本类型" class="headerlink" title="图的基本类型"></a>图的基本类型</h2><ol>
+<li>有向图与无向图</li>
+</ol>
+<p>区别是图中的边是否存在方向性。</p>
+<ol start="2">
+<li>非加权图与加权图</li>
+</ol>
+<p>图中的每条边有一个实数与之对应。</p>
+<ol start="3">
+<li>连通图与非连通图</li>
+</ol>
+<p>图中存在孤立的顶点，没有任何边与之相连，这样的图被称为非连通图。</p>
+<ol start="4">
+<li>二部图</li>
+</ol>
+<p>将图G中的顶点集合V拆分成两个子集A和B，如果对于图中的任何一条边e（连接vi与vj）都有vi∈A，vj∈B，则图G为二部图。二部图描述两类对象之间的关系，如用户与商品，作者与论文。</p>
+<h2 id="图的一些定义"><a href="#图的一些定义" class="headerlink" title="图的一些定义"></a>图的一些定义</h2><ul>
+<li>同一条边连接的两个顶点互为<strong>邻居</strong>。</li>
+<li>顶点连接的所有边的数目称为<strong>度</strong>。</li>
+<li>所有节点的度数之和为边数的两倍。</li>
+<li>有向图中度分为出度与入度，顶点的度数等于二者之和。</li>
+<li>图的顶点集与边集分别是另一个图的子集，则其为后者的子图。</li>
+<li>从顶点触发沿着一些边经过一些顶点形成的序列称之为路径（Path），路径的长度是路径的边数。</li>
+<li>顶点的距离为最短路径长度。</li>
+<li>设两顶点间的距离为k，则顶点间互为k阶邻居。</li>
+<li>某个顶点的k阶子图则是由其不大于k阶的邻居组成。</li>
 </ul>
-<p>优点：扫描隐蔽。</p>
-<h2 id="Connect扫描"><a href="#Connect扫描" class="headerlink" title="Connect扫描"></a>Connect扫描</h2><p>原理即为与TCP端口进行“三次握手”通信。</p>
+<h2 id="图的存储方式"><a href="#图的存储方式" class="headerlink" title="图的存储方式"></a>图的存储方式</h2><p>邻接矩阵（Adjacency matrix）与关联矩阵（Incidence matrix）</p>
+<p>邻接矩阵的一维数组表示顶点集合，二维数据表示邻接矩阵，其值表示顶点间的关联关系，当邻接矩阵中存在大量0值时可以采用稀疏矩阵的方式来存储。无向图的邻接矩阵是对称的。</p>
+<p>关联矩阵描述节点与边之间的关系。</p>
+<h2 id="图的遍历"><a href="#图的遍历" class="headerlink" title="图的遍历"></a>图的遍历</h2><p>图的遍历是指从图中的某一顶点触发，按照某种算法沿着图中的边对图中的所有顶点访问且仅访问一次。算法主要分为两种，深度优先与广度优先。</p>
+<h2 id="图数据的应用"><a href="#图数据的应用" class="headerlink" title="图数据的应用"></a>图数据的应用</h2><p>在实际的数据场景中，我们通常将其称为网络（Network）。</p>
+<p>下面列举其中比较重要的四类图数据。</p>
 <ul>
-<li>若建立成功，端口开放</li>
-<li>反之则关闭</li>
+<li>同构图：同构图是指图中的节点类型和关系类型都仅有一种。</li>
+<li>异构图：与同构图相反，异构图是指图中的节点类型或关系类型多于一种。</li>
+<li>属性图：相较于异构图，属性图给图数据增加了额外的属性信息。对于一个属性图而言，节点和关系都有标签（Label）和属性（Property），这里的标签是指节点或关系的类型。</li>
+<li>非显式图：非显式图是指数据之间没有显式地定义出关系，需要依据某种规则或计算方式将数据地关系表达出来，进而将数据当成一种图数据进行研究。</li>
 </ul>
-<p>优点：实现简单，没有<strong>权限</strong>要求。并且扫描速度快，可同时打开多个套接字从而加速扫描。</p>
-<p>缺点：会在目标主机的日志记录中留下<strong>痕迹</strong>，易被发现，并且数据包会被过滤。目标主机的logs文件会显示一连串的连接和连接出错的服务信息，并且能很快地使它关闭。</p>
-<h2 id="NULL扫描（反向扫描）"><a href="#NULL扫描（反向扫描）" class="headerlink" title="NULL扫描（反向扫描）"></a>NULL扫描（反向扫描）</h2><p>原理：将一个没有设置任何标志位的数据包发给TCP端口。对于遵守FRC 793的主机（*nix）：</p>
-<ul>
-<li>端口关闭：舍弃该分段，并发送一个RST数据包。</li>
-<li>端口开启：不会响应</li>
-</ul>
-<p>对于不遵循的主机，例如Windows主机，只要收到无标志位的数据包，无论端口开放还是关闭都响应RST数据包。</p>
-<p><del>为什么称作反向扫描呢？与前两种相比，前两种方式收到响应包表示端口开放，而NULL扫描收到则表示端口关闭</del></p>
-<p>优点：隐蔽性高，可粗略判断系统。</p>
-<p>缺点：精确度相对较低。</p>
-<h2 id="FIN扫描"><a href="#FIN扫描" class="headerlink" title="FIN扫描"></a>FIN扫描</h2><p>原理：FIN表示TCP会话结束，FIN扫描中发送一个设置了FIN位的数据包：</p>
-<ul>
-<li>响应RST数据包，端口关闭</li>
-<li>无响应，端口关闭</li>
-</ul>
-<p>优点：隐蔽</p>
-<p>缺点：不能判断Windows系统上端口开放情况</p>
-<h2 id="ACK扫描"><a href="#ACK扫描" class="headerlink" title="ACK扫描"></a>ACK扫描</h2><p>原理：扫描主机向目标主机发送ACK数据包，根据返回的RST数据包可以得到端口信息。</p>
-<ul>
-<li>RST的TTL小于等于64，端口开放</li>
-<li>反之关闭</li>
-</ul>
-<p>优点：隐蔽</p>
-<h2 id="Xmas-Tree扫描"><a href="#Xmas-Tree扫描" class="headerlink" title="Xmas-Tree扫描"></a>Xmas-Tree扫描</h2><p>通过发送带有以下标志位的TCP数据包：</p>
-<ul>
-<li>URG：指示数据时紧急数据，应立即处理。</li>
-<li>PSH：强制将数据压入缓冲区。</li>
-<li>FIN：在结束TCP会话时使用。</li>
-</ul>
-<p>通常这三种标志位不能被同时设置。我们可以通过这种扫描来判断端口情况。</p>
-<ul>
-<li>无响应，端口开放</li>
-<li>响应RST，端口关闭</li>
-</ul>
-<p>XMAS扫描原理和NULL扫描的类似，将TCP数据包中的ACK、FIN、RST、SYN、URG、PSH标志位置1后发送给目标主机。</p>
-<p>优点：隐蔽</p>
-<p>缺点：不能判断Windows系统上端口开放情况</p>
-<h2 id="Dump扫描"><a href="#Dump扫描" class="headerlink" title="Dump扫描"></a>Dump扫描</h2><p>也被称为Idle扫描或反向扫描，在扫描主机时应用了第三方僵尸计算机扫描。由僵尸主机向目标主机发送SYN包。目标主机端口开放时响应SYN|ACK，关闭时返回RST，僵尸主机对SYN|ACK回应RST，对RST不做回应。从僵尸主机上进行扫描时，进行的是一个从本地计算机到僵尸主机的、连续的ping操作。查看僵尸主机返回的Echo响应的ID字段，能确定目标主机上哪些端口是开放的还是关闭的。</p>
-<h2 id="UDP扫描"><a href="#UDP扫描" class="headerlink" title="UDP扫描"></a>UDP扫描</h2><p>原理：UDP为无连接协议。无连接的协议则不会事先建立客户端和服务器之间的通信信道，只要客户端到服务器存在可用信道，就会假设目标是可达的然后向对方发送数据。</p>
-<ul>
-<li>若响应，端口开放</li>
-<li>返回ICMP目标不可达，端口关闭</li>
-<li>如果服务器返回一个 ICMP 错误类型3且代码为1，2，3，9，10或13的数据包，则说明目标端口被服务器过滤了。</li>
-<li>无响应，<strong>无法判断</strong><del>薛定谔的猫</del></li>
-</ul>
-<h2 id="分段扫描"><a href="#分段扫描" class="headerlink" title="分段扫描"></a>分段扫描</h2><p>原理：将一个完整的 TCP 报文分割封装到 2 个或多个 IP 报文，分别独立发送。</p>
-<ul>
-<li>关闭的端口响应。</li>
-<li>无响应则开放</li>
-</ul>
-<p>优点：隐蔽性好，可穿越防火墙，</p>
-<p>缺点：可能被丢弃，某些程序在处理这些小数据包时会出现异常。</p>
+<h2 id="图数据相关任务分类"><a href="#图数据相关任务分类" class="headerlink" title="图数据相关任务分类"></a>图数据相关任务分类</h2><ol>
+<li><p>节点层面（Node Level）的任务<br>节点层面的任务主要包括分类任务和回归任务。节点分类</p>
+</li>
+<li><p>边层面（Link Level）的任务<br>边层面的任务主要包括边的分类和预测任务。</p>
+</li>
+<li><p>图层面（Graph Level）的任务<br>图层面的任务不依赖于某个节点或某条边的属性，而是从图的整体结构出发实现分类、表示和生成等任务。</p>
+</li>
+</ol>
 
         </div>
 
@@ -264,11 +248,11 @@
             <div class="post-copyright-info">
                 <div class="article-copyright-info-container">
     <ul>
-        <li>本文标题：常见端口扫描类型总结</li>
+        <li>本文标题：图神经网络学习.md</li>
         <li>本文作者：Akk0</li>
-        <li>创建时间：2021-05-31 15:17:57</li>
+        <li>创建时间：2022-02-05 15:01:27</li>
         <li>
-            本文链接：https://auxein.xyz/2021/05/31/常见端口扫描类型总结/
+            本文链接：https://auxein.xyz/2022/02/05/图神经网络学习-md/
         </li>
         <li>
             版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -285,13 +269,13 @@
                     <div class="article-prev">
                         <a class="prev"
                            rel="prev"
-                           href="/2021/08/13/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%87%AA%E6%88%91%E4%BF%AE%E5%85%BB%E2%80%94%E2%80%94%E9%93%BE%E6%8E%A5%E3%80%81%E8%A3%85%E8%BD%BD%E4%B8%8E%E5%BA%93-%E7%AC%94%E8%AE%B0/"
+                           href="/2022/07/25/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%BC%96%E5%86%99%E5%B0%8F%E8%AE%B0/"
                         >
                             <span class="left arrow-icon flex-center">
                               <i class="fas fa-chevron-left"></i>
                             </span>
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">程序员的自我修养——链接、装载与库 笔记</span>
+                                <span class="post-nav-title-item">操作系统编写小记</span>
                                 <span class="post-nav-item">上一篇</span>
                             </span>
                         </a>
@@ -301,10 +285,10 @@
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2021/05/17/NachOS%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"
+                           href="/2021/12/10/Python%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">NachOS系统调用</span>
+                                <span class="post-nav-title-item">Python软件包安装过程</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
@@ -427,7 +411,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%AB%AF%E5%8F%A3%E6%89%AB%E6%8F%8F%E7%B1%BB%E5%9E%8B%E6%80%BB%E7%BB%93"><span class="nav-number">1.</span> <span class="nav-text">常见端口扫描类型总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-SYN-%E6%89%AB%E6%8F%8F"><span class="nav-number">1.1.</span> <span class="nav-text">TCP SYN 扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Connect%E6%89%AB%E6%8F%8F"><span class="nav-number">1.2.</span> <span class="nav-text">Connect扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NULL%E6%89%AB%E6%8F%8F%EF%BC%88%E5%8F%8D%E5%90%91%E6%89%AB%E6%8F%8F%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">NULL扫描（反向扫描）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FIN%E6%89%AB%E6%8F%8F"><span class="nav-number">1.4.</span> <span class="nav-text">FIN扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ACK%E6%89%AB%E6%8F%8F"><span class="nav-number">1.5.</span> <span class="nav-text">ACK扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Xmas-Tree%E6%89%AB%E6%8F%8F"><span class="nav-number">1.6.</span> <span class="nav-text">Xmas-Tree扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dump%E6%89%AB%E6%8F%8F"><span class="nav-number">1.7.</span> <span class="nav-text">Dump扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UDP%E6%89%AB%E6%8F%8F"><span class="nav-number">1.8.</span> <span class="nav-text">UDP扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%AE%B5%E6%89%AB%E6%8F%8F"><span class="nav-number">1.9.</span> <span class="nav-text">分段扫描</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE"><span class="nav-number">1.</span> <span class="nav-text">图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.</span> <span class="nav-text">图的基本定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.2.</span> <span class="nav-text">图的基本类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E4%B8%80%E4%BA%9B%E5%AE%9A%E4%B9%89"><span class="nav-number">1.3.</span> <span class="nav-text">图的一些定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">1.4.</span> <span class="nav-text">图的存储方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E7%9A%84%E9%81%8D%E5%8E%86"><span class="nav-number">1.5.</span> <span class="nav-text">图的遍历</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E6%95%B0%E6%8D%AE%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.6.</span> <span class="nav-text">图数据的应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BE%E6%95%B0%E6%8D%AE%E7%9B%B8%E5%85%B3%E4%BB%BB%E5%8A%A1%E5%88%86%E7%B1%BB"><span class="nav-number">1.7.</span> <span class="nav-text">图数据相关任务分类</span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>
